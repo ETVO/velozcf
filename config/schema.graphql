@@ -1,0 +1,50 @@
+type UploadFile {
+    id: ID!
+    url: String!
+    caption: String
+    updated_at: DateTime!
+}
+
+type Empreendimento {
+    id: ID!
+    nome: String!
+    endereco: String!
+    area_cabana: String!
+    logo: UploadFile
+    cover: UploadFile
+    cabanas: [Cabana]
+    propostas: [Proposta]
+    updated_at: DateTime!
+}
+
+type Proposta {
+    id: ID!
+    endereco: String!
+    bairro: String!
+    cep: String!
+    cidade: String!
+    telefone: String!
+    email: String!
+    estadoCivil: String!
+    regimeCasamento: String
+    autenticada: Boolean
+    unidades: JSON
+    infoComprador: Info
+    infoConjuge: Info
+    pagamento: Pagamento
+    empreendimento: Empreendimento
+    vendedor: User
+    updated_at: DateTime!
+}
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    password: String!
+    blocked: Boolean
+    creci: String
+    estadoCivil: String!
+    info: Info
+    updated_at: DateTime!
+}
