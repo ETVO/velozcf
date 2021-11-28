@@ -3,7 +3,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS images;
 CREATE TABLE images (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    url VARCHAR(255),
+    url VARCHAR(255) NOT NULL,
     caption VARCHAR(255),
     size DECIMAL(10,2),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -12,14 +12,14 @@ CREATE TABLE images (
 DROP TABLE IF EXISTS empreendimentos;
 CREATE TABLE empreendimentos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255),
-    endereco VARCHAR(255),
-    area_cabana VARCHAR(255),
-    logo_img_id INT(11) UNSIGNED, 
-    cover_img_id INT(11) UNSIGNED,
+    nome VARCHAR(255) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    area_cabana VARCHAR(255) NOT NULL,
+    logo_id INT(11) UNSIGNED, 
+    cover_id INT(11) UNSIGNED,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY logo_img_fk (logo_img_id) REFERENCES images(id) ON DELETE SET NULL,
-    FOREIGN KEY cover_img_fk(cover_img_id) REFERENCES images(id) ON DELETE SET NULL
+    FOREIGN KEY logo_img_fk (logo_id) REFERENCES images(id) ON DELETE SET NULL,
+    FOREIGN KEY cover_img_fk(cover_id) REFERENCES images(id) ON DELETE SET NULL
 );
 
 DROP TABLE IF EXISTS cabanas;
@@ -52,13 +52,13 @@ CREATE TABLE cotas (
 DROP TABLE IF EXISTS infos;
 CREATE TABLE infos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	nome_completo VARCHAR(255),
-	nacionalidade VARCHAR(255),
-	profissao VARCHAR(255),
-	data_nasc VARCHAR(255),
-	cpf VARCHAR(255),
-	rg VARCHAR(255),
-	orgao_exp VARCHAR(255)
+	nome_completo VARCHAR(255) NOT NULL,
+	nacionalidade VARCHAR(255) NOT NULL,
+	profissao VARCHAR(255) NOT NULL,
+	data_nasc VARCHAR(255) NOT NULL,
+	cpf VARCHAR(255) NOT NULL,
+	rg VARCHAR(255) NOT NULL,
+	orgao_exp VARCHAR(255) NOT NULL
 );
 
 DROP TABLE IF EXISTS pagamentos;
@@ -75,8 +75,8 @@ CREATE TABLE pagamentos (
 DROP TABLE IF EXISTS imobiliarias;
 CREATE TABLE imobiliarias (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255),
-    cnpj VARCHAR(255),
+    nome VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(255) NOT NULL,
     endereco VARCHAR(255),
     bairro VARCHAR(255),
     cep VARCHAR(255),
@@ -87,9 +87,9 @@ CREATE TABLE imobiliarias (
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255),
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     estado_civil VARCHAR(255),
     creci VARCHAR(255),
     blocked BOOLEAN DEFAULT 0,
@@ -108,16 +108,16 @@ CREATE TABLE propostas (
     cep VARCHAR(255),
     cidade VARCHAR(255),
     telefone VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) NOT NULL,
     estado_civil VARCHAR(255),
     regime_casamento VARCHAR(255),
     comprador INT(11) UNSIGNED,
     conjuge INT(11) UNSIGNED,
     unidades JSON,
     pagamento INT(11) UNSIGNED,
-    aprovada BOOLEAN,
-    empreendimento INT(11) UNSIGNED,
-    vendedor INT(11) UNSIGNED,
+    aprovada BOOLEAN DEFAULT 0,
+    empreendimento INT(11) UNSIGNED NOT NULL,
+    vendedor INT(11) UNSIGNED NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY comprador_fk (comprador) REFERENCES infos(id) ON DELETE CASCADE,
     FOREIGN KEY conjuge_fk (conjuge) REFERENCES infos(id) ON DELETE CASCADE,
