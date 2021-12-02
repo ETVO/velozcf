@@ -30,13 +30,13 @@
                 'id' => $empre->id
             ],
             'success' => true,
-            'message' => 'Empreendimento created.'
+            'message' => 'Empreendimento criado com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Empreendimento not created.'
+            'message' => 'Erro ao criar empreendimento.'
         ]);
 
     }

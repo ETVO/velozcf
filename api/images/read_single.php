@@ -34,6 +34,6 @@
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Image not found.'
+            'message' => 'Imagem não encontrada.'
         ]);
     }

@@ -18,6 +18,7 @@ CREATE TABLE empreendimentos (
     logo_id INT(11) UNSIGNED, 
     cover_id INT(11) UNSIGNED,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted BOOLEAN DEFAULT 0,
     FOREIGN KEY logo_img_fk (logo_id) REFERENCES images(id) ON DELETE SET NULL,
     FOREIGN KEY cover_img_fk(cover_id) REFERENCES images(id) ON DELETE SET NULL
 );

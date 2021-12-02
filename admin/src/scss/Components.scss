@@ -1,0 +1,11 @@
+.ImageControl {
+    img {
+       &.single {
+           display: block;
+           width: 150px;
+           height: 80px;
+           object-fit: contain;
+           object-position: left bottom;
+       } 
+    }
+}

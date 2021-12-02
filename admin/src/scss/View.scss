@@ -1,0 +1,96 @@
+.View {
+    .heading {
+        .icon {
+            text-decoration: none;
+            cursor: pointer;
+
+            span::before {
+                transition: transform .8s ease-out;
+            }
+
+            &.reload:hover {
+                span::before {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+    }
+
+    .table {
+        tbody {
+    
+            .actions {
+                width: 80px;
+    
+                span {
+                    cursor: pointer;
+                }
+            }
+        }
+    
+        td, th {
+            vertical-align: middle;
+        }
+    
+        tr.deleted {
+            display: none;
+        }
+    
+        &.show-deleted {
+            tr.deleted {
+                display: unset;
+            }
+        }
+    }
+}
+.Empreendimentos {
+    .table {
+        tbody {
+            .logo {
+                width: 120px;
+                img {
+                    margin: auto;
+                    width: 80px;
+                    height: 50px;
+                    object-fit: cover;
+                }
+            }
+    
+            .updatedAt {
+                width: 200px;
+            }
+        }
+    }
+}
+
+.Single { 
+    .single-inner {
+
+        padding: .5rem 1rem;
+
+        .edit {
+            max-width: 600px;
+        }
+
+        form {
+            .form-label {
+                font-weight: 600;
+                font-size: .875rem;
+                margin-bottom: .25rem;
+            }
+        
+            .form-control, .form-select {
+                border: solid 1px #B6B6E2;
+                border-radius: 5px; 
+        
+                &::placeholder {
+                    color: #4C516F;
+                }
+            }
+            
+            .form-row {
+                margin-bottom: .625rem;
+            }
+        }
+    }
+}

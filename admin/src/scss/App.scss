@@ -1,0 +1,54 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.smaller {
+    font-size: .875rem;
+    line-height: 1;
+}
+
+#root {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+
+    .Header {
+        flex: 0 1 auto;
+    }
+
+    .App {
+        flex: 1 1 auto;
+    }
+}
+
+.Header {
+    .navbar {
+        &-brand {
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+    }
+}
+
+.Footer {
+    .text-muted {
+        a {
+            text-decoration: none;
+            color: inherit;
+
+            transition: color .2s;
+
+            &:hover, &:active, &:focus {
+                color: #bbb;
+            }
+        }
+    }
+}

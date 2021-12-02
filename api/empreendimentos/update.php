@@ -22,19 +22,20 @@
     $empre->nome = $data->nome;
     $empre->endereco = $data->endereco;
     $empre->area_cabana = $data->area_cabana;
+    $empre->deleted = $data->deleted;
     $empre->logo->id = $data->logo_id;
     $empre->cover->id = $data->cover_id;
 
     if($empre->update()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Empreendimento updated.'
+            'message' => 'Empreendimento atualizado.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Empreendimento not updated.'
+            'message' => 'Erro ao atualizar empreendimento.'
         ]);
 
     }

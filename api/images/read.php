@@ -46,6 +46,6 @@
         // Nothing found
         echo json_encode([
             'success' => false,
-            'message' => 'No images found.'
+            'message' => 'Nenhuma imagem foi encontrada.'
         ]);
     }

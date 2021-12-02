@@ -36,6 +36,7 @@
                 'caption' => $empre->cover->caption,
             ],
             'updated_at' => $empre->updated_at,
+            'deleted' => $empre->deleted,
         ];
     
         // Make JSON
@@ -44,6 +45,6 @@
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Empreendimento not found.'
+            'message' => 'Empreendimento não encontrado.'
         ]);
     }

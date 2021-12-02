@@ -26,13 +26,13 @@
     if($image->update()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Image updated.'
+            'message' => 'Imagem atualizada.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Image not updated.'
+            'message' => 'Erro ao atualizar imagem.'
         ]);
 
     }

@@ -23,13 +23,13 @@
     if($empre->delete()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Empreendimento deleted.'
+            'message' => 'Empreendimento excluído com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Empreendimento not deleted.'
+            'message' => 'Erro ao excluir empreendimento.'
         ]);
 
     }

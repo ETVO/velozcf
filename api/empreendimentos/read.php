@@ -43,6 +43,7 @@
                     'caption' => $cover_caption,
                 ],
                 'updated_at' => $updated_at,
+                'deleted' => $deleted,
             ];
 
             // Push to data array
@@ -56,6 +57,6 @@
         // Nothing found
         echo json_encode([
             'success' => false,
-            'message' => 'No empreendimentos found.'
+            'message' => 'Nenhum empreendimento foi encontrado.'
         ]);
     }

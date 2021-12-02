@@ -28,13 +28,13 @@
                 'id' => $image->id
             ],
             'success' => true,
-            'message' => 'Image created.'
+            'message' => 'Imagem criada com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Image not created.'
+            'message' => 'Erro ao criar imagem.'
         ]);
 
     }

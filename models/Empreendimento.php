@@ -32,6 +32,7 @@
                     e.endereco,
                     e.area_cabana,
                     e.updated_at,
+                    e.deleted,
                     e.logo_id,
                     logo.url as logo_url,
                     logo.caption as logo_caption,
@@ -66,6 +67,7 @@
                     e.endereco,
                     e.area_cabana,
                     e.updated_at,
+                    e.deleted,
                     e.logo_id,
                     logo.url as logo_url,
                     logo.caption as logo_caption,
@@ -109,6 +111,7 @@
                 $this->cover->caption = $row['cover_caption'];
                 
                 $this->updated_at = $row['updated_at'];
+                $this->deleted = $row['deleted'];
                 return true;
             }
 
@@ -131,11 +134,11 @@
             $stmt = $this->conn->prepare($query);
 
             // Clean data
-            $this->nome = ($this->nome != '') ? htmlspecialchars(strip_tags($this->nome)) : null;
-            $this->endereco = ($this->endereco != '') ? htmlspecialchars(strip_tags($this->endereco)) : null;
-            $this->area_cabana = ($this->area_cabana != '') ? htmlspecialchars(strip_tags($this->area_cabana)) : null;
-            $this->logo->id = ($this->logo->id != '') ? htmlspecialchars(strip_tags($this->logo->id)) : null;
-            $this->cover->id = ($this->cover->id != '') ? htmlspecialchars(strip_tags($this->cover->id)) : null;
+            $this->nome = ($this->nome !== '') ? htmlspecialchars(strip_tags($this->nome)) : null;
+            $this->endereco = ($this->endereco !== '') ? htmlspecialchars(strip_tags($this->endereco)) : null;
+            $this->area_cabana = ($this->area_cabana !== '') ? htmlspecialchars(strip_tags($this->area_cabana)) : null;
+            $this->logo->id = ($this->logo->id !== '') ? htmlspecialchars(strip_tags($this->logo->id)) : null;
+            $this->cover->id = ($this->cover->id !== '') ? htmlspecialchars(strip_tags($this->cover->id)) : null;
 
             // Bind params
             $stmt->bindParam(':nome', $this->nome);
@@ -164,7 +167,8 @@
                     endereco = IFNULL(:endereco, endereco),
                     area_cabana = IFNULL(:area_cabana, area_cabana),
                     logo_id = IFNULL(:logo_id, logo_id),
-                    cover_id = IFNULL(:cover_id, cover_id)
+                    cover_id = IFNULL(:cover_id, cover_id),
+                    deleted = IFNULL(:deleted, deleted)
                 WHERE 
                     id = :id
             ";
@@ -173,12 +177,13 @@
             $stmt = $this->conn->prepare($query);
 
             // Clean data
-            $this->nome = ($this->nome != '') ? htmlspecialchars(strip_tags($this->nome)) : null;
-            $this->endereco = ($this->endereco != '') ? htmlspecialchars(strip_tags($this->endereco)) : null;
-            $this->area_cabana = ($this->area_cabana != '') ? htmlspecialchars(strip_tags($this->area_cabana)) : null;
-            $this->logo->id = ($this->logo->id != '') ? htmlspecialchars(strip_tags($this->logo->id)) : null;
-            $this->cover->id = ($this->cover->id != '') ? htmlspecialchars(strip_tags($this->cover->id)) : null;
-            $this->id = ($this->id != '') ? htmlspecialchars(strip_tags($this->id)) : null;
+            $this->nome = (!empty($this->nome)) ? htmlspecialchars(strip_tags($this->nome)) : null;
+            $this->endereco = (!empty($this->endereco)) ? htmlspecialchars(strip_tags($this->endereco)) : null;
+            $this->area_cabana = (!empty($this->area_cabana)) ? htmlspecialchars(strip_tags($this->area_cabana)) : null;
+            $this->logo->id = (!empty($this->logo->id)) ? htmlspecialchars(strip_tags($this->logo->id)) : null;
+            $this->cover->id = (!empty($this->cover->id)) ? htmlspecialchars(strip_tags($this->cover->id)) : null;
+            $this->deleted = ($this->deleted !== '') ? htmlspecialchars(strip_tags($this->deleted)) : null;
+            $this->id = (!empty($this->id)) ? htmlspecialchars(strip_tags($this->id)) : null;
 
             // Bind params
             $stmt->bindParam(':nome', $this->nome);
@@ -186,6 +191,7 @@
             $stmt->bindParam(':area_cabana', $this->area_cabana);
             $stmt->bindParam(':logo_id', $this->logo->id);
             $stmt->bindParam(':cover_id', $this->cover->id);
+            $stmt->bindParam(':deleted', $this->deleted);
             $stmt->bindParam(':id', $this->id);
             
             // Execute query
@@ -200,14 +206,21 @@
 
         // Delete empreendimento
         public function delete() {
+            
             // Create query
-            $query = "DELETE FROM {$this->table} WHERE id = :id";
+            $query = "UPDATE {$this->table}
+                SET
+                    deleted = 1
+                WHERE 
+                    id = :id
+            ";
+            // $query = "DELETE FROM {$this->table} WHERE id = :id";
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
             // Clean data
-            $this->id = ($this->id != '') ? htmlspecialchars(strip_tags($this->id)) : null;
+            $this->id = ($this->id !== '') ? htmlspecialchars(strip_tags($this->id)) : null;
 
             // Bind data
             $stmt->bindParam(':id', $this->id);	

@@ -23,13 +23,13 @@
     if($image->delete()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Image deleted.'
+            'message' => 'Image excluída com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Image not deleted.'
+            'message' => 'Erro ao excluir imagem.'
         ]);
 
     }
