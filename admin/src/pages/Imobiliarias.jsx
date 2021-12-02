@@ -9,7 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL
 export default function Imobiliarias() {
 
     return (
-        <Container className='Imobiliarias my-5 col-xl-9'>
+        <Container className='Imobiliarias my-5'>
             <h1 className='title'>Imobiliarias</h1>
 
         </Container>

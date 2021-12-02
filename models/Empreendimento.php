@@ -208,13 +208,13 @@
         public function delete() {
             
             // Create query
-            $query = "UPDATE {$this->table}
-                SET
-                    deleted = 1
-                WHERE 
-                    id = :id
-            ";
-            // $query = "DELETE FROM {$this->table} WHERE id = :id";
+            // $query = "UPDATE {$this->table}
+            //     SET
+            //         deleted = 1
+            //     WHERE 
+            //         id = :id
+            // ";
+            $query = "DELETE FROM {$this->table} WHERE id = :id";
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);

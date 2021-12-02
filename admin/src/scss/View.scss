@@ -5,7 +5,7 @@
             cursor: pointer;
 
             span::before {
-                transition: transform .8s ease-out;
+                transition: transform .5s ease-out;
             }
 
             &.reload:hover {
@@ -38,7 +38,8 @@
     
         &.show-deleted {
             tr.deleted {
-                display: unset;
+                background-color: rgba(255, 0, 0, 0.15);
+                display: table-row;
             }
         }
     }
@@ -66,31 +67,38 @@
 .Single { 
     .single-inner {
 
-        padding: .5rem 1rem;
+        > * {
+            padding: 0 1rem 1rem;
+        }
 
         .edit {
             max-width: 600px;
         }
 
-        form {
-            .form-label {
-                font-weight: 600;
-                font-size: .875rem;
-                margin-bottom: .25rem;
+        .options {
+            margin-left: auto;
+            max-width: 300px;
+        }
+    }
+
+    form {
+        .form-label {
+            font-weight: 600;
+            font-size: .875rem;
+            margin-bottom: .25rem;
+        }
+    
+        .form-control, .form-select {
+            border: solid 1px #B6B6E2;
+            border-radius: 5px; 
+    
+            &::placeholder {
+                color: #4C516F;
             }
+        }
         
-            .form-control, .form-select {
-                border: solid 1px #B6B6E2;
-                border-radius: 5px; 
-        
-                &::placeholder {
-                    color: #4C516F;
-                }
-            }
-            
-            .form-row {
-                margin-bottom: .625rem;
-            }
+        .form-row {
+            margin-bottom: .625rem;
         }
     }
 }

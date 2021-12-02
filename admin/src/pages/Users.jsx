@@ -9,7 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL
 export default function Users() {
 
     return (
-        <Container className='Users my-5 col-xl-9'>
+        <Container className='Users my-5'>
             <h1 className='title'>Usuários</h1>
 
         </Container>

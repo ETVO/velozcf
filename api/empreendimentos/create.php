@@ -21,8 +21,8 @@
     $empre->nome = $data->nome;
     $empre->endereco = $data->endereco;
     $empre->area_cabana = $data->area_cabana;
-    $empre->logo->id = $data->logo_id;
-    $empre->cover->id = $data->cover_id;
+    $empre->logo->id = (isset($data->logo_id)) ? $data->logo_id : $data->logo->id;
+    $empre->cover->id = (isset($data->cover_id)) ? $data->cover_id : $data->cover->id;
 
     if($empre->create()) {
         echo json_encode([

@@ -9,13 +9,13 @@ const useGet = (url) => {
         const fetchData = async () => {
             setLoading(true)
 
-            try {   
+            try {
                 const res = await fetch(url)
                 const json = await res.json()
 
                 setData(json)
                 setLoading(false)
-            } catch(error) {
+            } catch (error) {
                 setError(error)
                 setLoading(false)
             }

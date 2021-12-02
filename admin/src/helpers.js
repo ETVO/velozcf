@@ -6,9 +6,53 @@ export async function fetchImage(id) {
 
     const data = await response.json()
 
-    if(data.statusCode === 400){
+    if(data.success === false){
         return null
     }  
+
+    return data
+}
+
+export async function apiCreate(endpoint, fields) {
+
+    const response = await fetch(API_URL + endpoint + '/create.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fields)
+    })
+
+    const data = await response.json()
+
+    return data
+}
+
+export async function apiUpdate(endpoint, fields) {
+
+    const response = await fetch(API_URL + endpoint + '/update.php', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fields)
+    })
+
+    const data = await response.json()
+
+    return data
+}
+
+export async function apiDelete(endpoint, id) {
+    const response = await fetch(API_URL + endpoint + '/delete.php', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id })
+    })
+
+    const data = await response.json()
 
     return data
 }

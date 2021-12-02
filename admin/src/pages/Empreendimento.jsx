@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
-import { handleFormChange } from '../helpers'
+import { handleFormChange, apiCreate, apiUpdate, apiDelete } from '../helpers'
 
 import '../scss/View.scss'
 
@@ -13,20 +13,12 @@ const API_URL = process.env.REACT_APP_API_URL
 
 async function deleteEmpre(id) {
 
-    if (window.confirm('Deseja realmente excluir este empreendimento?')) {
-        const response = await fetch(API_URL + 'empreendimentos/delete.php', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: id })
+    if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
+        apiDelete('empreendimentos', id).then(res => {
+            alert(res.message);
+            window.location.href = '/empreendimentos'
         })
 
-        const data = await response.json()
-
-        alert(data.message)
-
-        window.location.href = ''
     }
 }
 
@@ -57,6 +49,7 @@ function Empreendimento() {
     let editMode = (typeof id !== 'undefined');
 
     const [fields, setFields] = useState(initialFields)
+    const [validated, setValidated] = useState(false);
 
     const { loading, error, data } = useGet(API_URL + 'empreendimentos/read_single.php?id=' + id);
 
@@ -76,7 +69,36 @@ function Empreendimento() {
     }
 
     const handleSubmit = (e) => {
-        return false;
+        e.preventDefault();
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.stopPropagation();
+            setValidated(true)
+        }
+        else {
+
+            if (!editMode) {
+                // submit form data
+                apiCreate('empreendimentos', fields).then(response => {
+                    if (response) {
+
+                        alert(response.message);
+                        if (response.success !== false)
+                            window.location.href = '/empreendimento/' + response.data.id
+                    }
+                })
+            }
+            else {
+                apiUpdate('empreendimentos', fields, data).then(response => {
+                    if (response) {
+
+                        alert(response.message);
+                        if (response.success !== false)
+                            window.location.href = '/empreendimento/' + response.data.id
+                    }
+                })
+            }
+        }
     }
 
     const handleChange = (e) => {
@@ -85,20 +107,35 @@ function Empreendimento() {
 
     return (
         <Container className='Empreendimento View Single my-5'>
-            <div className="d-flex flex-column flex-md-row heading">
-                <div className="d-flex m-auto ms-md-0">
-                    <h1 className='title'>{(editMode) ? 'Alterar' : 'Novo'} Empreendimento</h1>
-                    <span className='m-auto ms-3'>
-                        <Link className='icon' title='Voltar' to={backLink}>
-                            <span className='bi-arrow-left'></span> Voltar
-                        </Link>
+
+            <Form onSubmit={handleSubmit} noValidate validated={validated}>
+                <div className="d-flex flex-column flex-md-row heading">
+                    <div className="d-flex m-auto ms-md-0">
+                        <h1 className='title'>{(editMode) ? 'Alterar' : 'Novo'} Empreendimento</h1>
+                        <span className='m-auto ms-3'>
+                            <Link className='icon' title='Voltar' to={backLink}>
+                                <span className='bi-arrow-left'></span> Voltar
+                            </Link>
+                        </span>
+                    </div>
+
+                    <span className='m-auto mt-2 mt-sm-auto me-md-0'>
+                        <Button variant='primary' type="submit">
+                            {(editMode) ? 'Atualizar' : 'Salvar'}
+                        </Button>
+                        <Button
+                            variant='outline-danger'
+                            className='ms-2'
+                            type="button"
+                            disabled={(!editMode)}
+                            onClick={() => { if (editMode) deleteEmpre(data.id) }}>
+                            Excluir
+                        </Button>
                     </span>
                 </div>
-            </div>
 
-            <Row className='single-inner'>
-                <Col className='edit'>
-                    <Form onSubmit={handleSubmit}>
+                <Row className='single-inner'>
+                    <Col className='edit'>
 
                         <Form.Group className='form-row' controlId="nome">
                             <Form.Label>Nome:</Form.Label>
@@ -131,12 +168,12 @@ function Empreendimento() {
                                 as="textarea"
                                 required
                             />
-                            <Form.Text muted>
-                                Texto que deverá ser exibido na seção "Área da Cabana" do contrato.
-                            </Form.Text>
                             <Form.Control.Feedback type="invalid">
                                 {errors.requiredText}
                             </Form.Control.Feedback>
+                            <Form.Text muted>
+                                Texto que deverá ser exibido na seção "Área da Cabana" do contrato.
+                            </Form.Text>
                         </Form.Group>
 
                         <div className="d-flex mt-4 m-auto ms-md-0">
@@ -164,7 +201,7 @@ function Empreendimento() {
                             setFields={setFields}>
                         </ImageControl>
 
-                        
+
 
                         <div className="d-flex mt-4 m-auto ms-md-0">
                             <h3 className='mb-0'>Cabanas</h3>
@@ -173,18 +210,30 @@ function Empreendimento() {
 
                         <div className="CabanaControl ms-2">
                             <h5>Cabana 1</h5>
-                            
+
                             <div className="d-flex mt-4 m-auto ms-md-0">
                                 <h6 className='mb-0'>Cotas</h6>
                             </div>
                             <hr className='mt-2' />
                         </div>
 
-                    </Form>
-                </Col>
-                <Col className='options'>
-                </Col>
-            </Row>
+                    </Col>
+                    <Col className='options'>
+
+                        <div className="d-flex flex-column">
+                            <div className="ms-auto">
+                                {(editMode && data) ? (
+                                    <div className='mt-2 text-end'>
+                                        <small className='text-muted'>Última atualização:</small>
+                                        <div>{moment(data.updated_at).format('DD/MM/YYYY HH:mm')}</div>
+                                    </div>
+                                ) : ''}
+                            </div>
+                        </div>
+
+                    </Col>
+                </Row>
+            </Form>
         </Container>
     )
 }

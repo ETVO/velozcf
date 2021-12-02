@@ -9,7 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL
 export default function Propostas() {
 
     return (
-        <Container className='Propostas my-5 col-xl-9'>
+        <Container className='Propostas my-5'>
             <h1 className='title'>Propostas</h1>
 
         </Container>
