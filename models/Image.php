@@ -61,7 +61,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Bind ID
-            $stmt->bindParam(1, sanitizeNumber($this->id));
+            $stmt->bindParam(1, sanitizeInt($this->id));
 
             // Execute stmt
             $stmt->execute();
@@ -161,7 +161,7 @@
 
             // Sanitize data & Bind params
             $stmt->bindParam(':caption', sanitizeText($this->caption));
-            $stmt->bindParam(':id', sanitizeNumber($this->id));
+            $stmt->bindParam(':id', sanitizeInt($this->id));
 
             // Execute query
             if ($stmt->execute()) {
@@ -181,7 +181,7 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            $this->id = sanitizeNumber($this->id);
+            $this->id = sanitizeInt($this->id);
 
             $deleted = false;
 

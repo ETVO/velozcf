@@ -40,13 +40,29 @@
     }
 
     function sanitizeText($value) {
-        return (!empty($value)) ? htmlspecialchars(strip_tags(strval($value))) : null;
+        return 
+            (!empty($value)) 
+            ? htmlspecialchars(strip_tags(strval($value)))
+            : null;
     }
     
-    function sanitizeNumber($value) {
-        return (!empty($value)) ? htmlspecialchars(strip_tags(strval($value))) : null;
+    function sanitizeInt($value) {
+        return 
+            (!empty($value)) 
+            ? intval(htmlspecialchars(strip_tags(strval($value)))) 
+            : null;
+    }
+
+    function sanitizeFloat($value) {
+        return 
+            (!empty($value)) 
+            ? floatval(htmlspecialchars(strip_tags(strval($value)))) 
+            : null;
     }
 
     function sanitizeBoolean($value) {
-        return ($value !== '') ? htmlspecialchars(strip_tags($value)) : null;
+        return 
+            ($value !== '') 
+            ? floatval(htmlspecialchars(strip_tags(strval($value)))) 
+            : null;
     }

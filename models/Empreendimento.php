@@ -58,6 +58,43 @@
             return $stmt;
         }
 
+        // READ with Cabanas
+        public function read_cabanas() {
+            // Create query
+            $query = "SELECT 
+                    e.id,
+                    e.nome,
+                    e.endereco,
+                    e.area_cabana,
+                    e.updated_at,
+                    e.deleted,
+                    e.logo_id,
+                    logo.url as logo_url,
+                    logo.caption as logo_caption,
+                    e.cover_id,
+                    cover.url as cover_url,
+                    cover.caption as cover_caption,
+                FROM 
+                    {$this->table} e
+                LEFT JOIN
+                    images logo ON e.logo_id = logo.id
+                LEFT JOIN
+                    images cover ON e.cover_id = cover.id
+                LEFT JOIN
+                    cabanas cabana ON cabana.empreendimento = e.id
+                ORDER BY 
+                    e.updated_at DESC
+            ";
+
+            // Prepare query
+            $stmt = $this->conn->prepare($query);
+
+            // Execute statement
+            $stmt->execute();
+
+            return $stmt;
+        }
+
         // Get single empreendimento
         public function read_single() {
             // Create query
@@ -89,7 +126,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Bind ID
-            $stmt->bindParam(1, sanitizeNumber($this->id));
+            $stmt->bindParam(1, sanitizeInt($this->id));
 
             // Execute stmt
             $stmt->execute();
@@ -137,8 +174,8 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':area_cabana', sanitizeText($this->area_cabana));
-            $stmt->bindParam(':logo_id', sanitizeNumber($this->logo->id));
-            $stmt->bindParam(':cover_id', sanitizeNumber($this->cover->id));
+            $stmt->bindParam(':logo_id', sanitizeInt($this->logo->id));
+            $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
 
             // Execute query
             if($stmt->execute()) {
@@ -173,10 +210,10 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':area_cabana', sanitizeText($this->area_cabana));
-            $stmt->bindParam(':logo_id', sanitizeNumber($this->logo->id));
-            $stmt->bindParam(':cover_id', sanitizeNumber($this->cover->id));
+            $stmt->bindParam(':logo_id', sanitizeInt($this->logo->id));
+            $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
             $stmt->bindParam(':deleted', sanitizeBoolean($this->deleted));
-            $stmt->bindParam(':id', sanitizeNumber($this->id));
+            $stmt->bindParam(':id', sanitizeInt($this->id));
             
             // Execute query
             if($stmt->execute()) {
@@ -204,7 +241,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Sanitize data & Bind params
-            $stmt->bindParam(':id', sanitizeNumber($this->id));	
+            $stmt->bindParam(':id', sanitizeInt($this->id));	
 
             // Execute query
 

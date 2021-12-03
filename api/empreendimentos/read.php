@@ -28,22 +28,22 @@
             extract($row);
 
             $empre_item = [
-                'id' => $id,
+                'id' => intval($id),
                 'nome' => $nome,
                 'endereco' => $endereco,
                 'area_cabana' => $area_cabana,
                 'logo' => [
-                    'id' => $logo_id,
+                    'id' => intval($logo_id),
                     'url' => $logo_url,
                     'caption' => $logo_caption,
                 ],
                 'cover' => [
-                    'id' => $cover_id,
+                    'id' => intval($cover_id),
                     'url' => $cover_url,
                     'caption' => $cover_caption,
                 ],
                 'updated_at' => $updated_at,
-                'deleted' => $deleted,
+                'deleted' => boolval($deleted),
             ];
 
             // Push to data array

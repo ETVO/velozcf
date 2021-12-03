@@ -28,10 +28,10 @@
             extract($row);
 
             $img_item = [
-                'id' => $id,
+                'id' => intval($id),
                 'url' => $url,
                 'caption' => $caption,
-                'size' => $size,
+                'size' => intval($size),
                 'updated_at' => $updated_at,
             ];
 

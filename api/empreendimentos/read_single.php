@@ -21,22 +21,22 @@
     if($empre->read_single()) {
 
         $empre_arr = [
-            'id' => $empre->id,
+            'id' => intval($empre->id),
             'nome' => $empre->nome,
             'endereco' => $empre->endereco,
             'area_cabana' => $empre->area_cabana,
             'logo' => [
-                'id' => $empre->logo->id,
+                'id' => intval($empre->logo->id),
                 'url' => $empre->logo->url,
                 'caption' => $empre->logo->caption,
             ],
             'cover' => [
-                'id' => $empre->cover->id,
+                'id' => intval($empre->cover->id),
                 'url' => $empre->cover->url,
                 'caption' => $empre->cover->caption,
             ],
             'updated_at' => $empre->updated_at,
-            'deleted' => $empre->deleted,
+            'deleted' => boolval($empre->deleted),
         ];
     
         // Make JSON

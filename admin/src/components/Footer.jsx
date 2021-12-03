@@ -5,7 +5,7 @@ import moment from 'moment'
 
 export default function Footer() {
     return (
-        <footer className='Footer px-4 py-2 text-light bg-dark d-flex text-uppercase'>
+        <footer className='Footer fixed-bottom px-4 py-2 text-light bg-dark d-flex text-uppercase'>
             <small className='m-auto text-center'>
                 {moment().format('Y')} © CF Negócios Imobiliários.&nbsp;<br className='d-block d-sm-none'/>
                 <span className="text-muted">Desenvolvido por <a href='https://imobmark.com.br/' rel="noreferrer" target='_blank'>Imobmark</a></span>

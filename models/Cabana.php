@@ -30,21 +30,23 @@
         public function read() {
             // Create query
             $query = "SELECT 
-                    id, 
-                    nome,
-                    tamanho,
-                    quartos,
-                    valor_base,
-                    disponivel,
-                    reservada,
-                    galeria,
-                    id_mapa,
-                    empreendimento,
-                    updated_at
+                    c.id, 
+                    c.nome,
+                    c.tamanho,
+                    c.quartos,
+                    c.valor_base,
+                    c.disponivel,
+                    c.reservada,
+                    c.galeria,
+                    c.id_mapa,
+                    e.id as empre_id,
+                    e.nome as empre_nome
                 FROM 
-                    {$this->table}
+                    {$this->table} c
+                LEFT JOIN 
+                    empreendimentos e ON c.empreendimento = e.id
                 ORDER BY 
-                    updated_at DESC
+                    c.nome DESC
             ";
 
             if($this->empreendimento->id) {
@@ -60,7 +62,7 @@
             if($this->empreendimento->id) {
                 // Bind ID
                 // Sanitize data & Bind params
-                $stmt->bindParam(':empreendimento', sanitizeNumber($this->empreendimento->id));
+                $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));
             }
 
             // Execute statement
@@ -82,8 +84,7 @@
                     reservada,
                     galeria,
                     id_mapa,
-                    empreendimento,
-                    updated_at
+                    empreendimento
                 FROM 
                     {$this->table}
                 WHERE
@@ -95,7 +96,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Bind ID
-            $stmt->bindParam(1, sanitizeNumber($this->id));
+            $stmt->bindParam(1, sanitizeInt($this->id));
 
             // Execute stmt
             $stmt->execute();
@@ -115,16 +116,17 @@
                 $this->galeria = $row['galeria'];
                 $this->id_mapa = $row['id_mapa'];
                 
-                $this->empreendimento = $row['empreendimento'];
-                
-                $this->updated_at = $row['updated_at'];
+                $this->empreendimento->id = $row['empreendimento'];
+
+                $this->empreendimento = $this->empreendimento->read_single();
+
                 return true;
             }
 
             return false;
         }
 
-        // Create empreendimento
+        // CREATE
         public function create() {
             // Create query
             $query = "INSERT INTO {$this->table}
@@ -146,11 +148,11 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':tamanho', sanitizeText($this->tamanho));
             $stmt->bindParam(':quartos', sanitizeText($this->quartos));
-            $stmt->bindParam(':valor_base', sanitizeNumber($this->valor_base));
+            $stmt->bindParam(':valor_base', sanitizeFloat($this->valor_base));
             $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
             $stmt->bindParam(':galeria', sanitizeText($this->galeria));
             $stmt->bindParam(':id_mapa', sanitizeText($this->id_mapa));
-            $stmt->bindParam(':empreendimento', sanitizeNumber($this->empreendimento->id));
+            $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));
             
             // Execute query
             if($stmt->execute()) {
@@ -177,7 +179,7 @@
                     disponivel = IFNULL(:disponivel, disponivel),
                     galeria = IFNULL(:galeria, galeria),
                     id_mapa = IFNULL(:id_mapa, id_mapa),
-                    empreendimento = IFNULL(:empreendimento, empreendimento),
+                    empreendimento = IFNULL(:empreendimento, empreendimento)
                 WHERE 
                     id = :id
             ";
@@ -189,13 +191,13 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':tamanho', sanitizeText($this->tamanho));
             $stmt->bindParam(':quartos', sanitizeText($this->quartos));
-            $stmt->bindParam(':valor_base', sanitizeNumber($this->valor_base));
+            $stmt->bindParam(':valor_base', sanitizeFloat($this->valor_base));
             $stmt->bindParam(':reservada', sanitizeBoolean($this->reservada));
             $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
             $stmt->bindParam(':galeria', sanitizeText($this->galeria));
             $stmt->bindParam(':id_mapa', sanitizeText($this->id_mapa));
-            $stmt->bindParam(':empreendimento', sanitizeNumber($this->empreendimento->id));
-            $stmt->bindParam(':id', sanitizeNumber($this->id));
+            $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));
+            $stmt->bindParam(':id', sanitizeInt($this->id));
             
             // Execute query
             if($stmt->execute()) {
@@ -215,7 +217,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Sanitize data & Bind params
-            $stmt->bindParam(':id', sanitizeNumber($this->id));	
+            $stmt->bindParam(':id', sanitizeInt($this->id));	
 
             // Execute query
 

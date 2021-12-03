@@ -1,8 +1,31 @@
-const API_URL = process.env.REACT_APP_API_URL
+const API_URL = process.env.REACT_APP_API_URL;
+
+export const errors = {
+    requiredText: 'Campo obrigatório'
+}
+
+// Format number with dots between the thousands 
+export function formatNumber(x, isMoney = false) {
+    x = parseFloat(x);
+    if(isMoney) x = x.toFixed(2)
+    x = x.toString()
+    x = x.replace('.', ',')
+    x = x.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    return x
+}
 
 export async function fetchImage(id) {
 
     const response = await fetch(API_URL + 'images/read_single.php?id=' + id)
+
+    const data = await response.json()
+
+    return data
+}
+
+export async function apiReadSingle(endpoint, id) {
+
+    const response = await fetch(API_URL + endpoint + '/read_single.php?id=' + id)
 
     const data = await response.json()
 
@@ -56,8 +79,8 @@ export async function apiDelete(endpoint, id) {
 export function handleFormChange(e, fields, setFields) {
     e.preventDefault()
     let { value, id } = e.target
-    
-    fieldsChange(value, id, fields, setFields)
+
+    fieldsChange(value, id, fields, setFields)    
 }
 
 export function fieldsChange(value, id, fields, setFields) {

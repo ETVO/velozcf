@@ -5,7 +5,8 @@ import moment from 'moment'
 
 import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
-import { handleFormChange, apiCreate, apiUpdate, apiDelete } from '../helpers'
+import EditHeading from '../components/EditHeading'
+import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete } from '../helpers'
 
 import '../scss/View.scss'
 
@@ -34,10 +35,6 @@ const initialFields = {
     },
 };
 
-const errors = {
-    requiredText: 'Campo obrigatório'
-}
-
 const archiveLink = '/empreendimentos';
 const imagesLink = '/images';
 const endpoint = 'empreendimentos';
@@ -45,7 +42,6 @@ const endpoint = 'empreendimentos';
 function Empreendimento() {
 
     const { id } = useParams()
-
 
     let editMode = (typeof id !== 'undefined');
 
@@ -77,7 +73,6 @@ function Empreendimento() {
             setValidated(true)
         }
         else {
-
             if (!editMode) {
                 // submit form data
                 apiCreate(endpoint, fields).then(response => {
@@ -110,30 +105,23 @@ function Empreendimento() {
         <Container className='Empreendimento View Single my-5'>
 
             <Form onSubmit={handleSubmit} noValidate validated={validated}>
-                <div className="d-flex flex-column flex-md-row heading">
-                    <div className="d-flex m-auto ms-md-0">
-                        <h1 className='title'>{(editMode) ? 'Alterar' : 'Novo'} Empreendimento</h1>
-                        <span className='m-auto ms-3'>
-                            <Link className='icon' title='Voltar' to={archiveLink}>
-                                <span className='bi-arrow-left'></span> Voltar
-                            </Link>
-                        </span>
-                    </div>
 
-                    <span className='m-auto mt-2 mt-sm-auto me-md-0'>
-                        <Button variant='primary' type="submit">
-                            {(editMode) ? 'Atualizar' : 'Salvar'}
-                        </Button>
-                        <Button
-                            variant='outline-danger'
-                            className='ms-2'
-                            type="button"
-                            disabled={(!editMode)}
-                            onClick={() => { if (editMode) deleteEmpre(data.id) }}>
-                            Excluir
-                        </Button>
-                    </span>
-                </div>
+                <EditHeading
+                    title={((editMode) ? 'Alterar' : 'Novo') + ' Empreendimento'}
+                    iconLink={archiveLink}
+                >
+                    <Button variant='primary' type="submit">
+                        {(editMode) ? 'Atualizar' : 'Salvar'}
+                    </Button>
+                    <Button
+                        variant='outline-danger'
+                        className='ms-2'
+                        type="button"
+                        disabled={(!editMode)}
+                        onClick={() => { if (editMode) deleteEmpre(data.id) }}>
+                        Excluir
+                    </Button>
+                </EditHeading>
 
                 <Row className='single-inner'>
                     <Col className='edit'>
@@ -180,11 +168,11 @@ function Empreendimento() {
                         <div className="d-flex mt-4 m-auto ms-md-0">
                             <h3 className='mb-0'>Imagens</h3>
                             <span className='m-auto ms-2'>
-                                <Link 
-                                    className='icon text-decoration-none' 
-                                    title='Consultar imagens' 
+                                <Link
+                                    className='icon text-decoration-none'
+                                    title='Consultar imagens'
                                     to={imagesLink}
-                                    target="_blank" rel="noopener noreferrer" 
+                                    target="_blank" rel="noopener noreferrer"
                                 >
                                     <span className='bi-arrow-up-right'></span>
                                 </Link>
@@ -206,22 +194,6 @@ function Empreendimento() {
                             fields={fields}
                             setFields={setFields}>
                         </ImageControl>
-
-
-
-                        <div className="d-flex mt-4 m-auto ms-md-0">
-                            <h3 className='mb-0'>Cabanas</h3>
-                        </div>
-                        <hr className='mt-2' />
-
-                        <div className="CabanaControl ms-2">
-                            <h5>Cabana 1</h5>
-
-                            <div className="d-flex mt-4 m-auto ms-md-0">
-                                <h6 className='mb-0'>Cotas</h6>
-                            </div>
-                            <hr className='mt-2' />
-                        </div>
 
                     </Col>
                     <Col className='options'>

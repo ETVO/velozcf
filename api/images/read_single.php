@@ -21,10 +21,10 @@
     if($image->read_single()) {
 
         $img_arr = [
-            'id' => $image->id,
+            'id' => intval($image->id),
             'url' => $image->url,
             'caption' => $image->caption,
-            'size' => $image->size,
+            'size' => intval($image->size),
             'updated_at' => $image->updated_at,
         ];
     
