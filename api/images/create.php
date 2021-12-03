@@ -4,23 +4,22 @@
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
     header('Access-Control-Allow-Methods: POST');
-    header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
-
+    
+    include_once '../functions.php';
     include_once '../../config/Database.php';
     include_once '../../models/Image.php';
-
+    
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
-
+    
     // Instantiate request
     $image = new Image($db);
 
-    $data = json_decode(file_get_contents('php://input'));
-
-    $image->url = $data->url;
-    $image->caption = $data->caption;
-    $image->size = $data->size;
+    $image->caption = $_POST['caption'];
+    $image->url = $_FILES['file']['tmp_name'];
+    $image->size = $_FILES['file']['size'];
+    $image->filename = $_FILES['file']['name'];
 
     if($image->create()) {
         echo json_encode([

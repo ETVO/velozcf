@@ -7,6 +7,8 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import Empreendimentos from './pages/Empreendimentos'
 import Empreendimento from './pages/Empreendimento'
+import Images from './pages/Images'
+import Image from './pages/Image'
 import Imobiliarias from './pages/Imobiliarias'
 import Propostas from './pages/Propostas'
 import Users from './pages/Users'
@@ -28,6 +30,9 @@ function App() {
           <Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
           <Route exact path="/empreendimento" element={(<Empreendimento />)}></Route>
           <Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
+          <Route exact path="/images" element={(<Images />)}></Route>
+          <Route exact path="/image" element={(<Image />)}></Route>
+          <Route exact path="/image/:id" element={(<Image />)}></Route>
           <Route exact path="/propostas" element={(<Propostas />)}></Route>
           <Route exact path="/users" element={(<Users />)}></Route>
           <Route exact path="/imobiliarias" element={(<Imobiliarias />)}></Route>

@@ -59,8 +59,13 @@ export async function apiDelete(endpoint, id) {
 
 export function handleFormChange(e, fields, setFields) {
     e.preventDefault()
-    let formValues = JSON.parse(JSON.stringify(fields))
     let { value, id } = e.target
+    
+    fieldsChange(value, id, fields, setFields)
+}
+
+export function fieldsChange(value, id, fields, setFields) {
+    let formValues = JSON.parse(JSON.stringify(fields))
 
     // If there are dots in the input id, use it to 
     // assign the value to a property one-level deeper
@@ -74,6 +79,32 @@ export function handleFormChange(e, fields, setFields) {
     // Else, just assign it normally
     else {
         formValues[id] = value;
+    }
+
+    setFields(formValues)
+}
+
+export function fieldsChangeArray(values, ids, fields, setFields) {
+    let formValues = JSON.parse(JSON.stringify(fields))
+
+    for(var i = 0; i < ids.length; i++) {
+        let id = ids[i];
+        
+        // If there are dots in the input id, use it to 
+        // assign the value to a property one-level deeper
+        if (id.indexOf('.') !== -1) {
+            let ids = id.split('.')
+            let id1 = ids[0]
+            let id2 = ids[1]
+
+            let value = values[id1][id2];
+            formValues[id1][id2] = value;
+        }
+        // Else, just assign it normally
+        else {
+            let value = values[id];
+            formValues[id] = value;
+        }
     }
 
     setFields(formValues)

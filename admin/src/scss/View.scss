@@ -16,16 +16,18 @@
         }
     }
 
+    .actions {
+        span {
+            cursor: pointer;
+        }
+    }
+    
     .table {
         tbody {
-    
             .actions {
                 width: 80px;
-    
-                span {
-                    cursor: pointer;
-                }
             }
+    
         }
     
         td, th {
@@ -44,6 +46,7 @@
         }
     }
 }
+
 .Empreendimentos {
     .table {
         tbody {
@@ -61,6 +64,61 @@
                 width: 200px;
             }
         }
+    }
+}
+
+.Images {
+    .row {
+        .col {
+            width: 160px;
+            padding: 0;
+            margin: .5rem;
+    
+            .card {
+                border: none;
+                border-radius: .25rem;
+                overflow: hidden;
+                cursor: pointer;
+
+                .card-img-top {
+                    margin: auto;
+                    width: 160px;
+                    height: 160px;
+                    object-fit: cover;
+                }
+
+                .card-body {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(white, .8);
+                    padding: .5rem;
+                    opacity: 0;
+
+                    transition: opacity .1s;
+
+                    padding: .25rem .75rem;
+                    margin: .25rem;
+                    border-radius: .25rem;
+                }
+
+                .image-id {
+                    position: absolute;
+                    background-color: rgba(white, .8);
+                    
+                    padding: .25rem .5rem;
+                    margin: .25rem;
+                    border-radius: .25rem;
+                }
+
+                &:hover, &:focus {
+                    .card-body {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
     }
 }
 

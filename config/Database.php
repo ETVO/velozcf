@@ -1,6 +1,6 @@
 <?php
-    require_once('env_constants.php');
-    error_reporting(0);
+    require_once("env_constants.php");
+    error_reporting($_ENV['ERROR_REPORTING'] ?? 0);
 
     class Database {
         // DB params
@@ -11,7 +11,6 @@
         private $conn;
 
         public function __construct() {
-            
         }
 
         // DB connect
