@@ -26,15 +26,15 @@ CREATE TABLE empreendimentos (
 DROP TABLE IF EXISTS cabanas;
 CREATE TABLE cabanas (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255),
+    nome VARCHAR(255) NOT NULL,
     tamanho VARCHAR(255),
     quartos VARCHAR(255),
-    valor_base DECIMAL(10,2),
+    valor_base DECIMAL(10,2) NOT NULL,
     disponivel BOOLEAN DEFAULT 1,
     reservada BOOLEAN DEFAULT 0,
     galeria VARCHAR(255),
     id_mapa VARCHAR(255),
-    empreendimento INT(11) UNSIGNED,
+    empreendimento INT(11) UNSIGNED NOT NULL,
     FOREIGN KEY empreendimento_fk (empreendimento) REFERENCES empreendimentos(id) ON DELETE CASCADE
 );
 

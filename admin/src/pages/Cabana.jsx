@@ -14,12 +14,12 @@ const { forwardRef, useRef, useImperativeHandle } = React;
 
 const API_URL = process.env.REACT_APP_API_URL
 
-async function deleteEmpre(id) {
+async function deleteCabana(id) {
 
     if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
         apiDelete(endpoint, id).then(res => {
             alert(res.message);
-            window.location.href = '/empreendimentos'
+            window.location.href = archiveLink;
         })
 
     }
@@ -31,13 +31,17 @@ const initialFields = {
     quartos: '',
     valor_base: '',
     id_mapa: '',
-    galeria: [],
-    empreendimento: 0
+    galeria: '',
+    disponivel: 1,
+    reservada: 0,
+    empreendimento_id: 0,
 };
 
-const archiveLink = '/empreendimentos';
+const archiveLink = '/cabanas';
+const singleLink = '/cabana';
 const imagesLink = '/images';
-const endpoint = 'empreendimentos';
+const endpoint = 'cabanas';
+const empresLink = '/empreendimentos';
 
 function Cabana() {
 
@@ -79,23 +83,24 @@ function Cabana() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(e)
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
             e.stopPropagation();
             setValidated(true)
         }
         else {
-
-            cabanasRef.current.saveChanges();
-
+            
+            // cabanasRef.current.saveChanges();
+            
             if (!editMode) {
                 // submit form data
                 apiCreate(endpoint, fields).then(response => {
                     if (response) {
-
+                        
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = '/empreendimento/' + response.data.id
+                            window.location.href = singleLink + '/' + response.data.id
                     }
                 })
             }
@@ -105,7 +110,7 @@ function Cabana() {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = '/empreendimento/' + data.id
+                            window.location.href = singleLink + '/' + data.id
                     }
                 })
             }
@@ -133,17 +138,39 @@ function Cabana() {
                         className='ms-2'
                         type="button"
                         disabled={(!editMode)}
-                        onClick={() => { if (editMode) deleteEmpre(data.id) }}>
+                        onClick={() => { if (editMode) deleteCabana(data.id) }}>
                         Excluir
                     </Button>
                 </EditHeading>
-
-
 
                 <Row className='single-inner'>
                     <Col className='edit'>
 
                         <div className="static-fields">
+                            <Form.Group className='form-row' controlId="empreendimento_id">
+                                <Form.Label>Empreendimento
+                                    (<Link
+                                        title='Consultar empreendimentos'
+                                        to={empresLink}
+                                        target="_blank" rel="noopener noreferrer"
+                                    >
+                                        <small>Consultar empreendimentos</small>
+                                    </Link>):
+                                </Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    value={fields.empreendimento_id}
+                                    type="number"
+                                    min={0}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                                <Form.Text muted>
+                                    Insira o ID do Empreendimento ao qual esta cabana pertence.
+                                </Form.Text>
+                            </Form.Group>
+
                             <Form.Group className='form-row' controlId="nome">
                                 <Form.Label>Nome:</Form.Label>
                                 <Form.Control onChange={changeNome}
@@ -219,7 +246,7 @@ function Cabana() {
                                         to={imagesLink}
                                         target="_blank" rel="noopener noreferrer"
                                     >
-                                        <span className='bi-arrow-up-right'></span>
+                                        <span className='bi-arrow-up-right'></span> Consultar
                                     </Link>
                                 </span>
                             </div>
@@ -235,18 +262,21 @@ function Cabana() {
                             
                         </div>
 
-                        {/* 
+                        
                         <div className="dynamic-fields">
                             <div className="d-flex mt-4 m-auto ms-md-0">
-                                <h3 className='mb-0'>Cabanas</h3>
+                                <h3 className='mb-0'>Cotas</h3>
                             </div>
-                            <hr className='mt-2' />
+                            <hr className='mt-2 mb-2' />
 
-                            {(editMode && data) ? (
+                            <small className='text-muted'>AVISO SISTEMA VELOZ:</small>
+                            <p>O seu usuário não tem permissão para acessar esta seção.</p>
+
+                            {/* {(editMode && data) ? (
                                 <Cabanas empId={data.id} ref={cabanasRef} />
-                            ) : 'Salve as alterações para inserir cabanas.'}
+                            ) : 'Salve as alterações para inserir cabanas.'} */}
 
-                        </div> */}
+                        </div>
 
                     </Col>
                     <Col className='options'>

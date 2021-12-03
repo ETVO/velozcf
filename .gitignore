@@ -2,3 +2,4 @@
 config/env_constants.php
 vendor
 composer.lock
+public/images/

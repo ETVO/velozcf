@@ -46,7 +46,7 @@
                 LEFT JOIN 
                     empreendimentos e ON c.empreendimento = e.id
                 ORDER BY 
-                    c.nome DESC
+                    e.nome ASC
             ";
 
             if($this->empreendimento->id) {
@@ -103,7 +103,7 @@
 
             // Fetch row & set properties
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            // var_dump($row);
+            
             if($row) {
                 $this->nome = $row['nome'];
                 $this->tamanho = $row['tamanho'];
@@ -117,8 +117,6 @@
                 $this->id_mapa = $row['id_mapa'];
                 
                 $this->empreendimento->id = $row['empreendimento'];
-
-                $this->empreendimento = $this->empreendimento->read_single();
 
                 return true;
             }
@@ -135,7 +133,7 @@
                     tamanho = :tamanho,
                     quartos = :quartos,
                     valor_base = :valor_base,
-                    disponivel = :disponivel,
+                    disponivel = IFNULL(:disponivel, 1),
                     galeria = :galeria,
                     id_mapa = :id_mapa,
                     empreendimento = :empreendimento

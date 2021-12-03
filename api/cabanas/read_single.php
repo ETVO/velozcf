@@ -30,7 +30,7 @@
             'reservada' => boolval($cabana->reservada),
             'galeria' => $cabana->galeria,
             'id_mapa' => $cabana->id_mapa,
-            'empreendimento' => $cabana->empreendimento
+            'empreendimento_id' => $cabana->empreendimento->id
         ];
     
         // Make JSON

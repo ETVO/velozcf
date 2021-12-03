@@ -174,7 +174,7 @@ function Empreendimento() {
                                     to={imagesLink}
                                     target="_blank" rel="noopener noreferrer"
                                 >
-                                    <span className='bi-arrow-up-right'></span>
+                                    <span className='bi-arrow-up-right'></span> Consultar
                                 </Link>
                             </span>
                         </div>
