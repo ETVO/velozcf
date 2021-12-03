@@ -13,17 +13,16 @@ export default function ImageControl({ label, controlId, controlFeedback, requir
         let formValues = JSON.parse(JSON.stringify(fields))
         let { value, id, type } = e.target
 
-        if(type !== 'number') window.location.href = '';
+        if (type !== 'number') window.location.href = '';
 
-        if(value === '') {
+        if (value === '') {
             e.target.setAttribute('value', 0)
             value = 0
         }
 
-        if(value != 0) {
-            let imageFetch = fetchImage(value)
-            imageFetch.then(data => {
-                if(data.success === false) { // Image not found
+        if (value != 0) {
+            fetchImage(value).then(data => {
+                if (data.success === false) { // Image not found
                     formValues[id] = {
                         valid: false,
                         id: value
@@ -36,7 +35,7 @@ export default function ImageControl({ label, controlId, controlFeedback, requir
                         caption: data.caption
                     };
                 }
-    
+
                 setFields(formValues)
             })
         }
@@ -67,22 +66,22 @@ export default function ImageControl({ label, controlId, controlFeedback, requir
             </Form.Group>
             <Col lg={4} className='d-flex flex-column'>
                 {(fields[controlId].url) ? (
-                    <img 
-                        className='single mb-2' 
-                        src={fields[controlId].url} 
-                        alt={fields[controlId].caption} 
-                        title={fields[controlId].caption} 
+                    <img
+                        className='single mb-2'
+                        src={fields[controlId].url}
+                        alt={fields[controlId].caption}
+                        title={fields[controlId].caption}
                     />
                 ) : (fields[controlId].id === 0) ? (
-                        <small className='my-auto'>
-                            Sem imagem
-                        </small>
-                    ) 
+                    <small className='my-auto'>
+                        Sem imagem
+                    </small>
+                )
                     : (
                         <small className='my-auto'>
                             Imagem não existe
                         </small>
-                    ) 
+                    )
                 }
             </Col>
         </Row>

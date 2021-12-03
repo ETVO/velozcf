@@ -14,7 +14,7 @@ const API_URL = process.env.REACT_APP_API_URL
 async function deleteEmpre(id) {
 
     if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
-        apiDelete('empreendimentos', id).then(res => {
+        apiDelete(endpoint, id).then(res => {
             alert(res.message);
             window.location.href = '/empreendimentos'
         })
@@ -38,8 +38,9 @@ const errors = {
     requiredText: 'Campo obrigatório'
 }
 
-const backLink = '/empreendimentos';
+const archiveLink = '/empreendimentos';
 const imagesLink = '/images';
+const endpoint = 'empreendimentos';
 
 function Empreendimento() {
 
@@ -51,7 +52,7 @@ function Empreendimento() {
     const [fields, setFields] = useState(initialFields)
     const [validated, setValidated] = useState(false);
 
-    const { loading, error, data } = useGet(API_URL + 'empreendimentos/read_single.php?id=' + id);
+    const { loading, error, data } = useGet(API_URL + endpoint + '/read_single.php?id=' + id);
 
     if (editMode && loading) return (
         <Container className='Empreendimento ViewSingle my-5'>
@@ -79,7 +80,7 @@ function Empreendimento() {
 
             if (!editMode) {
                 // submit form data
-                apiCreate('empreendimentos', fields).then(response => {
+                apiCreate(endpoint, fields).then(response => {
                     if (response) {
 
                         alert(response.message);
@@ -89,12 +90,12 @@ function Empreendimento() {
                 })
             }
             else {
-                apiUpdate('empreendimentos', fields, data).then(response => {
+                apiUpdate(endpoint, fields, data).then(response => {
                     if (response) {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = '/empreendimento/' + response.data.id
+                            window.location.href = '/empreendimento/' + data.id
                     }
                 })
             }
@@ -113,7 +114,7 @@ function Empreendimento() {
                     <div className="d-flex m-auto ms-md-0">
                         <h1 className='title'>{(editMode) ? 'Alterar' : 'Novo'} Empreendimento</h1>
                         <span className='m-auto ms-3'>
-                            <Link className='icon' title='Voltar' to={backLink}>
+                            <Link className='icon' title='Voltar' to={archiveLink}>
                                 <span className='bi-arrow-left'></span> Voltar
                             </Link>
                         </span>
@@ -179,7 +180,12 @@ function Empreendimento() {
                         <div className="d-flex mt-4 m-auto ms-md-0">
                             <h3 className='mb-0'>Imagens</h3>
                             <span className='m-auto ms-2'>
-                                <Link className='icon text-decoration-none' title='Consultar imagens' to={imagesLink}>
+                                <Link 
+                                    className='icon text-decoration-none' 
+                                    title='Consultar imagens' 
+                                    to={imagesLink}
+                                    target="_blank" rel="noopener noreferrer" 
+                                >
                                     <span className='bi-arrow-up-right'></span>
                                 </Link>
                             </span>

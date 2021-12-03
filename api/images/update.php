@@ -19,9 +19,9 @@
     $data = json_decode(file_get_contents('php://input'));
 
     $image->id = $data->id;
-    $image->url = $data->url;
+    // $image->url = $data->url;
     $image->caption = $data->caption;
-    $image->size = $data->size;
+    // $image->size = $data->size;
 
     if($image->update()) {
         echo json_encode([

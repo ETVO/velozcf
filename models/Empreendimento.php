@@ -89,7 +89,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Bind ID
-            $stmt->bindParam(1, $this->id);
+            $stmt->bindParam(1, sanitizeNumber($this->id));
 
             // Execute stmt
             $stmt->execute();
@@ -133,19 +133,12 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            // Clean data
-            $this->nome = ($this->nome !== '') ? htmlspecialchars(strip_tags($this->nome)) : null;
-            $this->endereco = ($this->endereco !== '') ? htmlspecialchars(strip_tags($this->endereco)) : null;
-            $this->area_cabana = ($this->area_cabana !== '') ? htmlspecialchars(strip_tags($this->area_cabana)) : null;
-            $this->logo->id = ($this->logo->id !== '') ? htmlspecialchars(strip_tags($this->logo->id)) : null;
-            $this->cover->id = ($this->cover->id !== '') ? htmlspecialchars(strip_tags($this->cover->id)) : null;
-
-            // Bind params
-            $stmt->bindParam(':nome', $this->nome);
-            $stmt->bindParam(':endereco', $this->endereco);
-            $stmt->bindParam(':area_cabana', $this->area_cabana);
-            $stmt->bindParam(':logo_id', $this->logo->id);
-            $stmt->bindParam(':cover_id', $this->cover->id);
+            // Sanitize data & Bind params
+            $stmt->bindParam(':nome', sanitizeText($this->nome));
+            $stmt->bindParam(':endereco', sanitizeText($this->endereco));
+            $stmt->bindParam(':area_cabana', sanitizeText($this->area_cabana));
+            $stmt->bindParam(':logo_id', sanitizeNumber($this->logo->id));
+            $stmt->bindParam(':cover_id', sanitizeNumber($this->cover->id));
 
             // Execute query
             if($stmt->execute()) {
@@ -176,23 +169,14 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            // Clean data
-            $this->nome = (!empty($this->nome)) ? htmlspecialchars(strip_tags($this->nome)) : null;
-            $this->endereco = (!empty($this->endereco)) ? htmlspecialchars(strip_tags($this->endereco)) : null;
-            $this->area_cabana = (!empty($this->area_cabana)) ? htmlspecialchars(strip_tags($this->area_cabana)) : null;
-            $this->logo->id = (!empty($this->logo->id)) ? htmlspecialchars(strip_tags($this->logo->id)) : null;
-            $this->cover->id = (!empty($this->cover->id)) ? htmlspecialchars(strip_tags($this->cover->id)) : null;
-            $this->deleted = ($this->deleted !== '') ? htmlspecialchars(strip_tags($this->deleted)) : null;
-            $this->id = (!empty($this->id)) ? htmlspecialchars(strip_tags($this->id)) : null;
-
-            // Bind params
-            $stmt->bindParam(':nome', $this->nome);
-            $stmt->bindParam(':endereco', $this->endereco);
-            $stmt->bindParam(':area_cabana', $this->area_cabana);
-            $stmt->bindParam(':logo_id', $this->logo->id);
-            $stmt->bindParam(':cover_id', $this->cover->id);
-            $stmt->bindParam(':deleted', $this->deleted);
-            $stmt->bindParam(':id', $this->id);
+            // Sanitize data & Bind params
+            $stmt->bindParam(':nome', sanitizeText($this->nome));
+            $stmt->bindParam(':endereco', sanitizeText($this->endereco));
+            $stmt->bindParam(':area_cabana', sanitizeText($this->area_cabana));
+            $stmt->bindParam(':logo_id', sanitizeNumber($this->logo->id));
+            $stmt->bindParam(':cover_id', sanitizeNumber($this->cover->id));
+            $stmt->bindParam(':deleted', sanitizeBoolean($this->deleted));
+            $stmt->bindParam(':id', sanitizeNumber($this->id));
             
             // Execute query
             if($stmt->execute()) {
@@ -219,11 +203,8 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            // Clean data
-            $this->id = ($this->id !== '') ? htmlspecialchars(strip_tags($this->id)) : null;
-
-            // Bind data
-            $stmt->bindParam(':id', $this->id);	
+            // Sanitize data & Bind params
+            $stmt->bindParam(':id', sanitizeNumber($this->id));	
 
             // Execute query
 

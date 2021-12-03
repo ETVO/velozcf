@@ -6,6 +6,8 @@ import moment from 'moment'
 import useGet from '../hooks/useGet'
 import { apiDelete, apiUpdate } from '../helpers'
 
+import ViewHeading from '../components/ViewHeading'
+
 import '../scss/View.scss'
 
 const API_URL = process.env.REACT_APP_API_URL
@@ -44,21 +46,7 @@ function Images() {
 
     return (
         <Container className='Images View my-5'>
-            <div className="d-flex flex-column flex-md-row heading">
-                <div className="d-flex flex-column flex-sm-row m-auto ms-md-0">
-                    <h1 className='title'>Imagens</h1>
-                    <span className='m-auto ms-sm-3'>
-                        <a className='icon reload d-none d-sm-block' title='Recarregar' href=''>
-                            <span className='mx-auto bi-arrow-clockwise'></span>
-                        </a>
-                    </span>
-                </div>
-                <span className='m-auto mt-2 mt-sm-auto me-md-0'>
-                    <Button variant='outline-dark' className='d-flex' as={Link} to={singleLink}>
-                        Adicionar Nova
-                    </Button>
-                </span>
-            </div>
+            <ViewHeading showReload={true} title='Imagens' addNew='Adicionar Nova' addNewLink={singleLink} />
 
             {(data.data) ?
                 <Row className='mb-3' xs={2} md={4} lg={5} xl={6}>

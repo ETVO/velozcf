@@ -1,6 +1,7 @@
 <?php
     require_once("env_constants.php");
-    error_reporting($_ENV['ERROR_REPORTING'] ?? 0);
+    require_once("functions.php");
+    error_reporting(1);
 
     class Database {
         // DB params

@@ -32,6 +32,7 @@ CREATE TABLE cabanas (
     valor_base DECIMAL(10,2),
     disponivel BOOLEAN DEFAULT 1,
     reservada BOOLEAN DEFAULT 0,
+    galeria VARCHAR(255),
     id_mapa VARCHAR(255),
     empreendimento INT(11) UNSIGNED,
     FOREIGN KEY empreendimento_fk (empreendimento) REFERENCES empreendimentos(id) ON DELETE CASCADE

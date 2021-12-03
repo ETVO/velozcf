@@ -107,25 +107,14 @@ function Image() {
         }
         else {
 
-            if (!editMode) {
-                // // submit form data
-                // apiCreate(endpoint, fields).then(response => {
-                //     if (response) {
-
-                //         alert(response.message);
-                //         if (response.success !== false)
-                //             window.location.href = singleLink + '/' + response.data.id
-                //     }
-                // })
-            }
-            else {
+            if (editMode) {
                 e.preventDefault();
                 apiUpdate(endpoint, fields, data).then(response => {
                     if (response) {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = singleLink + '/' + response.data.id
+                            window.location.href = singleLink + '/' + data.id
                     }
                 })
             }
@@ -165,7 +154,7 @@ function Image() {
                 onSubmit={handleSubmit} 
                 action={(!editMode) ? API_URL + endpoint + '/create.php' : null} 
                 method='post' 
-                enctype='multipart/form-data'
+                encType='multipart/form-data'
                 noValidate 
                 validated={validated}>
                 <div className="d-flex flex-column flex-md-row heading">
@@ -211,11 +200,14 @@ function Image() {
                         {(editMode) ? (
                             <Form.Group className='form-row'>
                                 <Form.Label>Imagem:</Form.Label>
-                                <img className='d-block w-100' src={fields.url} alt={fields.caption} />
                                 <Form.Text muted>
-                                    <div className='mt-1'>Dimensões: <b>{dimensions.w}</b> x <b>{dimensions.h}</b></div>
-                                    <div>Tamanho: <b>{getFileSize(fields.size)}</b></div>
+                                    <div className='mb-1'>
+                                        Dimensões: <b>{dimensions.w}</b> x <b>{dimensions.h}</b>
+                                        <br />
+                                        Tamanho: <b>{getFileSize(fields.size)}</b>
+                                    </div>
                                 </Form.Text>
+                                <img className='d-block w-100' src={fields.url} alt={fields.caption} />
                             </Form.Group>
                         ) : (
                             <div>
@@ -237,6 +229,7 @@ function Image() {
                                         </Form.Text>
                                     ) : ''}
                                 </Form.Group>
+                                <input type="hidden" name="redirect" value={window.location.href}/>
                             </div>
                         )}
 

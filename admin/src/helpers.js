@@ -6,10 +6,6 @@ export async function fetchImage(id) {
 
     const data = await response.json()
 
-    if(data.success === false){
-        return null
-    }  
-
     return data
 }
 

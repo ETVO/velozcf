@@ -6,15 +6,20 @@ import moment from 'moment'
 import useGet from '../hooks/useGet'
 import { apiDelete, apiUpdate } from '../helpers'
 
+import ViewHeading from '../components/ViewHeading'
+
 import '../scss/View.scss'
 
 const API_URL = process.env.REACT_APP_API_URL
+
+const singleLink = '/empreendimento/'
+const endpoint = 'empreendimentos'
 
 async function deleteEmpre(id, permanently = false) {
 
     if(!permanently) {
         if (window.confirm('Deseja realmente excluir este registro?')) {
-            apiUpdate('empreendimentos', {
+            apiUpdate(endpoint, {
                 id: id,
                 deleted: 1
             }).then(res => {
@@ -25,7 +30,7 @@ async function deleteEmpre(id, permanently = false) {
     }
     else {
         if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir este registro PERMANENTEMENTE?')) {
-            apiDelete('empreendimentos', id).then(res => {
+            apiDelete(endpoint, id).then(res => {
                 alert(res.message);
                 window.location.href = ''
             })
@@ -36,7 +41,7 @@ async function deleteEmpre(id, permanently = false) {
 
 async function recoverEmpre(id) {
 
-    apiUpdate('empreendimentos', {
+    apiUpdate(endpoint, {
         id: id,
         deleted: 0
     }).then(res => {
@@ -48,7 +53,7 @@ async function recoverEmpre(id) {
 }
 
 function Empreendimentos() {
-    const { loading, error, data } = useGet(API_URL + 'empreendimentos/read.php')
+    const { loading, error, data } = useGet(API_URL + endpoint + '/read.php')
 
     const [showDeleted, setDeletedShow] = useState(false)
 
@@ -65,26 +70,13 @@ function Empreendimentos() {
 
     return (
         <Container className='Empreendimentos View my-5'>
-            <div className="d-flex flex-column flex-md-row heading">
-                <div className="d-flex flex-column flex-sm-row m-auto ms-md-0">
-                    <h1 className='title'>Empreendimentos</h1>
-                    <span className='m-auto ms-sm-3'>
-                        <a className='icon reload d-none d-sm-block' title='Recarregar' href=''>
-                            <span className='mx-auto bi-arrow-clockwise'></span>
-                        </a>
-                    </span>
-                    <small className='m-auto ms-sm-2 cursor-pointer'>
-                        <span className={(showDeleted) ? 'text-decoration-underline' : 'text-muted'} onClick={() => { setDeletedShow(!showDeleted) }}>
-                            Ver Excluídos
-                        </span>
-                    </small>
-                </div>
-                <span className='m-auto mt-2 mt-sm-auto me-md-0'>
-                    <Button variant='outline-dark' className='d-flex' as={Link} to='/empreendimento'>
-                        Adicionar Novo
-                    </Button>
+            <ViewHeading showReload={true} title='Empreendimentos' addNew='Adicionar Novo' addNewLink={singleLink} />
+            
+            <small className='m-auto ms-sm-2 cursor-pointer d-block'>
+                <span className={(showDeleted) ? 'text-decoration-underline' : 'text-muted'} onClick={() => { setDeletedShow(!showDeleted) }}>
+                    Ver Excluídos
                 </span>
-            </div>
+            </small>
 
             {(data.data) ? <Table responsive className={(showDeleted) ? 'mb-3 show-deleted' : 'mb-3'}>
                 <thead>
@@ -114,7 +106,7 @@ function Empreendimentos() {
                                             <Link
                                                 title='Editar'
                                                 className='text-primary bi bi-pencil-fill'
-                                                to={'/empreendimento/' + item.id}>
+                                                to={singleLink + item.id}>
                                             </Link>
                                             &nbsp;&nbsp;
                                             <span
