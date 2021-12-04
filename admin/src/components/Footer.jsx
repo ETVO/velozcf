@@ -19,7 +19,7 @@ export default function Footer({setLoggedIn}) {
                 {moment().format('Y')} © CF Negócios Imobiliários.&nbsp;<br className='d-block d-sm-none'/>
                 <span className="text-muted">Desenvolvido por <a href='https://imobmark.com.br/' rel="noreferrer" target='_blank'>Imobmark</a></span>
             </small>
-            <small className='log-out  text-uppercase' title='Fazer log-out' onClick={logOut}>
+            <small className='log-out text-uppercase' title='Fazer log-out' onClick={logOut}>
                 Sair <span className='bi-arrow-bar-right'></span>
             </small>
         </footer>

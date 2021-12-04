@@ -115,8 +115,6 @@
                     $i = 1;
                     $newname = $name;
 
-                    echo $path_to_save;
-
                     // rename if file exists with same filename
                     while (file_exists($path_to_save)) {
                         if (substr($newname, -2) == "_$i") {
@@ -146,7 +144,7 @@
             }
 
             // Print error if something goes wrong
-            printf("Error: %s\n", $stmt->err);
+            // printf("Error: %s\n", $stmt->err);
             return false;
         }
 
@@ -173,7 +171,7 @@
             }
 
             // Print error if something goes wrong
-            printf("Error: %s\n", $stmt->err);
+            // printf("Error: %s\n", $stmt->err);
             return false;
         }
 

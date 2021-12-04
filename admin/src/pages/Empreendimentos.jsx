@@ -72,7 +72,7 @@ function Empreendimentos() {
         <Container className='Empreendimentos View my-5'>
             <ViewHeading showReload={true} title='Empreendimentos' addNew='Adicionar Novo' addNewLink={singleLink} />
             
-            <small className='m-auto ms-sm-2 cursor-pointer d-block'>
+            <small className='m-auto cursor-pointer d-block mt-2 mt-md-0'>
                 <span className={(showDeleted) ? 'text-decoration-underline' : 'text-muted'} onClick={() => { setDeletedShow(!showDeleted) }}>
                     Ver Excluídos
                 </span>
@@ -81,10 +81,10 @@ function Empreendimentos() {
             {(data.data) ? <Table responsive className={(showDeleted) ? 'mb-3 show-deleted' : 'mb-3'}>
                 <thead>
                     <tr>
-                        <th></th>
+                        <th className='d-none d-sm-table-cell'></th>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th>Última modificação</th>
+                        <th className='d-none d-sm-table-cell'>Última modificação</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -95,10 +95,10 @@ function Empreendimentos() {
 
                         return (
                             <tr key={item.id} className={(item.deleted == 1) ? 'deleted' : ''}>
-                                <td className='logo'><Link to={singleLink + item.id}><img src={item.logo.url} alt="" /></Link></td>
+                                <td className='logo d-none d-sm-table-cell'><Link to={singleLink + item.id}><img src={item.logo.url} alt="" /></Link></td>
                                 <td>#{item.id}</td>
                                 <td>{item.nome}</td>
-                                <td className='updatedAt'>{updatedAt}</td>
+                                <td className='updatedAt d-none d-sm-table-cell'>{updatedAt}</td>
                                 <td className='actions'>
 
                                     {(item.deleted != 1) ? (

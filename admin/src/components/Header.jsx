@@ -17,7 +17,7 @@ export default function Header() {
                 </Link>
             </Navbar.Brand>
             <Navbar.Toggle />
-            <Navbar.Collapse className='justify-content-start d-flex'>
+            <Navbar.Collapse className='justify-content-start'>
                 <Nav activeKey={location.pathname}>
                     <Nav.Link as={Link} to='/' eventKey='/'>Home</Nav.Link>
                     <Nav.Link as={Link} to='/empreendimentos' eventKey='/empreendimentos'>Empreendimentos</Nav.Link>

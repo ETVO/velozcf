@@ -55,44 +55,7 @@
 
             $query .= "
                 ORDER BY 
-                    e.updated_at DESC
-            ";
-
-            // Prepare query
-            $stmt = $this->conn->prepare($query);
-
-            // Execute statement
-            $stmt->execute();
-
-            return $stmt;
-        }
-
-        // READ with Cabanas
-        public function read_cabanas() {
-            // Create query
-            $query = "SELECT 
-                    e.id,
-                    e.nome,
-                    e.endereco,
-                    e.area_cabana,
-                    e.updated_at,
-                    e.deleted,
-                    e.logo_id,
-                    logo.url as logo_url,
-                    logo.caption as logo_caption,
-                    e.cover_id,
-                    cover.url as cover_url,
-                    cover.caption as cover_caption,
-                FROM 
-                    {$this->table} e
-                LEFT JOIN
-                    images logo ON e.logo_id = logo.id
-                LEFT JOIN
-                    images cover ON e.cover_id = cover.id
-                LEFT JOIN
-                    cabanas cabana ON cabana.empreendimento = e.id
-                ORDER BY 
-                    e.updated_at DESC
+                    e.nome DESC
             ";
 
             // Prepare query
@@ -193,7 +156,7 @@
             }
 
             // Print error if something goes wrong
-            printf("Error: %s\n", $stmt->err);
+            // printf("Error: %s\n", $stmt->err);
             return false;
         }
 
@@ -230,7 +193,7 @@
             }
 
             // Print error if something goes wrong
-            printf("Error: %s\n", $stmt->err);
+            // printf("Error: %s\n", $stmt->err);
             return false;
         }
 
@@ -259,7 +222,7 @@
             }
 
             // Print error if something goes wrong
-            printf("Error: %s\n", $stmt->err);
+            // printf("Error: %s\n", $stmt->err);
             return false;
         }
 

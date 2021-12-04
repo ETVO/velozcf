@@ -6,9 +6,9 @@ import moment from 'moment'
 import '../scss/View.scss'
 
 export default class EditHeading extends React.Component {
-    render () {
+    render() {
         let { title, showReload = false, iconLink } = this.props;
-        
+
         return <div className="d-flex flex-column flex-md-row heading">
             <div className="d-flex m-auto ms-md-0">
                 <h1 className='title'>{title}</h1>
@@ -18,7 +18,8 @@ export default class EditHeading extends React.Component {
                             <span className='bi-arrow-left'></span> Voltar
                         </Link>
                     ) : (showReload) ? (
-                        <span className='text-primary icon reload' title='Recarregar' onClick={window.location.reload}>
+                        <span onClick={() => window.location.reload()}
+                            className='text-primary icon reload' title='Recarregar'>
                             <span className='mx-auto bi-arrow-clockwise'></span>
                         </span>
                     ) : ''}

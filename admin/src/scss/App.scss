@@ -62,6 +62,12 @@ body {
     }
 }
 
+@media all and (max-width: 992px) {
+    .user-info, .log-out {
+        position: relative;
+    }
+}
+
 .Login {
     .wrap {
         padding: calc(2rem + 20px) 1rem 2rem;

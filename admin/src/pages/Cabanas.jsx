@@ -71,7 +71,7 @@ function Cabanas() {
         <Container className='Cabanas View my-5'>
             <ViewHeading showReload={true} title='Cabanas' addNew='Adicionar Novo' addNewLink={singleLink} />
             
-            <small className='m-auto ms-sm-2 d-block cursor-pointer mb-2'>
+            <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
                 {(empres) ? (
                     <Form.Select className='smaller filter-select' onChange={changeFilterEmpre}>
                         <option value=''>Filtrar empreendimentos</option>

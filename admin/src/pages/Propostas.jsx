@@ -8,7 +8,7 @@ import '../scss/View.scss'
 const API_URL = process.env.REACT_APP_API_URL
 
 export default function Propostas() {
-    const { loading, error, data } = useGet(API_URL + '/images/read.php')
+    const { loading, error, data } = useGet(API_URL + '/imagens/read.php')
 
     if (loading) return (
         <Container className='Propostas View my-5'>
