@@ -14,8 +14,10 @@
     // Instantiate request
     $empre = new Empreendimento($db);
 
+    $showDeleted = (isset($_GET['deleted'])) ? boolval($_GET['deleted']) : true;
+
     // Post query & row count
-    $result = $empre->read();
+    $result = $empre->read($showDeleted);
     $num = $result->rowCount();
 
     // Check if any rows exist

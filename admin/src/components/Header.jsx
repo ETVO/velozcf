@@ -10,7 +10,7 @@ export default function Header() {
     let location = useLocation();
 
     return (
-        <Navbar expand="md" variant="dark" bg="dark" className='Header px-4 py-2'>
+        <Navbar collapseOnSelect expand="md" variant="dark" bg="dark" className='Header px-4 py-2'>
             <Navbar.Brand>
                 <Link to='/'>
                     Sistema Veloz

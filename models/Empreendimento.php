@@ -1,6 +1,6 @@
 <?php
 
-    include 'Image.php';
+    include_once 'Image.php';
 
     class Empreendimento {
         // DB stuff
@@ -24,7 +24,7 @@
         }
 
         // Get empreendimentos
-        public function read() {
+        public function read($showDeleted = true) {
             // Create query
             $query = "SELECT 
                     e.id,
@@ -45,6 +45,15 @@
                     images logo ON e.logo_id = logo.id
                 LEFT JOIN
                     images cover ON e.cover_id = cover.id
+            ";
+
+            if(!$showDeleted)
+                $query .= "
+                    WHERE 
+                        e.deleted = 0
+                ";
+
+            $query .= "
                 ORDER BY 
                     e.updated_at DESC
             ";

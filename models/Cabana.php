@@ -1,6 +1,7 @@
 <?php
 
-    include 'Empreendimento.php';
+    include_once 'Empreendimento.php';
+    include_once 'Image.php';
 
     class Cabana {
         // DB stuff
@@ -16,6 +17,7 @@
         public $disponivel;
         public $reservada;
         public $id_mapa;
+        public $imagem;
         public $galeria;
         public $empreendimento;
         public $updated_at;
@@ -23,6 +25,7 @@
         // Construct with DB
         public function __construct($db) {
             $this->conn = $db;
+            $this->imagem = new Image($db);
             $this->empreendimento = new Empreendimento($db);
         }
 
@@ -30,23 +33,26 @@
         public function read() {
             // Create query
             $query = "SELECT 
-                    c.id, 
-                    c.nome,
-                    c.tamanho,
-                    c.quartos,
-                    c.valor_base,
-                    c.disponivel,
-                    c.reservada,
-                    c.galeria,
-                    c.id_mapa,
+                    cabana.id, 
+                    cabana.nome,
+                    cabana.tamanho,
+                    cabana.quartos,
+                    cabana.valor_base,
+                    cabana.disponivel,
+                    cabana.reservada,
+                    i.id as imagem_id,
+                    i.url as imagem_url,
+                    i.caption as imagem_caption,
+                    cabana.galeria,
+                    cabana.id_mapa,
                     e.id as empre_id,
                     e.nome as empre_nome
                 FROM 
-                    {$this->table} c
+                    {$this->table} cabana
                 LEFT JOIN 
-                    empreendimentos e ON c.empreendimento = e.id
-                ORDER BY 
-                    e.nome ASC
+                    images i ON cabana.imagem_id = i.id
+                LEFT JOIN 
+                    empreendimentos e ON cabana.empreendimento = e.id
             ";
 
             if($this->empreendimento->id) {
@@ -55,6 +61,11 @@
                         empreendimento = :empreendimento
                 ";
             }
+
+            $query .= "
+                ORDER BY 
+                    e.nome ASC
+            ";
 
             // Prepare query
             $stmt = $this->conn->prepare($query);
@@ -75,20 +86,25 @@
         public function read_single() {
             // Create query
             $query = "SELECT
-                    id, 
+                    c.id, 
                     nome,
                     tamanho,
                     quartos,
                     valor_base,
                     disponivel,
                     reservada,
+                    i.id as imagem_id,
+                    i.url as imagem_url,
+                    i.caption as imagem_caption,
                     galeria,
                     id_mapa,
                     empreendimento
                 FROM 
-                    {$this->table}
+                    {$this->table} c
+                LEFT JOIN 
+                    images i ON c.imagem_id = i.id
                 WHERE
-                    id = ?
+                    c.id = ?
                 LIMIT 1
             ";
 
@@ -112,6 +128,10 @@
                 
                 $this->disponivel = $row['disponivel'];
                 $this->reservada = $row['reservada'];
+
+                $this->imagem->id = $row['imagem_id'];
+                $this->imagem->url = $row['imagem_url'];
+                $this->imagem->caption = $row['imagem_caption'];
                 
                 $this->galeria = $row['galeria'];
                 $this->id_mapa = $row['id_mapa'];
@@ -134,6 +154,7 @@
                     quartos = :quartos,
                     valor_base = :valor_base,
                     disponivel = IFNULL(:disponivel, 1),
+                    imagem_id = :imagem_id,
                     galeria = :galeria,
                     id_mapa = :id_mapa,
                     empreendimento = :empreendimento
@@ -148,6 +169,7 @@
             $stmt->bindParam(':quartos', sanitizeText($this->quartos));
             $stmt->bindParam(':valor_base', sanitizeFloat($this->valor_base));
             $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
+            $stmt->bindParam(':imagem_id', sanitizeInt($this->imagem->id));
             $stmt->bindParam(':galeria', sanitizeText($this->galeria));
             $stmt->bindParam(':id_mapa', sanitizeText($this->id_mapa));
             $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));
@@ -175,6 +197,7 @@
                     valor_base = IFNULL(:valor_base, valor_base),
                     reservada = IFNULL(:reservada, reservada),
                     disponivel = IFNULL(:disponivel, disponivel),
+                    imagem_id = IFNULL(:imagem_id, imagem_id),
                     galeria = IFNULL(:galeria, galeria),
                     id_mapa = IFNULL(:id_mapa, id_mapa),
                     empreendimento = IFNULL(:empreendimento, empreendimento)
@@ -192,6 +215,7 @@
             $stmt->bindParam(':valor_base', sanitizeFloat($this->valor_base));
             $stmt->bindParam(':reservada', sanitizeBoolean($this->reservada));
             $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
+            $stmt->bindParam(':imagem_id', sanitizeText($this->imagem->id));
             $stmt->bindParam(':galeria', sanitizeText($this->galeria));
             $stmt->bindParam(':id_mapa', sanitizeText($this->id_mapa));
             $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));

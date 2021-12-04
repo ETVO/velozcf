@@ -7,40 +7,37 @@
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
     include_once '../../config/Database.php';
-    include_once '../../models/Cabana.php';
+    include_once '../../models/Cota.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $cabana = new Cabana($db);
+    $cota = new Cota($db);
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $cabana->nome = $data->nome;
-    $cabana->tamanho = $data->tamanho;
-    $cabana->quartos = $data->quartos;
-    $cabana->valor_base = $data->valor_base;
-    $cabana->disponivel = $data->disponivel;
-    $cabana->imagem->id = (isset($data->imagem_id)) ? $data->imagem_id : $data->imagem->id;
-    $cabana->galeria = $data->galeria;
-    $cabana->id_mapa = $data->id_mapa;
-    $cabana->empreendimento->id = (isset($data->empreendimento_id)) ? $data->empreendimento_id : $data->empreendimento->id;
+    $cota->numero = $data->numero;
+    $cota->valor = $data->valor;
+    $cota->data_inicio = $data->data_inicio;
+    $cota->data_fim = $data->data_fim;
+    $cota->disponivel = $data->disponivel;
+    $cota->cabana->id = (isset($data->cabana_id)) ? $data->cabana_id : $data->cabana->id;
 
-    if($cabana->create()) {
+    if($cota->create()) {
         echo json_encode([
             'data' => [
-                'id' => $cabana->id
+                'id' => $cota->id
             ],
             'success' => true,
-            'message' => 'Cabana criada com sucesso.'
+            'message' => 'Cota criada com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Erro ao criar cabana.'
+            'message' => 'Erro ao criar cota.'
         ]);
 
     }

@@ -25,6 +25,7 @@
     $cabana->valor_base = $data->valor_base;
     $cabana->disponivel = $data->disponivel;
     $cabana->reservada = $data->reservada;
+    $cabana->imagem->id = (isset($data->imagem_id)) ? $data->imagem_id : $data->imagem->id;
     $cabana->galeria = $data->galeria;
     $cabana->id_mapa = $data->id_mapa;
     $cabana->empreendimento->id = (isset($data->empreendimento_id)) ? $data->empreendimento_id : $data->empreendimento->id;

@@ -32,19 +32,20 @@ CREATE TABLE cabanas (
     valor_base DECIMAL(10,2) NOT NULL,
     disponivel BOOLEAN DEFAULT 1,
     reservada BOOLEAN DEFAULT 0,
+    imagem_id INT(11),
     galeria VARCHAR(255),
     id_mapa VARCHAR(255),
     empreendimento INT(11) UNSIGNED NOT NULL,
-    FOREIGN KEY empreendimento_fk (empreendimento) REFERENCES empreendimentos(id) ON DELETE CASCADE
+    FOREIGN KEY empreendimento_id_fk (empreendimento) REFERENCES empreendimentos(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS cotas;
 CREATE TABLE cotas (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    numero INT(11),
-    valor DECIMAL(10,2),
-    data_inicio VARCHAR(255),
-    data_fim VARCHAR(255),
+    numero INT(11) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
+    data_inicio VARCHAR(255) NOT NULL,
+    data_fim VARCHAR(255) NOT NULL,
     disponivel BOOLEAN DEFAULT 1,
     reservada BOOLEAN DEFAULT 0,
     cabana INT(11) UNSIGNED,
@@ -66,8 +67,8 @@ CREATE TABLE infos (
 DROP TABLE IF EXISTS pagamentos;
 CREATE TABLE pagamentos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    valor_proposta DECIMAL(10,2),
-    valor_final DECIMAL(10,2),
+    valor_proposta DECIMAL(10,2) NOT NULL,
+    valor_final DECIMAL(10,2) NOT NULL,
     valor_parcela DECIMAL(10,2),
     n_parcelas INT(11),
     entrada DECIMAL(10,2),

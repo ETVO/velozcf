@@ -1,19 +1,22 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom';
 
 import { fetchImage } from '../helpers'
 
 import '../scss/Components.scss'
 
 export default function ImageControl({ label, controlId, controlFeedback, required, fields, setFields }) {
+    
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         e.preventDefault()
         let formValues = JSON.parse(JSON.stringify(fields))
         let { value, id, type } = e.target
 
-        if (type !== 'number') window.location.href = '';
+        if (type !== 'number') window.location.reload();
 
         if (value === '') {
             e.target.setAttribute('value', 0)

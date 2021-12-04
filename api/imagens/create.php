@@ -39,9 +39,9 @@
             'message' => 'Erro ao criar imagem.'
         ]);
     }
-    if(isset($_POST['redirect'])) {
-        header("Location: $redirect_link");
-    }
-    else {
-        echo "<script>history.go(-1)</script>";
-    }
+    // if(isset($_POST['redirect'])) {
+    //     header("Location: $redirect_link");
+    // }
+    // else {
+    //     echo "<script>history.go(-1)</script>";
+    // }

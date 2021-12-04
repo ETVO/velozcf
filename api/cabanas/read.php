@@ -14,6 +14,10 @@
     // Instantiate request
     $cabana = new Cabana($db);
 
+    if(isset($_GET['empreendimento'])) {
+        $cabana->empreendimento->id = $_GET['empreendimento'];
+    }
+
     // Post query & row count
     $result = $cabana->read();
     $num = $result->rowCount();
@@ -23,7 +27,6 @@
         // Post array
         $cabanas_arr = [];
         $cabanas_arr['data'] = [];
-
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
 
@@ -35,6 +38,11 @@
                 'valor_base' => floatval($valor_base),
                 'disponivel' => boolval($disponivel),
                 'reservada' => boolval($reservada),
+                'imagem' => [
+                    'id' => intval($imagem_id),
+                    'url' => $imagem_url,
+                    'caption' => $imagem_caption
+                ],
                 'galeria' => $galeria,
                 'id_mapa' => $id_mapa,
                 'empreendimento' => [

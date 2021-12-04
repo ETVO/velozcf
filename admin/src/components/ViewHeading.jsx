@@ -12,9 +12,9 @@ export default function ViewHeading({title, showReload, addNew = 'Adicionar', ad
                     <h1 className='title'>{title}</h1>
                     {(showReload) ? (
                         <span className='m-auto ms-sm-3'>
-                            <a className='icon reload d-none d-sm-block' title='Recarregar' href=''>
+                            <span className='text-primary icon reload d-none d-sm-block' title='Recarregar' onClick={window.location.reload}>
                                 <span className='mx-auto bi-arrow-clockwise'></span>
-                            </a>
+                            </span>
                         </span>
                     ) : ''}
                 </div>

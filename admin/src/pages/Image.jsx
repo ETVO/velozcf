@@ -8,6 +8,7 @@ import useGet from '../hooks/useGet'
 import { handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers'
 
 import '../scss/View.scss'
+import { useNavigate } from 'react-router-dom'
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -15,14 +16,14 @@ const IMAGE_INPUT_ACCEPT = 'image/*'
 
 const archiveLink = '/images'
 const singleLink = '/image'
-const endpoint = 'images'
+const endpoint = 'imagens'
 
 async function deleteImage(id, permanently = false) {
 
     if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir esta imagem PERMANENTEMENTE?')) {
         apiDelete(endpoint, id).then(res => {
             alert(res.message);
-            window.location.href = ''
+            window.location.reload()
         })
     }
 
@@ -69,6 +70,8 @@ function Image() {
 
     const { id } = useParams()
 
+    const navigate = useNavigate();
+
     let editMode = (typeof id !== 'undefined');
 
     const [fields, setFields] = useState(initialFields);
@@ -114,7 +117,7 @@ function Image() {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = singleLink + '/' + data.id
+                            navigate(singleLink + '/' + data.id);
                     }
                 })
             }

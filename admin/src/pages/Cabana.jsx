@@ -1,29 +1,18 @@
 import React, { useState } from 'react'
 import { Container, Form, Col, Row, Button, FloatingLabel } from 'react-bootstrap'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
+import ImageControl from '../components/ImageControl'
 import GalleryControl from '../components/GalleryControl'
 import EditHeading from '../components/EditHeading'
+import Cotas from '../components/Cotas'
 import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers'
 
 import '../scss/View.scss'
 
 const { forwardRef, useRef, useImperativeHandle } = React;
-
-const API_URL = process.env.REACT_APP_API_URL
-
-async function deleteCabana(id) {
-
-    if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
-        apiDelete(endpoint, id).then(res => {
-            alert(res.message);
-            window.location.href = archiveLink;
-        })
-
-    }
-}
 
 const initialFields = {
     nome: '',
@@ -31,11 +20,16 @@ const initialFields = {
     quartos: '',
     valor_base: '',
     id_mapa: '',
+    imagem: {
+        id: 0
+    },
     galeria: '',
     disponivel: 1,
     reservada: 0,
     empreendimento_id: 0,
 };
+
+const API_URL = process.env.REACT_APP_API_URL
 
 const archiveLink = '/cabanas';
 const singleLink = '/cabana';
@@ -47,6 +41,8 @@ function Cabana() {
 
     const { id } = useParams()
 
+    const navigate = useNavigate();
+
     let editMode = (typeof id !== 'undefined');
 
     const [fields, setFields] = useState(initialFields)
@@ -55,16 +51,28 @@ function Cabana() {
     const changeNome = (e) => {
         let { value: nome } = e.target;
         let id_mapa = nome.replace(/\s/g, "").toLowerCase();
-        
+
         fieldsChangeArray({
             id_mapa: id_mapa,
             nome: nome
         }, ['id_mapa', 'nome'], fields, setFields);
     }
 
+    async function deleteCabana(id) {
+
+        if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
+            apiDelete(endpoint, id).then(res => {
+                alert(res.message);
+                window.location.reload();
+                // navigate(archiveLink);
+            })
+    
+        }
+    }
+
     const { loading, error, data } = useGet(API_URL + endpoint + '/read_single.php?id=' + id);
 
-    const cabanasRef = useRef();
+    const cotasRef = useRef();
 
     if (editMode && loading) return (
         <Container className='Cabana ViewSingle my-5'>
@@ -83,34 +91,33 @@ function Cabana() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e)
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
             e.stopPropagation();
             setValidated(true)
         }
         else {
-            
-            // cabanasRef.current.saveChanges();
-            
+
+
             if (!editMode) {
                 // submit form data
                 apiCreate(endpoint, fields).then(response => {
                     if (response) {
-                        
+
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = singleLink + '/' + response.data.id
+                            navigate(singleLink + '/' + response.data.id);
                     }
                 })
             }
             else {
+                cotasRef.current.saveChanges();
                 apiUpdate(endpoint, fields, data).then(response => {
                     if (response) {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = singleLink + '/' + data.id
+                            window.location.reload()
                     }
                 })
             }
@@ -195,7 +202,7 @@ function Cabana() {
                                         {errors.requiredText}
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                
+
                                 <Form.Group as={Col} className='form-row' controlId="quartos">
                                     <Form.Label>Quartos:</Form.Label>
                                     <Form.Control onChange={handleChange}
@@ -224,7 +231,7 @@ function Cabana() {
 
                             <Form.Group className='form-row' controlId="id_mapa">
                                 <Form.Label>ID Mapa:</Form.Label>
-                                <Form.Control 
+                                <Form.Control
                                     readOnly
                                     value={fields.id_mapa}
                                     type="text"
@@ -252,29 +259,37 @@ function Cabana() {
                             </div>
                             <hr className='mt-2' />
 
-                            <GalleryControl 
+                            <GalleryControl
                                 controlId='galeria'
                                 label='Galeria de Fotos'
                                 value={fields.galeria}
                                 fields={fields}
-                                setFields={setFields}/>
+                                setFields={setFields} />
 
-                            
+                            <ImageControl
+                                controlId='imagem'
+                                label='Imagem da Cabana'
+                                value={fields.imagem}
+                                fields={fields}
+                                setFields={setFields}>
+                            </ImageControl>
+
+
                         </div>
 
-                        
+
                         <div className="dynamic-fields">
                             <div className="d-flex mt-4 m-auto ms-md-0">
                                 <h3 className='mb-0'>Cotas</h3>
                             </div>
                             <hr className='mt-2 mb-2' />
 
-                            <small className='text-muted'>AVISO SISTEMA VELOZ:</small>
-                            <p>O seu usuário não tem permissão para acessar esta seção.</p>
+                            {/* <small className='text-muted'>AVISO SISTEMA VELOZ:</small>
+                            <p>O seu usuário não tem permissão para acessar esta seção.</p> */}
 
-                            {/* {(editMode && data) ? (
-                                <Cabanas empId={data.id} ref={cabanasRef} />
-                            ) : 'Salve as alterações para inserir cabanas.'} */}
+                            {(editMode && data) ? (
+                                <Cotas cabanaId={data.id} ref={cotasRef} />
+                            ) : 'Salve as alterações para inserir cotas.'}
 
                         </div>
 

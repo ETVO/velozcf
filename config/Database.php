@@ -1,7 +1,7 @@
 <?php
-    require_once("env_constants.php");
-    require_once("functions.php");
-    error_reporting(1);
+    include_once "functions.php";
+    include_once "env_constants.php";
+    error_reporting(0);
 
     class Database {
         // DB params

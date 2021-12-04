@@ -20,7 +20,7 @@ async function deleteCabana(id) {
     if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir este registro PERMANENTEMENTE?')) {
         apiDelete(endpoint, id).then(res => {
             alert(res.message);
-            window.location.href = ''
+            window.location.reload();
         })
     }
 
@@ -91,7 +91,7 @@ function Cabanas() {
                         <th>Nome</th>
                         <th>Empreendimento</th>
                         <th>Valor base</th>
-                        <th>Nº Cotas</th>
+                        {/* <th>Nº Cotas</th> */}
                         <th>Status</th>
                         <th></th>
                     </tr>
@@ -107,7 +107,7 @@ function Cabanas() {
                                 <td>{item.nome}</td>
                                 <td>{item.empreendimento.nome}</td>
                                 <td>{'R$ ' + formatNumber(item.valor_base, true)}</td>
-                                <td>{8}</td>
+                                {/* <td>{8}</td> */}
                                 <td className={'fw-bold ' + ((item.disponivel) ? ((item.reservada) ? 'text-warning' : 'text-green') : 'text-danger')}>
                                     {(item.disponivel) ? ((item.reservada) ? 'Reservada' : 'Disponível') : 'Vendida'}
                                 </td>

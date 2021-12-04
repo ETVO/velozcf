@@ -16,7 +16,7 @@ export function formatNumber(x, isMoney = false) {
 
 export async function fetchImage(id) {
 
-    const response = await fetch(API_URL + 'images/read_single.php?id=' + id)
+    const response = await fetch(API_URL + 'imagens/read_single.php?id=' + id)
 
     const data = await response.json()
 
@@ -41,6 +41,8 @@ export async function apiCreate(endpoint, fields) {
         },
         body: JSON.stringify(fields)
     })
+
+    console.log(JSON.stringify(fields));
 
     const data = await response.json()
 

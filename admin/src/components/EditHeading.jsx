@@ -18,9 +18,9 @@ export default class EditHeading extends React.Component {
                             <span className='bi-arrow-left'></span> Voltar
                         </Link>
                     ) : (showReload) ? (
-                        <a className='icon reload' title='Recarregar' href=''>
+                        <span className='text-primary icon reload' title='Recarregar' onClick={window.location.reload}>
                             <span className='mx-auto bi-arrow-clockwise'></span>
-                        </a>
+                        </span>
                     ) : ''}
                 </span>
             </div>

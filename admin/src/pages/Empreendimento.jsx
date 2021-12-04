@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Container, Form, Col, Row, Button, FloatingLabel } from 'react-bootstrap'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
@@ -11,17 +11,6 @@ import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete } from '../he
 import '../scss/View.scss'
 
 const API_URL = process.env.REACT_APP_API_URL
-
-async function deleteEmpre(id) {
-
-    if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
-        apiDelete(endpoint, id).then(res => {
-            alert(res.message);
-            window.location.href = '/empreendimentos'
-        })
-
-    }
-}
 
 const initialFields = {
     nome: '',
@@ -43,6 +32,8 @@ function Empreendimento() {
 
     const { id } = useParams()
 
+    const navigate = useNavigate();
+
     let editMode = (typeof id !== 'undefined');
 
     const [fields, setFields] = useState(initialFields)
@@ -60,6 +51,17 @@ function Empreendimento() {
             <p>Erro ao carregar.</p>
         </Container>
     );
+    
+    async function deleteEmpre(id) {
+
+        if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
+            apiDelete(endpoint, id).then(res => {
+                alert(res.message);
+                navigate(archiveLink);
+            })
+
+        }
+    }
 
     if (editMode && data && fields === initialFields) {
         setFields(data)
@@ -80,7 +82,7 @@ function Empreendimento() {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = '/empreendimento/' + response.data.id
+                            navigate('/empreendimento/' + response.data.id)
                     }
                 })
             }
@@ -90,7 +92,7 @@ function Empreendimento() {
 
                         alert(response.message);
                         if (response.success !== false)
-                            window.location.href = '/empreendimento/' + data.id
+                            window.location.reload()
                     }
                 })
             }

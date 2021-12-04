@@ -24,7 +24,7 @@ async function deleteEmpre(id, permanently = false) {
                 deleted: 1
             }).then(res => {
                 alert(res.message);
-                window.location.href = ''
+                window.location.reload()
             })
         }
     }
@@ -32,7 +32,7 @@ async function deleteEmpre(id, permanently = false) {
         if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir este registro PERMANENTEMENTE?')) {
             apiDelete(endpoint, id).then(res => {
                 alert(res.message);
-                window.location.href = ''
+                window.location.reload()
             })
         }
     }
@@ -48,7 +48,7 @@ async function recoverEmpre(id) {
         if(res.success === false) {
             alert(res.message)
         }
-        window.location.href = ''
+        window.location.reload()
     })
 }
 
