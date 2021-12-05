@@ -15,6 +15,15 @@ html {
 
     .Header {
         flex: 0 1 auto;
+        
+        .navbar {
+            &-brand {
+                a {
+                    text-decoration: none;
+                    color: inherit;
+                }
+            }
+        }
     }
 
     .App {

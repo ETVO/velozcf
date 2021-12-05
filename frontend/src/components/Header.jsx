@@ -1,39 +1,46 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Navbar, Button } from 'react-bootstrap'
+
+import { fetchImage } from '../helpers';
 
 // styling
 import '../scss/Header.scss'
 
 const API_URL = process.env.REACT_APP_API_URL
 
-// async function getHeaderLogo() {
-//     const response = await fetch(API_URL + '/estaticas')
+async function getHeaderLogo() {
+    const response = await fetch(API_URL + '/configs/read.php')
 
-//     const data = await response.json()
+    const data = await response.json()
 
-//     if(data.statusCode === 400){
-//         return null
-//     }  
+    return data
+}
 
-//     return data 
-// }
+export default function Header({ logOut, user }) {
 
-export default function Header({logOut, user}) {
+    var [logo, setLogo] = useState(null);
 
-    // var [logo, setLogo] = useState();
-
-    // (async () => {
-    //     const loginData = await getHeaderLogo()
-    //     setLogo(loginData.logoHeader.url)
-    // })()
+    (async () => {
+        if(!logo) {
+            const configData = await getHeaderLogo();
+            const logo = await fetchImage(configData.data.logo.value);
+            setLogo(logo);
+        }
+    })()
 
     return (
-        <Navbar className='Header px-4 py-1 text-light'>
+        <Navbar className='Header px-4 py-1 text-light' variant="dark" bg="dark" >
             <Navbar.Brand>
-                <Link to='/'>
-                    {/* <img src={API_URL + logo} alt="" /> */}
-                </Link>
+                {(logo) ? (
+                    <Link to='/'>
+                        <img src={logo.url} alt={logo.caption} />
+                    </Link>
+                ) : (
+                    <Link className='brand-text' to='/'>
+                        Sistema Veloz
+                    </Link>
+                )}
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className='justify-content-end'>
@@ -43,7 +50,7 @@ export default function Header({logOut, user}) {
                     </span>
                     <img className='photo d-block' src={API_URL + user.photo.url} alt="" />
                 </div>
-                <Button className="log-out" onClick={ logOut }>
+                <Button className="log-out" onClick={logOut}>
                     <span>
                         Sair
                     </span>
