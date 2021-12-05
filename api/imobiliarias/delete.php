@@ -3,41 +3,33 @@
     // Headers
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
-    header('Access-Control-Allow-Methods: POST');
+    header('Access-Control-Allow-Methods: DELETE');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
     include_once '../../config/Database.php';
-    include_once '../../models/User.php';
+    include_once '../../models/Imobiliaria.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $user = new User($db);
+    $imob = new Imobiliaria($db);
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $user->set_properties($data, ['info', 'photo', 'imobiliaria']);
-    
-    $user->info->set_properties($data->info);
-    
-    $user->photo->id = (isset($data->photo_id)) ? $data->photo_id : $data->photo->id;
-    $user->imobiliaria->id = (isset($data->imobiliaria_id)) ? $data->imobiliaria_id : $data->imobiliaria->id;
+    $imob->id = $data->id;
 
-    if($user->create()) {
+    if($imob->delete()) {
         echo json_encode([
-            'data' => [
-                'id' => $user->id
-            ],
             'success' => true,
-            'message' => 'Usuário criado com sucesso.'
+            'message' => 'Imobiliária excluída com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Erro ao criar usuário.'
+            'message' => 'Erro ao excluir imobiliária.'
         ]);
 
     }

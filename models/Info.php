@@ -83,6 +83,7 @@
             if($row) {
                 $this->nome_completo = $row['nome_completo'];
                 $this->nacionalidade = $row['nacionalidade'];
+                $this->profissao = $row['profissao'];
                 $this->data_nasc = $row['data_nasc'];
                 $this->cpf = $row['cpf'];
                 $this->rg = $row['rg'];
@@ -135,14 +136,14 @@
         public function update() {
             // Create query
             $query = "UPDATE {$this->table}
-                SET
+                SET  
                     nome_completo = IFNULL(:nome_completo, nome_completo),
                     nacionalidade = IFNULL(:nacionalidade, nacionalidade),
                     profissao = IFNULL(:profissao, profissao),
                     data_nasc = IFNULL(:data_nasc, data_nasc),
                     cpf = IFNULL(:cpf, cpf),
                     rg = IFNULL(:rg, rg),
-                    orgao_exp = IFNULL(:orgao_exp, orgao_exp),
+                    orgao_exp = IFNULL(:orgao_exp, orgao_exp)
                 WHERE 
                     id = :id
             ";
@@ -158,6 +159,7 @@
             $stmt->bindParam(':cpf', sanitizeText($this->cpf));
             $stmt->bindParam(':rg', sanitizeText($this->rg));
             $stmt->bindParam(':orgao_exp', sanitizeText($this->orgao_exp));
+            $stmt->bindParam(':id', sanitizeInt($this->id));
             
             // Execute query
             if($stmt->execute()) {

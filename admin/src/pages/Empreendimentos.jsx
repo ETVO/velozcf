@@ -95,7 +95,11 @@ function Empreendimentos() {
 
                         return (
                             <tr key={item.id} className={(item.deleted == 1) ? 'deleted' : ''}>
-                                <td className='logo d-none d-sm-table-cell'><Link to={singleLink + item.id}><img src={item.logo.url} alt="" /></Link></td>
+                                <td className='logo d-none d-sm-table-cell'>
+                                    <Link to={singleLink + item.id}>
+                                        <img src={item.logo.url} alt="" />
+                                    </Link>
+                                </td>
                                 <td>#{item.id}</td>
                                 <td>{item.nome}</td>
                                 <td className='updatedAt d-none d-sm-table-cell'>{updatedAt}</td>

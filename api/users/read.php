@@ -5,63 +5,64 @@
     header('Content-Type: application/json');
 
     include_once '../../config/Database.php';
-    include_once '../../models/Cabana.php';
+    include_once '../../models/User.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $cabana = new Cabana($db);
+    $user = new User($db);
 
-    if(isset($_GET['empreendimento'])) {
-        $cabana->empreendimento->id = $_GET['empreendimento'];
+    if(isset($_GET['imobiliaria'])) {
+        $user->imobiliaria->id = $_GET['imobiliaria'];
     }
 
+    $showBlocked = (isset($_GET['blocked'])) ? boolval($_GET['blocked']) : true;
+
     // Post query & row count
-    $result = $cabana->read();
+    $result = $user->read($showBlocked);
     $num = $result->rowCount();
 
     // Check if any rows exist
     if($num > 0) {
         // Post array
-        $cabanas_arr = [];
-        $cabanas_arr['data'] = [];
+        $users_arr = [];
+        $users_arr['data'] = [];
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
 
-            $cabana_item = [
+            $user_item = [
                 'id' => intval($id),
-                'nome' => $nome,
-                'tamanho' => $tamanho,
-                'quartos' => $quartos,
-                'valor_base' => floatval($valor_base),
-                'disponivel' => boolval($disponivel),
-                'reservada' => boolval($reservada),
-                'imagem' => [
-                    'id' => intval($imagem_id),
-                    'url' => $imagem_url,
-                    'caption' => $imagem_caption
+                'nome_completo' => $nome_completo,
+                'username' => $username,
+                'email' => $email,
+                'role' => $role,
+                'creci' => $creci,
+                'blocked' => boolval($blocked),
+                'updated_at' => $updated_at,
+                'photo' => [
+                    'id' => intval($photo_id),
+                    'url' => $photo_url,
+                    'caption' => $photo_caption
                 ],
-                'galeria' => $galeria,
-                'id_mapa' => $id_mapa,
-                'empreendimento' => [
-                    'id' => intval($empre_id),
-                    'nome' => $empre_nome,
+                'imobiliaria' => [
+                    'id' => intval($imob_id),
+                    'nome' => $imob_nome,
                 ]
             ];
 
             // Push to data array
-            array_push($cabanas_arr['data'], $cabana_item);
+            array_push($users_arr['data'], $user_item);
         }
 
         // Encode into JSON & output 
-        echo json_encode($cabanas_arr);
+        echo json_encode($users_arr);
     }
     else {
         // Nothing found
         echo json_encode([
             'success' => false,
-            'message' => 'Nenhuma cabana foi encontrada.'
+            'message' => 'Nenhum usuário foi encontrado.'
         ]);
     }

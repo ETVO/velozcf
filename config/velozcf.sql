@@ -1,6 +1,15 @@
 SET FOREIGN_KEY_CHECKS=0;
 
+DROP TABLE IF EXISTS propostas;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS imobiliarias;
+DROP TABLE IF EXISTS pagamentos;
+DROP TABLE IF EXISTS infos;
+DROP TABLE IF EXISTS cotas;
+DROP TABLE IF EXISTS cabanas;
+DROP TABLE IF EXISTS empreendimentos;
 DROP TABLE IF EXISTS images;
+
 CREATE TABLE images (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     url VARCHAR(255) NOT NULL,
@@ -9,7 +18,6 @@ CREATE TABLE images (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS empreendimentos;
 CREATE TABLE empreendimentos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -23,7 +31,6 @@ CREATE TABLE empreendimentos (
     FOREIGN KEY cover_img_fk(cover_id) REFERENCES images(id) ON DELETE SET NULL
 );
 
-DROP TABLE IF EXISTS cabanas;
 CREATE TABLE cabanas (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -39,7 +46,6 @@ CREATE TABLE cabanas (
     FOREIGN KEY empreendimento_id_fk (empreendimento) REFERENCES empreendimentos(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS cotas;
 CREATE TABLE cotas (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     numero INT(11) NOT NULL,
@@ -52,7 +58,6 @@ CREATE TABLE cotas (
     FOREIGN KEY cabana_fk (cabana) REFERENCES cabanas(id) ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS infos;
 CREATE TABLE infos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	nome_completo VARCHAR(255) NOT NULL,
@@ -64,7 +69,6 @@ CREATE TABLE infos (
 	orgao_exp VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS pagamentos;
 CREATE TABLE pagamentos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     valor_proposta DECIMAL(10,2) NOT NULL,
@@ -75,7 +79,6 @@ CREATE TABLE pagamentos (
     meio_pagamento VARCHAR(255)
 );
 
-DROP TABLE IF EXISTS imobiliarias;
 CREATE TABLE imobiliarias (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -87,12 +90,12 @@ CREATE TABLE imobiliarias (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) DEFAULT 'venda' NOT NULL,
     estado_civil VARCHAR(255),
     creci VARCHAR(255),
     blocked BOOLEAN DEFAULT 0,
@@ -104,7 +107,6 @@ CREATE TABLE users (
     FOREIGN KEY imobiliaria_fk (imobiliaria) REFERENCES imobiliarias(id) ON DELETE SET NULL
 );
 
-DROP TABLE IF EXISTS propostas;
 CREATE TABLE propostas (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     endereco VARCHAR(255),

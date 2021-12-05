@@ -1,7 +1,15 @@
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const errors = {
-    requiredText: 'Campo obrigatório'
+    requiredText: 'Campo obrigatório.',
+    invalidDate: 'A data fornecida é inválida.',
+    invalidPassword: 'Senha inválida.',
+}
+
+export const roles = {
+    venda: 'Vendas',
+    geren: 'Gerência',
+    admin: 'Administração'
 }
 
 // Format number with dots between the thousands 

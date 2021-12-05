@@ -1,7 +1,6 @@
 <?php
     include_once "functions.php";
     include_once "env_constants.php";
-    error_reporting(ifset($_ENV['ERROR_REPORTING'], 0));
 
     class Database {
         // DB params

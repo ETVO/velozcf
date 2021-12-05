@@ -69,7 +69,7 @@ function Cabanas() {
 
     return (
         <Container className='Cabanas View my-5'>
-            <ViewHeading showReload={true} title='Cabanas' addNew='Adicionar Novo' addNewLink={singleLink} />
+            <ViewHeading showReload={true} title='Cabanas' addNew='Adicionar Nova' addNewLink={singleLink} />
             
             <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
                 {(empres) ? (

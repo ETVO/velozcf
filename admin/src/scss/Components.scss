@@ -1,11 +1,29 @@
 .ImageControl {
     img {
-       &.single {
-           display: block;
-           width: 150px;
-           height: 80px;
-           object-fit: contain;
-           object-position: left bottom;
-       } 
+        &.single {
+            display: block;
+            width: 150px;
+            height: 80px;
+            object-fit: contain;
+            object-position: left bottom;
+        }
     }
+}
+
+.PasswordControl {
+    .control-area {
+        display: flex;
+        position: relative;
+        .toggle-view {
+            margin: auto 0;
+            margin-left: -1.75rem;
+        }
+    }
+}
+
+.was-validated .PasswordControl .form-control:valid,
+.PasswordControl .form-control.is-valid,
+.was-validated .PasswordControl .form-control:invalid,
+.PasswordControl .form-control.is-invalid {
+    background-position: center right 2.25rem;
 }

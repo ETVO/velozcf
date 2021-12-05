@@ -7,39 +7,34 @@
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
     include_once '../../config/Database.php';
-    include_once '../../models/Cabana.php';
+    include_once '../../models/User.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $cabana = new Cabana($db);
+    $user = new User($db);
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $cabana->id = $data->id;
-    $cabana->nome = $data->nome;
-    $cabana->tamanho = $data->tamanho;
-    $cabana->quartos = $data->quartos;
-    $cabana->valor_base = $data->valor_base;
-    $cabana->disponivel = $data->disponivel;
-    $cabana->reservada = $data->reservada;
-    $cabana->imagem->id = (isset($data->imagem_id)) ? $data->imagem_id : $data->imagem->id;
-    $cabana->galeria = $data->galeria;
-    $cabana->id_mapa = $data->id_mapa;
-    $cabana->empreendimento->id = (isset($data->empreendimento_id)) ? $data->empreendimento_id : $data->empreendimento->id;
+    $user->set_properties($data, ['info', 'photo', 'imobiliaria']);
+    
+    $user->info->set_properties($data->info);
+    
+    $user->photo->id = (isset($data->photo_id)) ? $data->photo_id : $data->photo->id;
+    $user->imobiliaria->id = (isset($data->imobiliaria_id)) ? $data->imobiliaria_id : $data->imobiliaria->id;
 
-    if($cabana->update()) {
+    if($user->update()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Cabana atualizada.'
+            'message' => 'Usuário atualizado.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Erro ao atualizar cabana.'
+            'message' => 'Erro ao atualizar usuário.'
         ]);
 
     }

@@ -1,6 +1,8 @@
 <?php
 
-    class Imobiliaria {
+    include_once 'Model.php';
+
+    class Imobiliaria extends Model {
         // DB stuff
         private $conn;
         private $table = 'imobiliarias';
@@ -13,6 +15,7 @@
         public $bairro;
         public $cep;
         public $cidade;
+        public $user_count;
         public $updated_at;
 
         // Construct with DB
@@ -24,16 +27,21 @@
         public function read() {
             // Create query
             $query = "SELECT 
-                    id, 
+                    i.id, 
                     nome,
                     cnpj,
                     endereco,
                     bairro,
                     cep,
                     cidade,
-                    updated_at
+                    i.updated_at,
+                    COUNT(u.id) AS user_count
                 FROM 
-                    {$this->table}
+                    {$this->table} i
+                LEFT JOIN
+                    users u ON u.imobiliaria = i.id
+                GROUP BY
+                    i.id
                 ORDER BY 
                     nome ASC
             ";
@@ -51,18 +59,21 @@
         public function read_single() {
             // Create query
             $query = "SELECT
-                    id, 
-                    nome,
+                    i.id, 
+                    i.nome,
                     cnpj,
                     endereco,
                     bairro,
                     cep,
                     cidade,
-                    updated_at
+                    i.updated_at,
+                    COUNT(u.id) AS user_count
                 FROM 
-                    {$this->table}
+                    {$this->table} i
+                LEFT JOIN
+                    users u ON u.imobiliaria = i.id
                 WHERE
-                    id = ?
+                    i.id = ?
                 LIMIT 1
             ";
 
@@ -79,13 +90,7 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if($row) {
-                $this->nome = $row['nome'];
-                $this->cnpj = $row['cnpj'];
-                $this->endereco = $row['endereco'];
-                $this->bairro = $row['bairro'];
-                $this->cep = $row['cep'];
-                $this->cidade = $row['cidade'];
-                $this->updated_at = $row['updated_at'];
+                $this->set_properties($row);
                 
                 return true;
             }
@@ -103,7 +108,7 @@
                     endereco = :endereco,
                     bairro = :bairro,
                     cep = :cep,
-                    cidade = :cidade,
+                    cidade = :cidade
             ";
 
             // Prepare statement

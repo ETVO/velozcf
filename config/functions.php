@@ -1,11 +1,4 @@
 <?php 
-    // declare(strict_types=1);
-    // require_once(__DIR__ . '/../vendor/autoload.php');
-    // Dotenv\Dotenv::createImmutable(__DIR__ . '/../')->load();
-
-    // function get_env_var($name) {
-    //     return $_ENV[$name];
-    // }
 
     $env = file_get_contents(__DIR__ . '/../.env');
 
@@ -18,6 +11,8 @@
             $_ENV[$name] = $value;
         }
     }
+    
+    error_reporting(ifset($_ENV['ERROR_REPORTING'], 0));
 
     function ifset($val, $def) {
         return (isset($val)) ? $val : $def;

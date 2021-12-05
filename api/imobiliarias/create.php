@@ -7,37 +7,32 @@
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
     include_once '../../config/Database.php';
-    include_once '../../models/User.php';
+    include_once '../../models/Imobiliaria.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $user = new User($db);
+    $imob = new Imobiliaria($db);
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $user->set_properties($data, ['info', 'photo', 'imobiliaria']);
+    $imob->set_properties($data);
     
-    $user->info->set_properties($data->info);
-    
-    $user->photo->id = (isset($data->photo_id)) ? $data->photo_id : $data->photo->id;
-    $user->imobiliaria->id = (isset($data->imobiliaria_id)) ? $data->imobiliaria_id : $data->imobiliaria->id;
-
-    if($user->create()) {
+    if($imob->create()) {
         echo json_encode([
             'data' => [
-                'id' => $user->id
+                'id' => $imob->id
             ],
             'success' => true,
-            'message' => 'Usuário criado com sucesso.'
+            'message' => 'Imobiliária criada com sucesso.'
         ]);
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Erro ao criar usuário.'
+            'message' => 'Erro ao criar imobiliária.'
         ]);
 
     }

@@ -3,8 +3,9 @@
     include_once 'Info.php';
     include_once 'Image.php';
     include_once 'Imobiliaria.php';
+    include_once 'Model.php';
 
-    class User {
+    class User extends Model {
         // DB stuff
         private $conn;
         private $table = 'users';
@@ -14,6 +15,7 @@
         public $username;
         public $email;
         public $password;
+        public $role;
         public $estado_civil;
         public $creci;
         public $blocked;
@@ -37,6 +39,7 @@
                     u.id, 
                     u.username,
                     u.email,
+                    u.role,
                     u.creci,
                     u.blocked,
                     u.updated_at,
@@ -75,7 +78,7 @@
 
             $query .= "
                 ORDER BY 
-                    u.nome ASC
+                    info.nome_completo ASC
             ";
 
             // Prepare query
@@ -101,6 +104,8 @@
                     u.username,
                     u.email,
                     u.password,
+                    u.role,
+                    u.estado_civil,
                     u.creci,
                     u.blocked,
                     u.updated_at,
@@ -136,23 +141,17 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if($row) {
-                $this->username = $row['username'];
-                $this->email = $row['email'];
-                $this->password = $row['password'];
-                $this->creci = $row['creci'];
-                $this->blocked = $row['blocked'];
-                $this->updated_at = $row['updated_at'];
+                $this->set_properties($row);
 
-                // read single info
+                // read single for foreign keys
                 $this->info->id = $row['info_id'];
                 $this->info->read_single();
                 
                 $this->photo->id = $row['photo_id'];
-                $this->photo->url = $row['photo_url'];
-                $this->photo->caption = $row['photo_caption'];
+                $this->photo->read_single();
 
                 $this->imobiliaria->id = $row['imob_id'];
-                $this->imobiliaria->nome = $row['imob_nome'];
+                $this->imobiliaria->read_single();
                 
                 return true;
             }
@@ -168,9 +167,10 @@
                     username = :username,
                     email = :email,
                     password = :password,
+                    role = IFNULL(:role, DEFAULT(role)),
                     estado_civil = :estado_civil,
                     creci = :creci,
-                    blocked = IFNULL(:blocked, 0),
+                    blocked = IFNULL(:blocked, DEFAULT(blocked)),
                     info = :info,
                     photo = :photo,
                     imobiliaria = :imobiliaria
@@ -186,6 +186,7 @@
                 $stmt->bindParam(':username', sanitizeText($this->username));
                 $stmt->bindParam(':email', sanitizeText($this->email));
                 $stmt->bindParam(':password', sanitizeText($this->password));
+                $stmt->bindParam(':role', sanitizeText($this->role));
                 $stmt->bindParam(':estado_civil', sanitizeText($this->estado_civil));
                 $stmt->bindParam(':creci', sanitizeText($this->creci));
                 $stmt->bindParam(':blocked', sanitizeBoolean($this->blocked));
@@ -216,6 +217,7 @@
                     username = IFNULL(:username, username),
                     email = IFNULL(:email, email),
                     password = IFNULL(:password, password),
+                    role = IFNULL(:role, role),
                     estado_civil = IFNULL(:estado_civil, estado_civil),
                     creci = IFNULL(:creci, creci),
                     blocked = IFNULL(:blocked, 0),
@@ -229,10 +231,13 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
+            if(!$this->info->update()) return false;
+
             // Sanitize data & Bind params
             $stmt->bindParam(':username', sanitizeText($this->username));
             $stmt->bindParam(':email', sanitizeText($this->email));
             $stmt->bindParam(':password', sanitizeText($this->password));
+            $stmt->bindParam(':role', sanitizeText($this->role));
             $stmt->bindParam(':estado_civil', sanitizeText($this->estado_civil));
             $stmt->bindParam(':creci', sanitizeText($this->creci));
             $stmt->bindParam(':blocked', sanitizeBoolean($this->blocked));
@@ -240,6 +245,7 @@
             $stmt->bindParam(':info', sanitizeInt($this->info->id));
             $stmt->bindParam(':photo', sanitizeInt($this->photo->id));
             $stmt->bindParam(':imobiliaria', sanitizeInt($this->imobiliaria->id));
+            $stmt->bindParam(':id', sanitizeInt($this->id));
             
             // Execute query
             if($stmt->execute()) {

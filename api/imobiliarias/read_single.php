@@ -5,29 +5,29 @@
     header('Content-Type: application/json');
 
     include_once '../../config/Database.php';
-    include_once '../../models/User.php';
+    include_once '../../models/Imobiliaria.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $user = new User($db);
+    $imobiliaria = new Imobiliaria($db);
 
     // Get ID from URL
-    $user->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $imobiliaria->id = isset($_GET['id']) ? $_GET['id'] : die();
 
     // Read single
-    if($user->read_single()) {
+    if($imobiliaria->read_single()) {
 
-        $user_arr = get_object_vars($user);
+        $imobiliaria_arr = get_object_vars($imobiliaria);
     
         // Make JSON
-        print_r(json_encode($user_arr));
+        print_r(json_encode($imobiliaria_arr));
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Usuário não encontrado.'
+            'message' => 'Imobiliária não encontrada.'
         ]);
     }

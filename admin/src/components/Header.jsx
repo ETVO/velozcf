@@ -23,9 +23,9 @@ export default function Header() {
                     <Nav.Link as={Link} to='/empreendimentos' eventKey='/empreendimentos'>Empreendimentos</Nav.Link>
                     <Nav.Link as={Link} to='/cabanas' eventKey='/cabanas'>Cabanas</Nav.Link>
                     <Nav.Link as={Link} to='/images' eventKey='/images'>Imagens</Nav.Link>
-                    <Nav.Link as={Link} to='/propostas' eventKey='/propostas'>Propostas</Nav.Link>
                     <Nav.Link as={Link} to='/users' eventKey='/users'>Usuários</Nav.Link>
                     <Nav.Link as={Link} to='/imobiliarias' eventKey='/imobiliarias'>Imobiliárias</Nav.Link>
+                    <Nav.Link as={Link} to='/propostas' eventKey='/propostas'>Propostas</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

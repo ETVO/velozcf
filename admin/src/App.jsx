@@ -12,9 +12,11 @@ import Cabanas from './pages/Cabanas'
 import Cabana from './pages/Cabana'
 import Images from './pages/Images'
 import Image from './pages/Image'
-import Imobiliarias from './pages/Imobiliarias'
-import Propostas from './pages/Propostas'
 import Users from './pages/Users'
+import User from './pages/User'
+import Imobiliarias from './pages/Imobiliarias'
+import Imobiliaria from './pages/Imobiliaria'
+import Propostas from './pages/Propostas'
 
 // import styling
 import './scss/App.scss'
@@ -60,9 +62,13 @@ function App() {
 					<Route exact path="/images" element={(<Images />)}></Route>
 					<Route exact path="/image" element={(<Image />)}></Route>
 					<Route exact path="/image/:id" element={(<Image />)}></Route>
-					<Route exact path="/propostas" element={(<Propostas />)}></Route>
 					<Route exact path="/users" element={(<Users />)}></Route>
+					<Route exact path="/user" element={(<User />)}></Route>
+					<Route exact path="/user/:id" element={(<User />)}></Route>
+					<Route exact path="/propostas" element={(<Propostas />)}></Route>
 					<Route exact path="/imobiliarias" element={(<Imobiliarias />)}></Route>
+					<Route exact path="/imobiliaria" element={(<Imobiliaria />)}></Route>
+					<Route exact path="/imobiliaria/:id" element={(<Imobiliaria />)}></Route>
 				</Routes>
 			</div>
 			<Footer setLoggedIn={setLoggedIn} />
