@@ -63,7 +63,7 @@ const Cotas = forwardRef(({cabanaId}, ref) => {
 
     if(data.success && cotas.length === 0) {
         data.data.forEach(cota => {cota.index = cota.numero - 1});
-        setCotas(data.data)
+        setCotas(data.data);
     }
 
     const cotaChangeHandle = (e, index) => {

@@ -92,7 +92,7 @@ export default function GalleryCabana({ id, galeria }) {
                         )
                     }
                     else if (i > 3)
-                        return;
+                        return '';
                         
                     return (
                         <div className='selector' key={'sel' + i} onClick={() => setIndex(i)}>

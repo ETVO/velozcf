@@ -67,7 +67,7 @@ export default function Empreendimento() {
             
             // read cotas for each cabana
             await tmp.forEach(async cabana => {
-                let { data: cotas } = await apiRead('cotas', "?cabana=" + cabana.id)
+                let { data: cotas } = await apiRead('cotas', "?cabana_id=" + cabana.id)
                 
                 // store cotas as a property of cabana
                 cabana.cotas = cotas;
@@ -207,7 +207,11 @@ export default function Empreendimento() {
                             {'R$ ' + formatNumber(totalPrice())}
                         </div>
                         <div className="action">
-                            <Link className='btn btn-primary' to={'/proposta/' + id}>
+                            <Link
+                                disabled={(totalPrice() === 0)} 
+                                className='btn btn-primary' 
+                                to={((totalPrice() > 0) ? ('/proposta/' + id) : '')}
+                            >
                                 enviar proposta
                             </Link>
                         </div>

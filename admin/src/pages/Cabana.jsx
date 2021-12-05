@@ -284,9 +284,6 @@ function Cabana() {
                             </div>
                             <hr className='mt-2 mb-2' />
 
-                            {/* <small className='text-muted'>AVISO SISTEMA VELOZ:</small>
-                            <p>O seu usuário não tem permissão para acessar esta seção.</p> */}
-
                             {(editMode && data) ? (
                                 <Cotas cabanaId={data.id} ref={cotasRef} />
                             ) : 'Salve as alterações para inserir cotas.'}

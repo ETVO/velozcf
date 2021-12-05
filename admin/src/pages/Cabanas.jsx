@@ -13,6 +13,7 @@ import '../scss/View.scss'
 const API_URL = process.env.REACT_APP_API_URL
 
 const singleLink = '/cabana/'
+const singleEmpreLink = '/empreendimento/'
 const endpoint = 'cabanas'
 
 async function deleteCabana(id) {
@@ -105,7 +106,15 @@ function Cabanas() {
                             <tr key={item.id} className={(hide) ? 'd-none' : ''}>
                                 <td>#{item.id}</td>
                                 <td>{item.nome}</td>
-                                <td>{item.empreendimento.nome}</td>
+                                <td>
+                                    <Link to={singleEmpreLink + item.empreendimento.id} 
+                                        target="_blank" rel="noopener noreferrer"
+                                        title='Ver empreendimento'
+                                        className='text-decoration-none'
+                                    >
+                                        {item.empreendimento.nome} <span className='smaller bi-arrow-up-right'></span>
+                                    </Link>
+                                </td>
                                 <td>{'R$ ' + formatNumber(item.valor_base, true)}</td>
                                 {/* <td>{8}</td> */}
                                 <td className={'fw-bold ' + ((item.disponivel) ? ((item.reservada) ? 'text-warning' : 'text-green') : 'text-danger')}>
