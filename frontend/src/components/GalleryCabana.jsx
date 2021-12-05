@@ -36,34 +36,6 @@ export default function GalleryCabana({ id, galeria }) {
         getImages();
     }, [])
 
-    // console.log(galeriaArr);
-
-    // var tmp = [];
-
-    // /** fetch images */
-    // (async () => {
-    //     if(images.length === 0) {
-
-    //         await galeriaArr.forEach( imageId => {
-    //             fetch(API_URL + 'imagens/read_single.php?id=' + imageId).then(
-    //                 async res => {
-    //                     let data = await res.json();
-    //                     if(data.success !== false) {
-    //                         // console.log(data);
-    //                         tmp.push(data);
-    //                     }
-    //                 }
-    //             );
-    //         });
-
-
-    //     }
-    // })();
-
-    // if(tmp.length > 0) {
-    //     setImages(tmp);
-    // }
-
     return (
 
         <div className='GalleryCabana'>

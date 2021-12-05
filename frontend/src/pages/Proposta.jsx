@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Row, Col, Container, Button } from 'react-bootstrap'
 import { useParams, useNavigate, Navigate, Link } from 'react-router-dom'
-import { formatNumber } from '../helpers'
+import { apiRead, apiReadSingle, fetchImage, formatNumber, initialInfo, initialPagamento } from '../helpers'
 import { enviarProposta } from '../helpers/enviarProposta'
 
 import '../scss/Proposta.scss'
@@ -22,148 +22,140 @@ const initialUnidades = {
     cabanas: []
 }
 
-const initialPaymentFields = {
-    valorProposta: 0,
-    entrada: 0,
-    nParcelas: 1,
-    valorParcela: 0,    
-    valorFinal: 0,
-    meioPagamento: 'transferencia_pix'
-}
-
 const initialFields = {
-    infoComprador: {
-        nomeCompleto: '',
-        dataNasc: '',
-        nacionalidade: '',
-        profissao: '',
-        cpf: '',
-        rg: '',
-        orgaoExp: '',
-    },
-    estadoCivil: '',
-    regimeCasamento: '',
-    infoConjuge: {
-        nomeCompleto: '',
-        dataNasc: '',
-        nacionalidade: '',
-        profissao: '',
-        cpf: '',
-        rg: '',
-        orgaoExp: '',
-    },
+    unidades: [],
     endereco: '',
     bairro: '',
     cep: '',
     cidade: '',
     telefone: '',
     email: '',
-    pagamento: initialPaymentFields,
-    vendedor: 0,
+    estado_civil: '',
+    regime_casamento: '',
+    comprador: initialInfo,
+    conjuge: initialInfo,
+    pagamento: initialPagamento,
+    aprovada: 0,
     empreendimento: 0,
-    unidades: []
+    vendedor: 0,
 }
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export default function Proposta({user}) {
+export default function Proposta({ user }) {
     const { id } = useParams()
 
     const navigate = useNavigate()
 
-    const { loading, error, data } = useGet(API_URL  + 'empreendimentos/read_single.php?id=' + id);
+    const { loading, error, data } = useGet(API_URL + 'cabanas/read.php?empreendimento_id=' + id);
 
     const [selected, setSelected] = useState(initialSelected)
     const [activeStage, setStage] = useState(0)
     const [fields, setFields] = useState(initialFields);
 
-    (() => {
-        let storedSelected = JSON.parse(sessionStorage.getItem('selectedUnidades'))
-        let storedFields = JSON.parse(sessionStorage.getItem('formFields'))
-        let storedStage = JSON.parse(sessionStorage.getItem('formStage'))
+    /** set states on initial load */
+    (async () => {
 
-        if(activeStage === 0 && storedStage && storedStage.empreendimentoId === id) {
+        // selected cotas from previous page (empreendimento)
+        let storedSelected = JSON.parse(sessionStorage.getItem('selectedUnidades'))
+        if (selected === initialSelected && storedSelected && storedSelected.empreendimentoId === id) {
+            setSelected(storedSelected.selected)
+        }
+
+        // stage of the form 
+        let storedStage = JSON.parse(sessionStorage.getItem('formStage'))
+        if (activeStage === 0 && storedStage && storedStage.empreendimentoId === id) {
             setStage(storedStage.activeStage)
         }
 
-        if(fields === initialFields && storedFields && storedFields.empreendimentoId === id) {
-            if(storedFields.fields.vendedor === 0) {
+        // fields values of the form 
+        let storedFields = JSON.parse(sessionStorage.getItem('formFields'))
+        if (fields === initialFields && storedFields && storedFields.empreendimentoId === id) {
+            if (storedFields.fields.vendedor === 0) {
                 storedFields.fields.vendedor = user.id
             }
-            if(storedFields.fields.empreendimento === 0) {
+            if (storedFields.fields.empreendimento === 0) {
                 storedFields.fields.empreendimento = id
             }
             setFields(storedFields.fields)
         }
         else {
-            if(fields.vendedor === 0) {
-                let newFields = JSON.parse(JSON.stringify(fields))
-                // newFields.vendedor = user.id
 
-                setFields(newFields)
+            if (fields.vendedor === 0) {
+                let newFields = JSON.parse(JSON.stringify(fields));
+                newFields.vendedor = user.id
+
+                setFields(newFields);
             }
-            if(fields.empreendimento === 0) {
-                let newFields = JSON.parse(JSON.stringify(fields))
+            if (fields.empreendimento === 0) {
+                let newFields = JSON.parse(JSON.stringify(fields));
                 newFields.empreendimento = parseInt(id)
 
-                setFields(newFields)
+                setFields(newFields);
             }
+
         }
-        
-        if(selected === initialSelected && storedSelected && storedSelected.empreendimentoId === id) {
-            setSelected(storedSelected.selected)
-        }
-    
-        if(data && fields.unidades.length === 0 && selected !== initialSelected) {
-            
-            let newCabanas = []
-            let valorProposta = 0.00
-            data.empreendimento.cabanas.map(cabana => {
-                let newCotas = []
-    
-                let cabanaIndex = selected.cabanas.map(c => c.id).indexOf(cabana.id)
-    
-                const isSelected = cabanaIndex !== -1
-                
-                if(isSelected) {
-                    cabana.cotas.filter(cota => {
-                        let isCotaSelected = selected.cabanas[cabanaIndex].cotas.map(c => c.id).indexOf(cota.id) !== -1
-    
-                        if(isCotaSelected) {
-                            const {__typename, ...other} = cota
-                        
-                            newCotas.push({
-                                ...other
-                            })
-                            
-                            valorProposta += parseFloat(cota.valor)
-                        }
-                        
-                        return isCotaSelected
-                    })
-    
-                    newCabanas.push({
-                        id: cabana.id,
-                        nome: cabana.nome,
-                        cotas: newCotas,
-                    })
-    
-                } 
-                
-                return isSelected
+
+        // get cabanas from selected
+        if (data && fields.unidades.length === 0 && selected !== initialSelected) {
+            let valor_proposta = 0.00;
+            let tmp = data.data;
+            let unidades = [];
+
+            if (false) {
+                await tmp.filter(async cabana => {
+
+                    // get current cabana index
+                    let cabanaIndex = selected.cabanas.map(c => c.id).indexOf(cabana.id)
+
+                    console.log(cabana.nome, '\n' + cabanaIndex);
+
+                    // return false if current cabana is not selected
+                    if (cabanaIndex === -1) return false;
+
+                    // Get array of IDs of selected cotas
+                    let cotasIDs = selected.cabanas[cabanaIndex].cotas.map(c => c.id);
+
+                    let cotasValores = selected.cabanas[cabanaIndex].cotas.map(c => c.valor);
+                    cotasValores.reduce((valor_proposta, v) => valor_proposta + v, valor_proposta);
+
+                    cabana.cotas = []
+                    // loop through all the fetched cotas
+                    cotasIDs.forEach(cota => {
+
+                        valor_proposta += parseFloat(cota.valor)
+
+                        const cotaData = new Promise(resolve => {
+                            apiReadSingle('cotas', cota)
+                                .then(res => {
+                                    resolve(res);
+                                });
+                        })
+                        cabana.cotas.push(cotaData);
+                    });
+
+                    cabana.cotas = await Promise.all(cabana.cotas);
+                    unidades.push(cabana);
+                });
+            }
+
+
+            selected.cabanas.forEach(cabana => {
+                cabana.cotas.forEach(cota => {
+                    valor_proposta += parseFloat(cota.valor)
+                })
             })
-            
-            let newFields = JSON.parse(JSON.stringify(fields))
-            newFields.pagamento.valorProposta = valorProposta
-            newFields.unidades = newCabanas
-            console.log(newFields)
-            setFields(newFields)
-    
+
+            let tmpFields = JSON.parse(JSON.stringify(fields));
+            tmpFields.pagamento.valor_proposta = valor_proposta;
+            tmpFields.unidades = selected.cabanas;
+
+            setFields(tmpFields)
         }
     })()
 
     const setStageFilter = (newStage) => {
-        if(newStage) {
+        if (newStage) {
             let stageJSON = JSON.stringify({
                 empreendimentoId: id,
                 activeStage: newStage
@@ -179,7 +171,7 @@ export default function Proposta({user}) {
     }
 
     const setFieldsFilter = (newFields) => {
-        if(newFields) {
+        if (newFields) {
             let fieldsJSON = JSON.stringify({
                 empreendimentoId: id,
                 fields: newFields
@@ -195,7 +187,7 @@ export default function Proposta({user}) {
     }
 
     const setPaymentFields = (paymentFields) => {
-        if(paymentFields) {
+        if (paymentFields) {
             let newFields = JSON.parse(JSON.stringify(fields))
             newFields.pagamento = paymentFields;
 
@@ -209,7 +201,7 @@ export default function Proposta({user}) {
         }
         else {
             let newFields = JSON.parse(JSON.stringify(fields))
-            newFields.pagamento = initialPaymentFields
+            newFields.pagamento = initialPagamento
 
             let fieldsJSON = JSON.stringify({
                 empreendimentoId: id,
@@ -222,7 +214,7 @@ export default function Proposta({user}) {
     }
 
     const submitNext = () => {
-        if(activeStage === 2){
+        if (activeStage === 2) {
             enviarProposta(fields)
         }
         else {
@@ -235,7 +227,7 @@ export default function Proposta({user}) {
         <DadosPagamento paymentFields={fields.pagamento} setPaymentFields={setPaymentFields} submit={submitNext} />,
         <RevisaoProposta fields={fields} submit={submitNext} />
     ]
-    
+
     const prevText = [
         'Voltar para o mapa',
         'Voltar',
@@ -249,7 +241,7 @@ export default function Proposta({user}) {
     ]
 
     const backClick = () => {
-        if(activeStage === 0) {
+        if (activeStage === 0) {
             navigate('/empreendimento/' + id)
         }
         else {
@@ -257,14 +249,14 @@ export default function Proposta({user}) {
         }
     }
 
-    if(loading) {
+    if (loading) {
         return (
             <div className='Proposta d-flex h-100'>
                 <p className='m-auto'>Carregando...</p>
             </div>
-        ) 
+        )
     }
-    if(error) {
+    if (error) {
         return (
             <div className='Proposta d-flex h-100'>
                 <p className='m-auto'>Ocorreu um erro ao carregar a página de proposta.</p>
@@ -290,7 +282,7 @@ export default function Proposta({user}) {
                             {stages.map((stage, i) => {
                                 let className = 'stage-bar'
 
-                                if(activeStage === i)
+                                if (activeStage === i)
                                     className += ' active'
                                 else if (activeStage > i)
                                     className += ' previous'
@@ -303,11 +295,11 @@ export default function Proposta({user}) {
 
                         <div className="stages mt-2 mb-4">
                             {stages.map((stage, i) => {
-                                if(i === activeStage) {
+                                if (i === activeStage) {
                                     return (
                                         <div key={'stage' + i} className="stage-view">
                                             {stage}
-                                        </div> 
+                                        </div>
                                     )
                                 }
                             })}
@@ -322,21 +314,28 @@ export default function Proposta({user}) {
                         <div className="brief">
                             <p className='title'>Unidade:</p>
                             {fields.unidades.map(cabana => {
-                                return (
+
+                                return (cabana) ? (
                                     <div key={cabana.id} className="brief-section my-2">
                                         <h5 className='brief-title'>{cabana.nome}</h5>
-                                        {(cabana.cotas.map(cota => {
-                                            return (
-                                                <div key={cota.id} className="brief-section">
-                                                    <span className='nome-cota'>{'Cota ' + cota.numero}</span>
-                                                    <span className='datas ms-2'>{cota.dataInicio + ' – ' + cota.dataFim}</span>
-                                                </div>
-                                            )
-                                        }))}
+                                        {(cabana.cotas) ? (
+                                            cabana.cotas.map(cota => {
+                                                return (
+                                                    <div key={cota.id} className="brief-section">
+                                                        <span className='nome-cota'>
+                                                            {'Cota ' + cota.numero}
+                                                        </span>
+                                                        <span className='datas ms-2'>
+                                                            {cota.data_inicio + ' – ' + cota.data_fim}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            })
+                                        ) : ''}
                                     </div>
-                                )
+                                ) : ''
                             })}
-                            <span className='total-price'>{'R$ ' + formatNumber(fields.pagamento.valorProposta)}</span>
+                            <span className='total-price'>{'R$ ' + formatNumber(fields.pagamento.valor_proposta)}</span>
                         </div>
                     ) : (
                         <div className="brief">
@@ -347,21 +346,21 @@ export default function Proposta({user}) {
                     {(activeStage >= 1) ? (
                         <div className="brief mt-3">
                             <p className='title muted'>Comprador:</p>
-                            
+
                             <div className="brief-section mb-2">
-                                <h5 className='brief-title'>{fields.infoComprador.nomeCompleto}</h5>
+                                <h5 className='brief-title'>{fields.comprador.nome_completo}</h5>
                                 <span className=''>{fields.email}</span>
                             </div>
                         </div>
                     ) : (
                         <p onLoad={() => setStageFilter(1)}></p>
                     )}
-                    {(activeStage >= 1 && fields.estadoCivil === 'Casado') ? (
+                    {(activeStage >= 1 && fields.estado_civil === 'Casado') ? (
                         <div className="brief mt-3">
                             <p className='title muted'>Cônjuge:</p>
-                            
+
                             <div className="brief-section mb-2">
-                                <h5 className='brief-title'>{fields.infoConjuge.nomeCompleto}</h5>
+                                <h5 className='brief-title'>{fields.conjuge.nome_completo}</h5>
                             </div>
                         </div>
                     ) : ''}
@@ -369,8 +368,8 @@ export default function Proposta({user}) {
 
             </Row>
 
-            
-            
+
+
         </div>
     )
 }

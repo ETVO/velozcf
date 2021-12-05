@@ -74,7 +74,15 @@ export default function Empreendimento() {
             })
 
             // set cabanas accordingly
-            setCabanas(tmp)
+            setCabanas(tmp)   
+        }
+
+        let storedSelected = JSON.parse(sessionStorage.getItem('selectedUnidades'))
+        
+        if(selected === initialSelected && storedSelected) {
+            if(storedSelected.empreendimentoId === id) {
+                setSelected(storedSelected.selected)
+            }
         }
     })();
 
@@ -82,7 +90,7 @@ export default function Empreendimento() {
     const setSelectedFilter = selected => {
         if(selected) {
             let selectedJSON = JSON.stringify({
-                empreendimentoId: data.id,
+                empreendimentoId: id,
                 selected: selected
             })
             

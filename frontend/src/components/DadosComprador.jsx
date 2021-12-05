@@ -3,12 +3,16 @@ import { Form, Col, Row, Button } from 'react-bootstrap'
 import InputMask from 'react-input-mask';
 import moment from 'moment'
 
+import { errors } from '../helpers';
+
+const estado_civil_options = ['Solteiro', 'Casado', 'Separado', 'Divorciado', 'Viúvo'];
+
 export default function DadosComprador({ fields, setFields, submit }) {
 
     let minDataNasc = moment().subtract(105, 'years')
     let maxDataNasc = moment().subtract(18, 'years')
 
-    const [conjuge, setConjuge] = useState(fields.estadoCivil === 'Casado');
+    const [conjuge, setConjuge] = useState(fields.estado_civil === 'Casado');
     const [validated, setValidated] = useState(false);
 
     const handleSubmit = e => {
@@ -40,15 +44,12 @@ export default function DadosComprador({ fields, setFields, submit }) {
         else {
             formValues[id] = value;
         }
-        
-        // show/hide infoConjuge fields depending on the estadoCivil value
-        if(id === 'estadoCivil') setConjuge(value === 'Casado')
+
+        // show/hide conjuge fields depending on the estado_civil value
+        if (id === 'estado_civil') setConjuge(value === 'Casado')
 
         setFields(formValues)
     }
-
-    const requiredErrorText = 'Campo obrigatório.'
-    const dataNascErrorText = 'Data inválida.'
 
     return (
         <div className='DadosComprador'>
@@ -60,71 +61,70 @@ export default function DadosComprador({ fields, setFields, submit }) {
                         <h5>Comprador</h5>
                     </div>
                     <div className="section-content">
-                        <Form.Group className="form-row" controlId="infoComprador.nomeCompleto">
+                        <Form.Group className="form-row" controlId="comprador.nome_completo">
                             <Form.Label>Nome completo:</Form.Label>
-                            <Form.Control onChange={handleChange} type="text" defaultValue={fields.infoComprador.nomeCompleto} placeholder="Nome Sobrenome" required />
+                            <Form.Control onChange={handleChange} type="text" defaultValue={fields.comprador.nome_completo} placeholder="Nome Sobrenome" required />
                             <Form.Control.Feedback type="invalid">
-                                {requiredErrorText}
+                                {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
 
                         <Row className="form-row">
-                            <Form.Group as={Col} lg={4} controlId="infoComprador.dataNasc">
+                            <Form.Group as={Col} lg={4} controlId="comprador.data_nasc">
                                 <Form.Label>Data de nascimento:</Form.Label>
                                 <Form.Control onChange={handleChange}
                                     type="date"
-                                    defaultValue={fields.infoComprador.dataNasc}
+                                    defaultValue={fields.comprador.data_nasc}
                                     placeholder="DD/MM/AAAA"
                                     min={minDataNasc.format('YYYY-MM-DD')}
                                     max={maxDataNasc.format('YYYY-MM-DD')}
                                     required
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    {dataNascErrorText}
+                                    {errors.invalidDate}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="infoComprador.nacionalidade">
+                            <Form.Group as={Col} controlId="comprador.nacionalidade">
                                 <Form.Label>Nacionalidade:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
-                                    defaultValue={fields.infoComprador.nacionalidade}
+                                    defaultValue={fields.comprador.nacionalidade}
                                     placeholder="Brasileiro(a)" required />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Row>
 
-                        <Form.Group className="form-row" controlId="infoComprador.profissao">
+                        <Form.Group className="form-row" controlId="comprador.profissao">
                             <Form.Label>Profissão:</Form.Label>
                             <Form.Control onChange={handleChange} type="text"
-                                defaultValue={fields.infoComprador.profissao}
+                                defaultValue={fields.comprador.profissao}
                                 placeholder="Profissão" required />
                             <Form.Control.Feedback type="invalid">
-                                {requiredErrorText}
+                                {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group className="form-row" controlId="estadoCivil">
+                        <Form.Group className="form-row" controlId="estado_civil">
                             <Form.Label>Estado civil:</Form.Label>
-                            <Form.Control onChange={handleChange} as={Form.Select} required defaultValue={fields.estadoCivil}>
-                                <option disabled value=''>Escolha uma opção</option>
-                                <option value="Solteiro">Solteiro</option>
-                                <option value="Casado">Casado</option>
-                                <option value="Viúvo">Viúvo</option>
-                                <option value="Separado">Separado</option>
-                                <option value="Divorciado">Divorciado</option>
+                            <Form.Control onChange={handleChange} as={Form.Select} required value={fields.estado_civil}>
+                                {estado_civil_options.map(option => {
+                                    return (
+                                        <option key={option} value={option}>{option}</option>
+                                    );
+                                })}
                             </Form.Control>
                             <Form.Control.Feedback type="invalid">
-                                {requiredErrorText}
+                                {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
 
                         {(conjuge) ? (
                             <div className="casado-fields">
-                                <Form.Group className="form-row" controlId="regimeCasamento">
+                                <Form.Group className="form-row" controlId="regime_casamento">
                                     <Form.Label>Regime de casamento:</Form.Label>
-                                    <Form.Control onChange={handleChange} as={Form.Select} required defaultValue={fields.regimeCasamento}>
+                                    <Form.Control onChange={handleChange} as={Form.Select} required defaultValue={fields.regime_casamento}>
                                         <option disabled value=''>Escolha uma opção</option>
                                         <option value="Comunhão total de bens">Comunhão total de bens</option>
                                         <option value="Comunhão parcial de bens">Comunhão parcial de bens</option>
@@ -132,7 +132,7 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                         <option value="Participação final nos aquestos">Participação final nos aquestos</option>
                                     </Form.Control>
                                     <Form.Control.Feedback type="invalid">
-                                        {requiredErrorText}
+                                        {errors.requiredText}
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
@@ -142,87 +142,87 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                         <h5>Cônjuge</h5>
                                     </div>
                                     <div className="section-content">
-                                        <Form.Group className="form-row" controlId="infoConjuge.nomeCompleto">
+                                        <Form.Group className="form-row" controlId="conjuge.nome_completo">
                                             <Form.Label>Nome completo:</Form.Label>
                                             <Form.Control onChange={handleChange} type="text"
-                                                defaultValue={fields.infoConjuge.nomeCompleto}
+                                                defaultValue={fields.conjuge.nome_completo}
                                                 placeholder="Nome Sobrenome" required />
                                             <Form.Control.Feedback type="invalid">
-                                                {requiredErrorText}
+                                                {errors.requiredText}
                                             </Form.Control.Feedback>
                                         </Form.Group>
 
                                         <Row className="form-row">
-                                            <Form.Group as={Col} lg={4} controlId="infoConjuge.dataNasc">
+                                            <Form.Group as={Col} lg={4} controlId="conjuge.data_nasc">
                                                 <Form.Label>Data de nascimento:</Form.Label>
                                                 <Form.Control onChange={handleChange}
                                                     type="date"
-                                                    defaultValue={fields.infoConjuge.dataNasc}
+                                                    defaultValue={fields.conjuge.data_nasc}
                                                     placeholder="DD/MM/AAAA"
                                                     min={minDataNasc.format('YYYY-MM-DD')}
                                                     max={maxDataNasc.format('YYYY-MM-DD')}
                                                     required
                                                 />
                                                 <Form.Control.Feedback type="invalid">
-                                                    {requiredErrorText}
+                                                    {errors.requiredText}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
 
-                                            <Form.Group as={Col} controlId="infoConjuge.nacionalidade">
+                                            <Form.Group as={Col} controlId="conjuge.nacionalidade">
                                                 <Form.Label>Nacionalidade:</Form.Label>
                                                 <Form.Control onChange={handleChange} type="text"
-                                                    defaultValue={fields.infoConjuge.nacionalidade}
+                                                    defaultValue={fields.conjuge.nacionalidade}
                                                     placeholder="Brasileiro(a)" />
                                                 <Form.Control.Feedback type="invalid">
-                                                    {requiredErrorText}
+                                                    {errors.requiredText}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
                                         </Row>
 
-                                        <Form.Group className="form-row" controlId="infoConjuge.profissao">
+                                        <Form.Group className="form-row" controlId="conjuge.profissao">
                                             <Form.Label>Profissão:</Form.Label>
                                             <Form.Control onChange={handleChange} type="text"
-                                                defaultValue={fields.infoConjuge.profissao}
+                                                defaultValue={fields.conjuge.profissao}
                                                 placeholder="Profissão" required />
                                             <Form.Control.Feedback type="invalid">
-                                                {requiredErrorText}
+                                                {errors.requiredText}
                                             </Form.Control.Feedback>
                                         </Form.Group>
 
 
                                         <Row className="form-row">
-                                            <Form.Group as={Col} controlId="infoConjuge.cpf">
+                                            <Form.Group as={Col} controlId="conjuge.cpf">
                                                 <Form.Label>CPF:</Form.Label>
                                                 <Form.Control onChange={handleChange}
                                                     as={InputMask}
-                                                    defaultValue={fields.infoConjuge.cpf}
+                                                    defaultValue={fields.conjuge.cpf}
                                                     mask="999.999.999-99"
                                                     maskChar="_"
                                                     placeholder='000.000.000-00'
                                                     required
                                                 />
                                                 <Form.Control.Feedback type="invalid">
-                                                    {requiredErrorText}
+                                                    {errors.requiredText}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
 
-                                            <Form.Group as={Col} controlId="infoConjuge.rg">
+                                            <Form.Group as={Col} controlId="conjuge.rg">
                                                 <Form.Label>RG:</Form.Label>
                                                 <Form.Control onChange={handleChange} type="text"
-                                                    defaultValue={fields.infoConjuge.rg}
+                                                    defaultValue={fields.conjuge.rg}
                                                     placeholder="0000000" required />
                                                 <Form.Control.Feedback type="invalid">
-                                                    {requiredErrorText}
+                                                    {errors.requiredText}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
 
-                                            <Form.Group as={Col} controlId="infoConjuge.orgaoExp">
+                                            <Form.Group as={Col} controlId="conjuge.orgao_exp">
                                                 <Form.Label>Órgão Exp.:</Form.Label>
                                                 <Form.Control onChange={handleChange} type="text"
-                                                    defaultValue={fields.infoConjuge.orgaoExp}
+                                                    defaultValue={fields.conjuge.orgao_exp}
                                                     placeholder="SSP/SC" required />
                                                 <Form.Control.Feedback type="invalid">
-                                                    {requiredErrorText}
+                                                    {errors.requiredText}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
 
@@ -233,38 +233,38 @@ export default function DadosComprador({ fields, setFields, submit }) {
                         ) : ''}
 
                         <Row className="form-row">
-                            <Form.Group as={Col} controlId="infoComprador.cpf">
+                            <Form.Group as={Col} controlId="comprador.cpf">
                                 <Form.Label>CPF:</Form.Label>
                                 <Form.Control onChange={handleChange}
                                     as={InputMask}
-                                    defaultValue={fields.infoComprador.cpf}
+                                    defaultValue={fields.comprador.cpf}
                                     mask="999.999.999-99"
                                     maskChar="_"
                                     placeholder='000.000.000-00'
                                     required
                                 />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="infoComprador.rg">
+                            <Form.Group as={Col} controlId="comprador.rg">
                                 <Form.Label>RG:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
-                                    defaultValue={fields.infoComprador.rg}
+                                    defaultValue={fields.comprador.rg}
                                     placeholder="0000000" required />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="infoComprador.orgaoExp">
+                            <Form.Group as={Col} controlId="comprador.orgao_exp">
                                 <Form.Label>Órgão Exp.:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
-                                    defaultValue={fields.infoComprador.orgaoExp}
+                                    defaultValue={fields.comprador.orgao_exp}
                                     placeholder="SSP/SC" required />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
@@ -277,7 +277,7 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                 placeholder="Rua, número, apartamento" required />
 
                             <Form.Control.Feedback type="invalid">
-                                {requiredErrorText}
+                                {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
 
@@ -289,7 +289,7 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                     defaultValue={fields.bairro}
                                     placeholder="Bairro" required />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
@@ -299,7 +299,7 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                     defaultValue={fields.cep}
                                     placeholder="00000-000" required />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
@@ -311,7 +311,7 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                 defaultValue={fields.cidade}
                                 placeholder="Cidade/UF" required />
                             <Form.Control.Feedback type="invalid">
-                                {requiredErrorText}
+                                {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
 
@@ -323,7 +323,7 @@ export default function DadosComprador({ fields, setFields, submit }) {
                                     defaultValue={fields.telefone}
                                     placeholder="(00) 00000-0000" required />
                                 <Form.Control.Feedback type="invalid">
-                                    {requiredErrorText}
+                                    {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
@@ -332,10 +332,10 @@ export default function DadosComprador({ fields, setFields, submit }) {
                         <Form.Group className="form-row" controlId="email">
                             <Form.Label>Email:</Form.Label>
                             <Form.Control onChange={handleChange} type="email"
-                                    defaultValue={fields.email} 
-                                     placeholder="email.exemplo@dominio.com" required />
+                                defaultValue={fields.email}
+                                placeholder="email.exemplo@dominio.com" required />
                             <Form.Control.Feedback type="invalid">
-                                {requiredErrorText}
+                                {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
                     </div>

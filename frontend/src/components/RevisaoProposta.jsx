@@ -13,42 +13,42 @@ export default function RevisaoProposta({ fields, submit }) {
 
                     <div className="field-view">
                         <small>Nome completo:</small>
-                        <p>{fields.infoComprador.nomeCompleto}</p>
+                        <p>{fields.comprador.nome_completo}</p>
                     </div>
 
                     <div className='field-row'>
                         <div className="field-view">
                             <small>Data de nascimento:</small>
-                            <p>{moment(fields.infoComprador.dataNasc).format('DD/MM/yyyy')}</p>
+                            <p>{moment(fields.comprador.data_nasc).format('DD/MM/yyyy')}</p>
                         </div>
                         <div className="field-view">
                             <small>Nacionalidade:</small>
-                            <p>{fields.infoComprador.nacionalidade}</p>
+                            <p>{fields.comprador.nacionalidade}</p>
                         </div>
                     </div>
 
                     <div className="field-view">
                         <small>Profissão:</small>
-                        <p>{fields.infoComprador.profissao}</p>
+                        <p>{fields.comprador.profissao}</p>
                     </div>
 
                     <div className="field-view">
                         <small>Estado civil:</small>
-                        <p>{fields.estadoCivil}</p>
+                        <p>{fields.estado_civil}</p>
                     </div>
 
                     <div className='field-row'>
                         <div className="field-view">
                             <small>CPF:</small>
-                            <p>{fields.infoComprador.cpf}</p>
+                            <p>{fields.comprador.cpf}</p>
                         </div>
                         <div className="field-view">
                             <small>RG:</small>
-                            <p>{fields.infoComprador.rg}</p>
+                            <p>{fields.comprador.rg}</p>
                         </div>
                         <div className="field-view">
                             <small>Órgão exp.:</small>
-                            <p>{fields.infoComprador.orgaoExp}</p>
+                            <p>{fields.comprador.orgao_exp}</p>
                         </div>
                     </div>
 
@@ -86,43 +86,43 @@ export default function RevisaoProposta({ fields, submit }) {
                 </div>
 
                 {
-                    (fields.estadoCivil === 'Casado') ? (
+                    (fields.estado_civil === 'Casado') ? (
                         <div className="review-section mt-3">
                             <h4>Cônjuge</h4>
 
                             <div className="field-view">
                                 <small>Nome completo:</small>
-                                <p>{fields.infoConjuge.nomeCompleto}</p>
+                                <p>{fields.conjuge.nome_completo}</p>
                             </div>
 
                             <div className='field-row'>
                                 <div className="field-view">
                                     <small>Data de nascimento:</small>
-                                    <p>{moment(fields.infoConjuge.dataNasc).format('DD/MM/yyyy')}</p>
+                                    <p>{moment(fields.conjuge.data_nasc).format('DD/MM/yyyy')}</p>
                                 </div>
                                 <div className="field-view">
                                     <small>Nacionalidade:</small>
-                                    <p>{fields.infoConjuge.nacionalidade}</p>
+                                    <p>{fields.conjuge.nacionalidade}</p>
                                 </div>
                             </div>
 
                             <div className="field-view">
                                 <small>Profissão:</small>
-                                <p>{fields.infoConjuge.profissao}</p>
+                                <p>{fields.conjuge.profissao}</p>
                             </div>
 
                             <div className='field-row'>
                                 <div className="field-view">
                                     <small>CPF:</small>
-                                    <p>{fields.infoConjuge.cpf}</p>
+                                    <p>{fields.conjuge.cpf}</p>
                                 </div>
                                 <div className="field-view">
                                     <small>RG:</small>
-                                    <p>{fields.infoConjuge.rg}</p>
+                                    <p>{fields.conjuge.rg}</p>
                                 </div>
                                 <div className="field-view">
                                     <small>Órgão exp.:</small>
-                                    <p>{fields.infoConjuge.orgaoExp}</p>
+                                    <p>{fields.conjuge.orgao_exp}</p>
                                 </div>
                             </div>
                         </div>

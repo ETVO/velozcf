@@ -30,7 +30,7 @@ export default function CotasCabana({cabana, selected, setSelected}) {
 
             if(cabanaIndex === -1) { // cabana does not exist in cabanas array yet
                 newSelected.cabanas.push({
-                    id: cabana.id,
+                    ...cabana,
                     cotas: [cota]
                 })
             } // cabana element already exists -> let's push this 'cota' in the 'cotas' array of this element

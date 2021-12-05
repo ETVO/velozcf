@@ -27,10 +27,12 @@ function App() {
 
 	const user = {
 		fullname: 'Usuário Teste',
-		photo: {url: '../public/images/snow.jpg'}
+		id: 1,
+		id: 1,
+		photo: { url: '../public/images/snow.jpg' }
 	}
 
-	if(!token) {
+	if (!token) {
 		return (
 			<Router>
 				<div className="App">
@@ -43,17 +45,17 @@ function App() {
 		)
 	}
 	// else if(token.user.confirmed && !token.user.blocked) {
-	else if(token) {
+	else if (token) {
 
 		const logOut = e => {
 			sessionStorage.clear()
 			localStorage.clear()
 			setToken(null)
 		}
-		
+
 		return (
 			<Router>
-				<Header logOut={ logOut } user={ user }>
+				<Header logOut={logOut} user={user}>
 
 				</Header>
 				<div className="App">
@@ -62,7 +64,7 @@ function App() {
 						<Route exact path="/" element={(<Empreendimentos />)}></Route>
 						<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
 						<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
-						<Route exact path="/proposta/:id" element={(<Proposta />)}></Route>
+						<Route exact path="/proposta/:id" element={(<Proposta user={user} />)}></Route>
 					</Routes>
 				</div>
 			</Router>

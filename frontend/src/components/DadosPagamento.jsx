@@ -46,7 +46,7 @@ export default function DadosPagamento({ paymentFields, setPaymentFields, submit
                 else 
                     value = parseFloat(value)
             }
-            if(id === 'nParcelas') {
+            if(id === 'n_parcelas') {
                 if(value === '')
                     value = 0
                 else 
@@ -61,8 +61,8 @@ export default function DadosPagamento({ paymentFields, setPaymentFields, submit
 
     const getValorParcela = () => {
 
-        let P = parseFloat(paymentFields.valorProposta)
-        const n = parseInt(paymentFields.nParcelas)
+        let P = parseFloat(paymentFields.valor_proposta)
+        const n = parseInt(paymentFields.n_parcelas)
         const e = parseFloat(paymentFields.entrada)
         
         return calcParcela(P, n, e)
@@ -80,11 +80,11 @@ export default function DadosPagamento({ paymentFields, setPaymentFields, submit
                         <h5>Pagamento</h5>
                     </div>
                     <div className="section-content">
-                        <Form.Group className="form-row" controlId="valorProposta">
+                        <Form.Group className="form-row" controlId="valor_proposta">
                             <Form.Label>Valor final da proposta:</Form.Label>
                             <Form.Control
                                 type="text"
-                                value={'R$ ' + formatNumber(paymentFields.valorProposta, true)}
+                                value={'R$ ' + formatNumber(paymentFields.valor_proposta, true)}
                                 disabled
                             />
                             <Form.Control.Feedback type="invalid">
@@ -118,13 +118,13 @@ export default function DadosPagamento({ paymentFields, setPaymentFields, submit
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group className="form-row" controlId="nParcelas">
+                        <Form.Group className="form-row" controlId="n_parcelas">
                             <Form.Label>Número de parcelas mensais:</Form.Label>
                             <Form.Control
                                 onChange={handleChange}
                                 type="number"
                                 min={1}
-                                defaultValue={paymentFields.nParcelas}
+                                defaultValue={paymentFields.n_parcelas}
                                 required 
                             />
                             <Form.Control.Feedback type="invalid">
