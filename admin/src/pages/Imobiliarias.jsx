@@ -86,7 +86,7 @@ function Imobiliarias() {
                         )
                     })}
                 </tbody>
-            </Table> : 'Nenhuma cabana foi encontrada.'}
+            </Table> : data.message}
         </Container>
     )
 }

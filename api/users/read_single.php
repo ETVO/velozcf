@@ -4,7 +4,7 @@
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
 
-    include_once '../../config/Database.php';
+    include_once '../../config/setup.php';
     include_once '../../models/User.php';
 
     // Instantiate Database & connect
@@ -15,7 +15,8 @@
     $user = new User($db);
 
     // Get ID from URL
-    $user->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $user->id = isset($_GET['id']) ? $_GET['id'] : null;
+    $user->username = isset($_GET['username']) ? $_GET['username'] : null;
 
     // Read single
     if($user->read_single()) {

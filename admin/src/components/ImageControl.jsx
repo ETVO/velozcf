@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 
-import { fetchImage } from '../helpers'
+import { fetchImage, fieldsChange } from '../helpers'
 
 import '../scss/Components.scss'
 
-export default function ImageControl({ label, controlId, controlFeedback, required, fields, setFields }) {
+export default function ImageControl({ label, controlId, required = true, fields, setFields }) {
     
     const navigate = useNavigate();
 
@@ -30,6 +30,7 @@ export default function ImageControl({ label, controlId, controlFeedback, requir
                         valid: false,
                         id: value
                     };
+                    
                 }
                 else { // Image found
                     formValues[id] = {
@@ -61,7 +62,7 @@ export default function ImageControl({ label, controlId, controlFeedback, requir
                     value={fields[controlId].id}
                     type='number'
                     min={0}
-                    required
+                    required={required}
                 />
                 <Form.Text muted>
                     Insira o ID da imagem, ou 0 para valor nulo

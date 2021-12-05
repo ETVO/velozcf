@@ -97,7 +97,7 @@
         }
 
         // READ SINGLE
-        public function read_single() {
+        public function read_single($showBlocked = true) {
             // Create query
             $query = "SELECT
                     u.id, 
@@ -123,8 +123,36 @@
                     infos info ON u.info = info.id
                 LEFT JOIN 
                     imobiliarias imob ON u.imobiliaria = imob.id
-                WHERE
-                    u.id = ?
+            ";
+
+            $this->id = sanitizeInt($this->id);
+            $this->username = sanitizeText($this->username);
+
+            // If id is set, use it to select the user
+            if($this->id) {
+                $query .= "
+                    WHERE
+                        u.id = ?
+                ";
+            }
+            // Else, if username is set, use it instead
+            else if($this->username) {
+                $query .= "
+                    WHERE
+                        u.username = ?
+                ";
+            }
+            // If nothing is set, the user cannot be found 
+            else return false;
+
+            // to show only users that are not blocked
+            if(!$showBlocked) {
+                $query .= "
+                    AND u.blocked = 0
+                ";
+            }
+
+            $query .= "
                 LIMIT 1
             ";
 
@@ -132,7 +160,11 @@
             $stmt = $this->conn->prepare($query);
 
             // Bind ID
-            $stmt->bindParam(1, sanitizeInt($this->id));
+            if($this->id)
+                $stmt->bindParam(1, sanitizeInt($this->id));
+            // Bind username
+            else if($this->username)
+                $stmt->bindParam(1, sanitizeText($this->username));
 
             // Execute stmt
             $stmt->execute();
@@ -178,10 +210,9 @@
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
-
-            // Create row for info
+            
+            // Only follow ahead if info exists and is created
             if($this->info && $this->info->create()) {
-                
                 // Sanitize data & Bind params
                 $stmt->bindParam(':username', sanitizeText($this->username));
                 $stmt->bindParam(':email', sanitizeText($this->email));
@@ -194,18 +225,24 @@
                 $stmt->bindParam(':info', sanitizeInt($this->info->id));
                 $stmt->bindParam(':photo', sanitizeInt($this->photo->id));
                 $stmt->bindParam(':imobiliaria', sanitizeInt($this->imobiliaria->id));
-                
+            }
+            else {
+                return false;
+            }
+
+            // Create row for info
+            try {
+
                 // Execute query
                 if($stmt->execute()) {
                     $this->id = $this->conn->lastInsertId();
                     return true;
                 }
 
+            } catch(Exception $e) {
+                $this->sqlstate = $stmt->errorCode();
             }
-
-
-            // Print error if something goes wrong
-            // printf("Error: %s\n", $stmt->err);
+            
             return false;
         }
 
@@ -247,13 +284,17 @@
             $stmt->bindParam(':imobiliaria', sanitizeInt($this->imobiliaria->id));
             $stmt->bindParam(':id', sanitizeInt($this->id));
             
-            // Execute query
-            if($stmt->execute()) {
-                return true;
+            try {
+                // Execute query
+                if($stmt->execute()) {
+                    return true;
+                }
+
+            } catch(Exception $e) {
+                $this->sqlstate = $stmt->errorCode();
             }
 
-            // Print error if something goes wrong
-            // printf("Error: %s\n", $stmt->err);
+            print_r($stmt->errorInfo());
             return false;
         }
 

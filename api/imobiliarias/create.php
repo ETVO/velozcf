@@ -6,7 +6,7 @@
     header('Access-Control-Allow-Methods: POST');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-    include_once '../../config/Database.php';
+    include_once '../../config/setup.php';
     include_once '../../models/Imobiliaria.php';
 
     // Instantiate Database & connect

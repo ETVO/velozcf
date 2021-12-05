@@ -6,7 +6,7 @@
     header('Access-Control-Allow-Methods: POST');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-    include_once '../../config/Database.php';
+    include_once '../../config/setup.php';
     include_once '../../models/User.php';
 
     // Instantiate Database & connect
@@ -35,9 +35,18 @@
         ]);
     }
     else {
+        $message = 'Erro ao criar usuário.';
+
+        $usernameTaken = ($user->sqlstate == 23000);
+
+        if($usernameTaken) {
+            $message = 'O nome de usuário já está em uso!';
+        }
+
         echo json_encode([
             'success' => false,
-            'message' => 'Erro ao criar usuário.'
+            'message' => $message,
+            'username_taken' => $usernameTaken
         ]);
 
     }

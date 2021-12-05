@@ -17,18 +17,43 @@ import User from './pages/User'
 import Imobiliarias from './pages/Imobiliarias'
 import Imobiliaria from './pages/Imobiliaria'
 import Propostas from './pages/Propostas'
+import Config from './pages/Config'
 
 // import styling
 import './scss/App.scss'
 
 const API_URL = process.env.REACT_APP_API_URL
 
+const initialUser = {
+    username: '',
+    email: '',
+    password: '',
+    role: '',
+    info: {
+		nome_completo: ''
+	},
+    photo: {
+        id: 0,
+    }
+}
+
 function App() {
 
-	const [loggedIn, setLoggedIn] = useState(false)
+	const [user, setUser] = useState(initialUser)
 
-	if (loggedIn === false) {
-	}
+	const [loggedIn, setLoggedIn] = useState(false);
+
+	// if (user === initialUser) {
+	// 	let sessionUser = sessionStorage.getItem('user');
+	// 	if(sessionUser) {
+	// 		setUser(sessionUser);
+	// 	}
+	// }
+	// else {
+	// 	if(authUser(user.username, user.password)) {
+
+	// 	}
+	// }
 
 	if (!loggedIn) {
 		if (sessionStorage.getItem('loggedIn'))
@@ -69,6 +94,7 @@ function App() {
 					<Route exact path="/imobiliarias" element={(<Imobiliarias />)}></Route>
 					<Route exact path="/imobiliaria" element={(<Imobiliaria />)}></Route>
 					<Route exact path="/imobiliaria/:id" element={(<Imobiliaria />)}></Route>
+					<Route exact path="/configuracoes" element={(<Config />)}></Route>
 				</Routes>
 			</div>
 			<Footer setLoggedIn={setLoggedIn} />

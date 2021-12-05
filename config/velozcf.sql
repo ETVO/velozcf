@@ -9,6 +9,19 @@ DROP TABLE IF EXISTS cotas;
 DROP TABLE IF EXISTS cabanas;
 DROP TABLE IF EXISTS empreendimentos;
 DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS configs;
+
+CREATE TABLE configs (
+    name VARCHAR(255) UNIQUE PRIMARY KEY,
+    value VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- INSERT INTO configs SET ('logo', '0', 'Logo', 'ID da Logotipo do Sistema Veloz', DEFAULT)
+INSERT INTO configs SET name = 'logo', value = '0';
+INSERT INTO configs SET name = 'cover', value = '0';
+INSERT INTO configs SET name = 'desconto_max', value = '10';
+INSERT INTO configs SET name = 'entrada_min', value = '15000';
 
 CREATE TABLE images (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -92,7 +105,7 @@ CREATE TABLE imobiliarias (
 
 CREATE TABLE users (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(255) DEFAULT 'venda' NOT NULL,

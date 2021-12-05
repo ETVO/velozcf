@@ -42,7 +42,7 @@ function Images() {
         </Container>
     );
 
-    
+
 
     return (
         <Container className='Images View my-5'>
@@ -59,9 +59,9 @@ function Images() {
                             <Col key={item.id}>
                                 <Card>
                                     <Link to={singleLink + '/' + item.id}>
-                                    <Card.Img 
-                                        variant="top" 
-                                        src={item.url} />
+                                        <Card.Img
+                                            variant="top"
+                                            src={item.url} />
                                     </Link>
 
                                     <Card.Body className='d-flex'>
@@ -97,7 +97,7 @@ function Images() {
                         )
                     })}
                 </Row>
-                : 'Nenhuma imagem foi encontrada.'}
+                : data.message}
         </Container>
     )
 }

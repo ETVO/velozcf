@@ -6,7 +6,7 @@
     header('Access-Control-Allow-Methods: DELETE');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-    include_once '../../config/Database.php';
+    include_once '../../config/setup.php';
     include_once '../../models/Cabana.php';
 
     // Instantiate Database & connect

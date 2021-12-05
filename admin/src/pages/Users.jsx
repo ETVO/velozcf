@@ -71,6 +71,7 @@ function Users() {
                 <thead>
                     <tr>
                         <th></th>
+                        <th>#</th>
                         <th>Usuário</th>
                         <th>Nome</th>
                         <th>Categoria</th>
@@ -90,6 +91,7 @@ function Users() {
                                         <img src={item.photo.url} alt="" />
                                     </Link>
                                 </td>
+                                <td>{item.id}</td>
                                 <td>{item.username}</td>
                                 <td>{item.nome_completo}</td>
                                 <td>{roles[item.role]}</td>
@@ -134,7 +136,7 @@ function Users() {
                         )
                     })}
                 </tbody>
-            </Table> : 'Nenhuma cabana foi encontrada.'}
+            </Table> : data.message }
         </Container>
     )
 }

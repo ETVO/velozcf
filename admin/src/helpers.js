@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL;
+export const API_URL = process.env.REACT_APP_API_URL;
 
 export const errors = {
     requiredText: 'Campo obrigatório.',
@@ -11,6 +11,16 @@ export const roles = {
     geren: 'Gerência',
     admin: 'Administração'
 }
+
+export const initialInfo = {
+    nome_completo: '',
+    nacionalidade: '',
+    profissao: '',
+    data_nasc: '',
+    cpf: '',
+    rg: '',
+    orgao_exp: ''
+};
 
 // Format number with dots between the thousands 
 export function formatNumber(x, isMoney = false) {
@@ -50,8 +60,6 @@ export async function apiCreate(endpoint, fields) {
         body: JSON.stringify(fields)
     })
 
-    console.log(JSON.stringify(fields));
-
     const data = await response.json()
 
     return data
@@ -66,6 +74,8 @@ export async function apiUpdate(endpoint, fields) {
         },
         body: JSON.stringify(fields)
     })
+    
+    console.log(JSON.stringify(fields));
 
     const data = await response.json()
 

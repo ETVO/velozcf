@@ -71,15 +71,21 @@ export default function PasswordControl({ classes, label, controlId, handleChang
             {(showHelp) ? (
                 <Form.Text className='text-dark'>
                     {(editMode) ? ((value === '') ? (
-                        <span>Deixe em branco para manter inalterado.&nbsp;</span>
+                        <span>Deixe em branco para manter inalterada.&nbsp;</span>
                     ) : (
                         <span>
                             <span className={getTestClass(length)}>No mínimo 8 caracteres</span>,
                             &nbsp;<span className={getTestClass(symbol)}>1 símbolo</span>,
                             &nbsp;<span className={getTestClass(number)}>1 número</span> e 
-                            &nbsp;<span className={getTestClass(uppercase)}>1 letra maíscula</span>.</span>
+                            &nbsp;<span className={getTestClass(uppercase)}>1 letra maíscula</span>.
+                        </span>
                     )) : (
-                        <span>8-16 caracteres, 1 número e 1 letra maíscula.</span>
+                        <span>
+                            <span className={getTestClass(length)}>No mínimo 8 caracteres</span>,
+                            &nbsp;<span className={getTestClass(symbol)}>1 símbolo</span>,
+                            &nbsp;<span className={getTestClass(number)}>1 número</span> e 
+                            &nbsp;<span className={getTestClass(uppercase)}>1 letra maíscula</span>.
+                        </span>
                     )}
                 </Form.Text>
             ) : ''}

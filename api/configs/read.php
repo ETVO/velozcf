@@ -5,47 +5,44 @@
     header('Content-Type: application/json');
 
     include_once '../../config/setup.php';
-    include_once '../../models/Image.php';
+    include_once '../../models/Config.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $image = new Image($db);
+    $config = new Config($db);
 
     // Post query & row count
-    $result = $image->read();
+    $result = $config->read();
     $num = $result->rowCount();
 
     // Check if any rows exist
     if($num > 0) {
         // Post array
-        $imgs_arr = [];
-        $imgs_arr['data'] = [];
+        $config_arr = [];
+        $config_arr['data'] = [];
 
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
 
-            $img_item = [
-                'id' => intval($id),
-                'url' => $url,
-                'caption' => $caption,
-                'size' => intval($size),
-                'updated_at' => $updated_at,
+            $config_item = [
+                'value' => $value,
+                'updated_at' => $updated_at
             ];
 
             // Push to data array
-            array_push($imgs_arr['data'], $img_item);
+            $config_arr['data'][$name] = $config_item;
         }
 
         // Encode into JSON & output 
-        echo json_encode($imgs_arr);
+        echo json_encode($config_arr);
     }
     else {
         // Nothing found
         echo json_encode([
             'success' => false,
-            'message' => 'Nenhuma imagem foi encontrada.'
+            'message' => 'Nenhuma configuração foi encontrada.'
         ]);
     }

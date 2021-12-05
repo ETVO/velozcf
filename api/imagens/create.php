@@ -6,7 +6,7 @@
         header('Content-Type: application/json');
     header('Access-Control-Allow-Methods: POST');
     
-    include_once '../../config/Database.php';
+    include_once '../../config/setup.php';
     include_once '../../models/Image.php';
     
     // Instantiate Database & connect

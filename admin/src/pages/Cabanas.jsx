@@ -17,7 +17,7 @@ const singleEmpreLink = '/empreendimento/'
 const endpoint = 'cabanas'
 
 async function deleteCabana(id) {
-    
+
     if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir este registro PERMANENTEMENTE?')) {
         apiDelete(endpoint, id).then(res => {
             alert(res.message);
@@ -39,12 +39,12 @@ async function getEmpres() {
 
 function Cabanas() {
     const { loading, error, data } = useGet(API_URL + endpoint + '/read.php')
-    
+
     const [empres, setEmpres] = useState([]);
     const [filter, setFilter] = useState('');
 
     (async () => {
-        if(empres.length === 0) {
+        if (empres.length === 0) {
             setEmpres(await getEmpres());
         }
     })()
@@ -71,13 +71,13 @@ function Cabanas() {
     return (
         <Container className='Cabanas View my-5'>
             <ViewHeading showReload={true} title='Cabanas' addNew='Adicionar Nova' addNewLink={singleLink} />
-            
+
             <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
                 {(empres) ? (
                     <Form.Select className='smaller filter-select' onChange={changeFilterEmpre}>
                         <option value=''>Filtrar empreendimentos</option>
                         {(empres.data) ? empres.data.map(empre => {
-                            return(
+                            return (
                                 <option key={empre.id} value={empre.id}>{empre.nome}</option>
                             );
                         }) : ''}
@@ -99,7 +99,7 @@ function Cabanas() {
                 </thead>
                 <tbody>
                     {data.data.map(item => {
-                        
+
                         let hide = (filter !== '' && item.empreendimento.id != filter)
 
                         return (
@@ -107,7 +107,7 @@ function Cabanas() {
                                 <td>#{item.id}</td>
                                 <td>{item.nome}</td>
                                 <td>
-                                    <Link to={singleEmpreLink + item.empreendimento.id} 
+                                    <Link to={singleEmpreLink + item.empreendimento.id}
                                         target="_blank" rel="noopener noreferrer"
                                         title='Ver empreendimento'
                                         className='text-decoration-none'
@@ -139,7 +139,7 @@ function Cabanas() {
                         )
                     })}
                 </tbody>
-            </Table> : 'Nenhuma cabana foi encontrada.'}
+            </Table> : data.message}
         </Container>
     )
 }

@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { Container, Form, Col, Row, Button, FloatingLabel } from 'react-bootstrap'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import InputMask from 'react-input-mask';
+import md5 from 'md5'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
 import PasswordControl from '../components/PasswordControl'
 import EditHeading from '../components/EditHeading'
-import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, roles } from '../helpers'
+import { errors, initialInfo, handleFormChange, apiCreate, apiUpdate, apiDelete, roles, fieldsChange } from '../helpers'
 
 import '../scss/View.scss'
 
@@ -24,15 +25,7 @@ const initialFields = {
     estado_civil: estado_civil_options[0],
     creci: '',
     blocked: 0,
-    info: {
-        nome_completo: '',
-        nacionalidade: '',
-        profissao: '',
-        data_nasc: '',
-        cpf: '',
-        rg: '',
-        orgao_exp: ''
-    },
+    info: initialInfo,
     photo: {
         id: 0,
     },
@@ -91,6 +84,7 @@ function User() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
             e.stopPropagation();
@@ -103,7 +97,12 @@ function User() {
                     if (response) {
 
                         alert(response.message);
-                        if (response.success !== false)
+                        if (response.username_taken === true) {
+                            document.getElementById('username').value = '';
+                            document.getElementById('username').focus();
+                            // fieldsChange('', 'username', fields, setFields);
+                        }
+                        else if (response.success !== false)
                             navigate(singleLink + response.data.id)
                     }
                 })
@@ -113,7 +112,12 @@ function User() {
                     if (response) {
 
                         alert(response.message);
-                        if (response.success !== false)
+                        if (response.username_taken === true) {
+                            document.getElementById('username').value = '';
+                            document.getElementById('username').focus();
+                            // fieldsChange('', 'username', fields, setFields);
+                        }
+                        else if (response.success !== false)
                             window.location.reload()
                     }
                 })
@@ -122,13 +126,17 @@ function User() {
     }
 
     const handleChange = (e) => {
-        handleFormChange(e, fields, setFields)
+        let { value, id } = e.target;
+        if (id === 'password') {
+            value = md5(value);
+        }
+        fieldsChange(value, id, fields, setFields);
     }
 
     return (
         <Container className='User View Single my-5'>
 
-            <Form onSubmit={handleSubmit} noValidate validated={validated}>
+            <Form onSubmit={handleSubmit} onKeyDown={(e) => e.key !== 'Enter'} noValidate validated={validated}>
 
                 <EditHeading
                     title={((editMode) ? 'Alterar' : 'Novo') + ' Usuário'}
@@ -255,7 +263,6 @@ function User() {
                             <Form.Control onChange={handleChange}
                                 value={fields.creci}
                                 type="text"
-                                required
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.requiredText}

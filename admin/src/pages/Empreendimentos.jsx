@@ -17,7 +17,7 @@ const endpoint = 'empreendimentos'
 
 async function deleteEmpre(id, permanently = false) {
 
-    if(!permanently) {
+    if (!permanently) {
         if (window.confirm('Deseja realmente excluir este registro?')) {
             apiUpdate(endpoint, {
                 id: id,
@@ -45,7 +45,7 @@ async function recoverEmpre(id) {
         id: id,
         deleted: 0
     }).then(res => {
-        if(res.success === false) {
+        if (res.success === false) {
             alert(res.message)
         }
         window.location.reload()
@@ -71,7 +71,7 @@ function Empreendimentos() {
     return (
         <Container className='Empreendimentos View my-5'>
             <ViewHeading showReload={true} title='Empreendimentos' addNew='Adicionar Novo' addNewLink={singleLink} />
-            
+
             <small className='m-auto cursor-pointer d-block mt-2 mt-md-0'>
                 <span className={(showDeleted) ? 'text-decoration-underline' : 'text-muted'} onClick={() => { setDeletedShow(!showDeleted) }}>
                     Ver Excluídos
@@ -120,7 +120,7 @@ function Empreendimentos() {
                                             </span>
                                         </div>
                                     ) : (
-                                        
+
                                         <div>
                                             <span
                                                 title='Recuperar'
@@ -140,7 +140,7 @@ function Empreendimentos() {
                         )
                     })}
                 </tbody>
-            </Table> : 'Nenhum empreendimento foi encontrado.'}
+            </Table> : data.message}
         </Container>
     )
 }
