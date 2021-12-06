@@ -56,13 +56,17 @@
                 }
             }
             
-            if(!$valid && $echo_json) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Credenciais inválidas ou permissões insuficientes.'
-                ]);
+            if(!$valid) {
+                if($echo_json) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Credenciais inválidas ou permissões insuficientes.'
+                    ]);
+                }
+
+                return false;
             }
 
-            return $valid;
+            return $user;
         }
     }

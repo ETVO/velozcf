@@ -29,13 +29,14 @@ function Empreendimentos() {
         )
     }
 
+
     return (
         <Container className='Empreendimentos mt-5 col-xl-9'>
             <h1 className='title'>Bem vindo!</h1>
 
             <h5 className='mt-4 mb-3 fw-normal text-secondary'>Empreendimentos:</h5>
 
-            {data.data.map(emp => (
+            {(data.success !== false) ? data.data.map(emp => (
                 <Link key={emp.id} to={'/empreendimento/' + emp.id}>
                     <div className='emp-card'>
                         <img className='cover' src={emp.cover.url} />
@@ -53,7 +54,7 @@ function Empreendimentos() {
                         </div>
                     </div>
                 </Link>
-            ))}
+            )) : data.message}
 
         </Container>
     )

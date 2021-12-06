@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
+import { authUser } from './helpers';
+
 // import pages & components
 import Login from './pages/Login'
 import Header from './components/Header'
@@ -43,17 +45,20 @@ function App() {
 
 	const [loggedIn, setLoggedIn] = useState(false);
 
-	// if (user === initialUser) {
-	// 	let sessionUser = sessionStorage.getItem('user');
-	// 	if(sessionUser) {
-	// 		setUser(sessionUser);
-	// 	}
-	// }
-	// else {
-	// 	if(authUser(user.username, user.password)) {
-
-	// 	}
-	// }
+	if (user === initialUser) {
+		let sessionUser = sessionStorage.getItem('user');
+		if(sessionUser) {
+			setUser(sessionUser);
+		}
+	}
+	else {
+		if(authUser(user.username, user.password)) {
+			console.log('authenticated', user.info.nome_completo);
+		}
+		else {
+			user = initialUser;
+		}
+	}
 
 	if (!loggedIn) {
 		if (sessionStorage.getItem('loggedIn'))
@@ -64,7 +69,7 @@ function App() {
 				<div className="App">
 					<Routes>
 						<Route exact path="*" element={(<Navigate to="/login" />)}></Route>
-						<Route path="/login" element={(<Login setLoggedIn={setLoggedIn} />)}></Route>
+						<Route path="/login" element={(<Login setUser={setUser} />)}></Route>
 					</Routes>
 				</div>
 			</Router>

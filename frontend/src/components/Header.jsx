@@ -10,15 +10,15 @@ import '../scss/Header.scss'
 const API_URL = process.env.REACT_APP_API_URL
 
 async function getHeaderLogo() {
-    const response = await fetch(API_URL + '/configs/read.php')
-
+    const response = await fetch(API_URL + 'configs/read.php')
+    
     const data = await response.json()
-
+    
     return data
 }
 
 export default function Header({ logOut, user }) {
-
+    
     var [logo, setLogo] = useState(null);
 
     (async () => {

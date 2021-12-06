@@ -41,6 +41,20 @@ export async function fetchImage(id) {
     return data
 }
 
+export async function authUser(username, password) {
+
+    const response = await fetch(API_URL + '/auth', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Basic ' + btoa(username + ':' + password)
+        }
+    })
+
+    const data = await response.json()
+
+    return data
+}
+
 export async function apiReadSingle(endpoint, id) {
 
     const response = await fetch(API_URL + endpoint + '/read_single.php?id=' + id)
