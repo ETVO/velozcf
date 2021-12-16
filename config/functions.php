@@ -6,9 +6,11 @@
         $lines = explode(PHP_EOL, $env);
 
         foreach($lines as $line) {
-            [$name, $value] = explode('=', $line);
-
-            $_ENV[$name] = $value;
+            if(trim($line) != '') {
+                [$name, $value] = explode('=', $line);
+    
+                $_ENV[$name] = $value;
+            }
         }
     }
     

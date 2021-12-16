@@ -36,6 +36,7 @@ CREATE TABLE empreendimentos (
     nome VARCHAR(255) NOT NULL,
     endereco VARCHAR(255) NOT NULL,
     area_cabana VARCHAR(255) NOT NULL,
+    map_slug VARCHAR(255) NOT NULL,
     logo_id INT(11) UNSIGNED, 
     cover_id INT(11) UNSIGNED,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

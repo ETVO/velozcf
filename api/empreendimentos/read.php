@@ -34,6 +34,7 @@
                 'nome' => $nome,
                 'endereco' => $endereco,
                 'area_cabana' => $area_cabana,
+                'map_slug' => $map_slug,
                 'logo' => [
                     'id' => intval($logo_id),
                     'url' => $logo_url,

@@ -1,8 +1,9 @@
 <?php
 
     include_once 'Image.php';
+    include_once 'Model.php';
 
-    class Empreendimento {
+    class Empreendimento extends Model {
         // DB stuff
         private $conn;
         private $table = 'empreendimentos';
@@ -12,6 +13,7 @@
         public $nome;
         public $endereco;
         public $area_cabana;
+        public $map_slug;
         public $logo;
         public $cover;
         public $updated_at;
@@ -33,6 +35,7 @@
                     e.area_cabana,
                     e.updated_at,
                     e.deleted,
+                    e.map_slug,
                     e.logo_id,
                     logo.url as logo_url,
                     logo.caption as logo_caption,
@@ -77,12 +80,9 @@
                     e.area_cabana,
                     e.updated_at,
                     e.deleted,
+                    e.map_slug,
                     e.logo_id,
-                    logo.url as logo_url,
-                    logo.caption as logo_caption,
-                    e.cover_id,
-                    cover.url as cover_url,
-                    cover.caption as cover_caption
+                    e.cover_id
                 FROM 
                     {$this->table} e
                 LEFT JOIN
@@ -107,20 +107,14 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             // var_dump($row);
             if($row) {
-                $this->nome = $row['nome'];
-                $this->endereco = $row['endereco'];
-                $this->area_cabana = $row['area_cabana'];
-                
+                $this->set_properties($row);
+
                 $this->logo->id = $row['logo_id'];
-                $this->logo->url = $row['logo_url'];
-                $this->logo->caption = $row['logo_caption'];
+                $this->logo->read_single();
                 
                 $this->cover->id = $row['cover_id'];
-                $this->cover->url = $row['cover_url'];
-                $this->cover->caption = $row['cover_caption'];
-                
-                $this->updated_at = $row['updated_at'];
-                $this->deleted = $row['deleted'];
+                $this->cover->read_single();
+
                 return true;
             }
 
@@ -135,6 +129,7 @@
                     nome = :nome,
                     endereco = :endereco,
                     area_cabana = :area_cabana,
+                    map_slug = :map_slug,
                     logo_id = :logo_id,
                     cover_id = :cover_id
             ";
@@ -146,6 +141,7 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':area_cabana', sanitizeText($this->area_cabana));
+            $stmt->bindParam(':map_slug', sanitizeText($this->map_slug));
             $stmt->bindParam(':logo_id', sanitizeInt($this->logo->id));
             $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
 
@@ -168,6 +164,7 @@
                     nome = IFNULL(:nome, nome),
                     endereco = IFNULL(:endereco, endereco),
                     area_cabana = IFNULL(:area_cabana, area_cabana),
+                    map_slug = IFNULL(:map_slug, map_slug),
                     logo_id = IFNULL(:logo_id, logo_id),
                     cover_id = IFNULL(:cover_id, cover_id),
                     deleted = IFNULL(:deleted, deleted)
@@ -182,6 +179,7 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':area_cabana', sanitizeText($this->area_cabana));
+            $stmt->bindParam(':map_slug', sanitizeText($this->map_slug));
             $stmt->bindParam(':logo_id', sanitizeInt($this->logo->id));
             $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
             $stmt->bindParam(':deleted', sanitizeBoolean($this->deleted));
@@ -200,13 +198,6 @@
         // Delete empreendimento
         public function delete() {
             
-            // Create query
-            // $query = "UPDATE {$this->table}
-            //     SET
-            //         deleted = 1
-            //     WHERE 
-            //         id = :id
-            // ";
             $query = "DELETE FROM {$this->table} WHERE id = :id";
 
             // Prepare statement

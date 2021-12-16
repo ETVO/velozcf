@@ -48,7 +48,7 @@ export default function Header({ logOut, user }) {
                     <span className='name'>
                         {user.fullname}
                     </span>
-                    <img className='photo d-block' src={API_URL + user.photo.url} alt="" />
+                    {/* <img className='photo d-block' src={API_URL + user.photo.url} alt="" /> */}
                 </div>
                 <Button className="log-out" onClick={logOut}>
                     <span>

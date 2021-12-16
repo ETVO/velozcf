@@ -18,9 +18,8 @@
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $empre->nome = $data->nome;
-    $empre->endereco = $data->endereco;
-    $empre->area_cabana = $data->area_cabana;
+    $empre->set_properties($data, ['logo', 'cover']);
+    
     $empre->logo->id = (isset($data->logo_id)) ? $data->logo_id : $data->logo->id;
     $empre->cover->id = (isset($data->cover_id)) ? $data->cover_id : $data->cover->id;
 

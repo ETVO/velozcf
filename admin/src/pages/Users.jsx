@@ -70,7 +70,7 @@ function Users() {
             {(data.data) ? <Table responsive className='mb-3'>
                 <thead>
                     <tr>
-                        <th></th>
+                        {/* <th></th> */}
                         <th>#</th>
                         <th>Usuário</th>
                         <th>Nome</th>
@@ -86,11 +86,11 @@ function Users() {
 
                         return (
                             <tr key={item.id}>
-                                <td className='photo'>
+                                {/* <td className='photo'>
                                     <Link to={singleLink + item.id}>
                                         <img src={item.photo.url} alt="" />
                                     </Link>
-                                </td>
+                                </td> */}
                                 <td>{item.id}</td>
                                 <td>{item.username}</td>
                                 <td>{item.nome_completo}</td>

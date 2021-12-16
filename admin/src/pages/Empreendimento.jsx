@@ -16,6 +16,9 @@ const initialFields = {
     nome: '',
     endereco: '',
     area_cabana: '',
+    map: {
+        id: 0
+    },
     logo: {
         id: 0
     },
@@ -51,7 +54,7 @@ function Empreendimento() {
             <p>Erro ao carregar.</p>
         </Container>
     );
-    
+
     async function deleteEmpre(id) {
 
         if (window.confirm('ATENÇÃO!\nDeseja realmente excluir este registro?')) {
@@ -165,6 +168,18 @@ function Empreendimento() {
                             <Form.Text muted>
                                 Texto que deverá ser exibido na seção "Área da Cabana" do contrato.
                             </Form.Text>
+                        </Form.Group>
+
+                        <Form.Group className='form-row' controlId="map_slug">
+                            <Form.Label>Slug do mapa:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.map_slug}
+                                type="text"
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.requiredText}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <div className="d-flex mt-4 m-auto ms-md-0">

@@ -20,24 +20,7 @@
     // Read single
     if($empre->read_single()) {
 
-        $empre_arr = [
-            'id' => intval($empre->id),
-            'nome' => $empre->nome,
-            'endereco' => $empre->endereco,
-            'area_cabana' => $empre->area_cabana,
-            'logo' => [
-                'id' => intval($empre->logo->id),
-                'url' => $empre->logo->url,
-                'caption' => $empre->logo->caption,
-            ],
-            'cover' => [
-                'id' => intval($empre->cover->id),
-                'url' => $empre->cover->url,
-                'caption' => $empre->cover->caption,
-            ],
-            'updated_at' => $empre->updated_at,
-            'deleted' => boolval($empre->deleted),
-        ];
+        $empre_arr = get_object_vars($empre);
     
         // Make JSON
         print_r(json_encode($empre_arr));

@@ -347,7 +347,7 @@ function User() {
 
                         </Row>
 
-                        <div className="d-flex mt-4 m-auto ms-md-0">
+                        {/* <div className="d-flex mt-4 m-auto ms-md-0">
                             <h3 className='mb-0'>Imagens</h3>
                             <span className='m-auto ms-2'>
                                 <Link
@@ -368,7 +368,7 @@ function User() {
                             value={fields.photo}
                             fields={fields}
                             setFields={setFields}>
-                        </ImageControl>
+                        </ImageControl> */}
 
                     </Col>
                     <Col className='options'>

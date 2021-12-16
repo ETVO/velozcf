@@ -18,17 +18,6 @@ const archiveLink = '/images'
 const singleLink = '/image'
 const endpoint = 'imagens'
 
-async function deleteImage(id, permanently = false) {
-
-    if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir esta imagem PERMANENTEMENTE?')) {
-        apiDelete(endpoint, id).then(res => {
-            alert(res.message);
-            window.location.reload()
-        })
-    }
-
-}
-
 function getFileSize(bytes, si = false, dp = 1) {
     const thresh = si ? 1000 : 1024;
 
@@ -102,6 +91,16 @@ function Image() {
         setFields(data)
     }
 
+
+    async function deleteImage(id, permanently = false) {
+        if (window.confirm('AÇÃO IRREVERSÍVEL!\nDeseja realmente excluir esta imagem PERMANENTEMENTE?')) {
+            apiDelete(endpoint, id).then(res => {
+                alert(res.message);
+                navigate(archiveLink);
+            })
+        }
+    }
+
     const handleSubmit = (e) => {
         const form = e.currentTarget;
         if (form.checkValidity() === false) {
@@ -138,7 +137,6 @@ function Image() {
 
         fetch(url).then(async (r) => {
             let blob = await r.blob();
-            console.log(url);
         });
 
         fieldsChangeArray({
@@ -153,12 +151,12 @@ function Image() {
     return (
         <Container className='Image View Single my-5'>
 
-            <Form 
-                onSubmit={handleSubmit} 
-                action={(!editMode) ? API_URL + endpoint + '/create.php' : null} 
-                method='post' 
+            <Form
+                onSubmit={handleSubmit}
+                action={(!editMode) ? API_URL + endpoint + '/create.php' : null}
+                method='post'
                 encType='multipart/form-data'
-                noValidate 
+                noValidate
                 validated={validated}>
                 <div className="d-flex flex-column flex-md-row heading">
                     <div className="d-flex m-auto ms-md-0">
@@ -232,7 +230,7 @@ function Image() {
                                         </Form.Text>
                                     ) : ''}
                                 </Form.Group>
-                                <input type="hidden" name="redirect" value={window.location.href}/>
+                                <input type="hidden" name="redirect" value={window.location.href} />
                             </div>
                         )}
 

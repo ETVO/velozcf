@@ -41,24 +41,24 @@ const initialUser = {
 
 function App() {
 
-	const [user, setUser] = useState(initialUser)
+	// const [user, setUser] = useState(initialUser)
 
 	const [loggedIn, setLoggedIn] = useState(false);
 
-	if (user === initialUser) {
-		let sessionUser = sessionStorage.getItem('user');
-		if(sessionUser) {
-			setUser(sessionUser);
-		}
-	}
-	else {
-		if(authUser(user.username, user.password)) {
-			console.log('authenticated', user.info.nome_completo);
-		}
-		else {
-			user = initialUser;
-		}
-	}
+	// if (user === initialUser) {
+	// 	let sessionUser = sessionStorage.getItem('user');
+	// 	if(sessionUser) {
+	// 		setUser(sessionUser);
+	// 	}
+	// }
+	// else {
+	// 	if(authUser(user.username, user.password)) {
+	// 		console.log('authenticated', user.info.nome_completo);
+	// 	}
+	// 	else {
+	// 		user = initialUser;
+	// 	}
+	// }
 
 	if (!loggedIn) {
 		if (sessionStorage.getItem('loggedIn'))
@@ -69,7 +69,7 @@ function App() {
 				<div className="App">
 					<Routes>
 						<Route exact path="*" element={(<Navigate to="/login" />)}></Route>
-						<Route path="/login" element={(<Login setUser={setUser} />)}></Route>
+						<Route path="/login" element={(<Login setLoggedIn={setLoggedIn} />)}></Route>
 					</Routes>
 				</div>
 			</Router>
