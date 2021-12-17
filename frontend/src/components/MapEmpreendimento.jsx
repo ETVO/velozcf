@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import map from '../assets/urubici/map_urubici.svg';
 
 // styling
 import '../scss/MapEmpreendimento.scss'
@@ -17,7 +18,7 @@ export default function MapEmpreendimento({ mapSlug }) {
         <div className="MapEmpreendimento">
             <canvas className='canvas' id='mapCanvas'></canvas>
             {/* <iframe className='map-svg-wrap' title="Mapa do Empreendimento" id='mapFrame' src={mapUrl} frameBorder="0"></iframe> */}
-            <object className='map-svg-wrap' id="mapFrame" data={mapUrl} type="image/svg+xml"></object>
+            <object className='map-svg-wrap' id="mapFrame" data={map} type="image/svg+xml"></object>
         </div>
     )
 }

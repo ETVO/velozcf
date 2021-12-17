@@ -11,6 +11,8 @@ import Header from './components/Header'
 // import hooks
 import useToken from './hooks/useToken'
 
+import history from './helpers/history';
+
 // import styling
 import './scss/App.scss'
 
@@ -34,7 +36,7 @@ function App() {
 
 	if (!token) {
 		return (
-			<Router>
+			<Router history={history}>
 				<div className="App">
 					<Routes>
 						<Route exact path="*" element={(<Navigate to="/login" />)}></Route>
@@ -54,7 +56,7 @@ function App() {
 		}
 
 		return (
-			<Router>
+			<Router history={history}>
 				<Header logOut={logOut} user={user}>
 
 				</Header>

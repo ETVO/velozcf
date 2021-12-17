@@ -50,14 +50,17 @@
 
             .disp-1 {
                 fill: #2fb1d9;
+                fill: #fcba03;
             }
 
             .disp-2 {
                 fill: #2bacd4;
+                fill: #f0b102;
             }
 
             .disp-3 {
                 fill: #16a0cf;
+                fill: #e3a805;
             }
 
             .cls-5 {
@@ -90,7 +93,7 @@
             <rect class="selected-2" y="11.64" width="18.37" height="11.64" />
             <rect class="selected-3" x="15.24" y="14.24" width="2.22" height="2.22" />
             <path class="selected-3" d="M15.49,14.49h1.72v1.72H15.49V14.49M15,14v2.72h2.72V14Z" />
-            <!-- <path class="selected-4" d="M5.5 10.14l4 5.2 4.5-8.8" /> -->
+            <!-- <path class="selected-4" d="M5.5 10.14l4 5.2 4.5-8.8   " /> -->
         </symbol>
         <symbol id="cabana_disp" class="cabana-pointer" data-name="Disponível" viewBox="0 0 18.37 23.28">
             <rect class="disp-1" width="18.37" height="23.28" />
