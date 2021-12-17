@@ -9,12 +9,23 @@ export default function Header() {
 
     let location = useLocation();
 
+    const logo = {
+        url: process.env.REACT_APP_SYSTEM_URL + '/public/images/logo_veloz.png',
+        caption: 'Sistema Veloz'
+    } 
+
     return (
-        <Navbar collapseOnSelect expand="md" variant="dark" bg="dark" className='Header px-4 py-2'>
+        <Navbar collapseOnSelect expand="md" variant="dark" bg="dark" className='Header px-4'>
             <Navbar.Brand>
-                <Link to='/'>
-                    Sistema Veloz
-                </Link>
+                {(logo) ? (
+                    <Link to='/'>
+                        <img src={logo.url} alt={logo.caption} />
+                    </Link>
+                ) : (
+                    <Link className='brand-text' to='/'>
+                        {logo.caption}
+                    </Link>
+                )}
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse className='justify-content-start'>

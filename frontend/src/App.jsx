@@ -29,8 +29,7 @@ function App() {
 
 	const user = {
 		fullname: 'Usuário Teste',
-		id: 1,
-		id: 1,
+		id: 2,
 		photo: { url: '../public/images/snow.jpg' }
 	}
 
@@ -52,14 +51,13 @@ function App() {
 		const logOut = e => {
 			sessionStorage.clear()
 			localStorage.clear()
-			setToken(null)
+			window.location.href = '/';
 		}
 
 		return (
 			<Router history={history}>
-				<Header logOut={logOut} user={user}>
+				<Header logOut={logOut} user={user}></Header>
 
-				</Header>
 				<div className="App">
 					<Routes>
 						<Route path="*" element={<Navigate to="/" />}></Route>

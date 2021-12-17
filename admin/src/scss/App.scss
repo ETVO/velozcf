@@ -25,11 +25,16 @@ body {
 }
 
 .Header {
-    .navbar {
-        &-brand {
+    &.navbar {
+
+        height: 70px; 
+        .navbar-brand {
             a {
                 text-decoration: none;
                 color: inherit;
+            }
+            img {
+                height: 50px;
             }
         }
     }

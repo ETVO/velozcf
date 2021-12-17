@@ -1,13 +1,28 @@
+import { apiCreate } from '../helpers';
 
-export function enviarProposta(fields) {
-    let P = parseFloat(fields.pagamento.valorProposta)
-    let n = parseInt(fields.pagamento.nParcelas)
+export async function enviarProposta(fields) {
+    let P = parseFloat(fields.pagamento.valor_proposta)
+    let n = parseInt(fields.pagamento.n_parcelas)
     let e = parseFloat(fields.pagamento.entrada)
 
-    fields.pagamento.valorParcela = calcParcela(P, n, e)
-    fields.pagamento.valorFinal = e + (n * fields.pagamento.valorParcela)
+    fields.pagamento.valor_parcela = calcParcela(P, n, e)
+    fields.pagamento.valor_final = e + (n * fields.pagamento.valor_parcela)
 
-    alert('Envio de email encontra-se em manutenção temporária.\nPor favor tente novamente mais tarde. Para preservar os campos dos formulários, não faça log-out.')
+    // alert('Envio de email encontra-se em manutenção temporária.\nPor favor tente novamente mais tarde. Para preservar os campos dos formulários, não faça log-out.')
+
+    console.log(JSON.stringify(fields));
+
+    // submit form data
+    
+    apiCreate('propostas', fields).then(response => {
+        if (response) {
+
+            alert(response.message);
+            
+			sessionStorage.clear();
+			window.location.href = '/';
+        }
+    })
 
     // createProposta - api
 
@@ -15,18 +30,18 @@ export function enviarProposta(fields) {
 
     // updateProposta (signer URL) - api 
     // create hook to send email once the proposta is updated with the signer URL
-    
+
 }
 
 export function calcParcela(P, n, e) {
     const r = 0.9 / 100; // taxa de juros a.m.
     const PV = - P + e
 
-    if(n > 1) {
+    if (n > 1) {
         // P = (PV * r) / ( 1 - (1+r)**(-n))
         P = PMT(r, n, PV, 0, 0)
     }
-    else if(e > 0) {
+    else if (e > 0) {
         P = - PV
     }
 

@@ -17,9 +17,6 @@ CREATE TABLE configs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- INSERT INTO configs SET ('logo', '0', 'Logo', 'ID da Logotipo do Sistema Veloz', DEFAULT)
-INSERT INTO configs SET name = 'logo', value = '0';
-INSERT INTO configs SET name = 'cover', value = '0';
 INSERT INTO configs SET name = 'desconto_max', value = '10';
 INSERT INTO configs SET name = 'entrada_min', value = '15000';
 
@@ -90,6 +87,7 @@ CREATE TABLE pagamentos (
     valor_parcela DECIMAL(10,2),
     n_parcelas INT(11),
     entrada DECIMAL(10,2),
+    desconto DECIMAL(10,2),
     meio_pagamento VARCHAR(255)
 );
 
@@ -131,6 +129,7 @@ CREATE TABLE propostas (
     email VARCHAR(255) NOT NULL,
     estado_civil VARCHAR(255),
     regime_casamento VARCHAR(255),
+    sign_url VARCHAR(255),
     comprador INT(11) UNSIGNED,
     conjuge INT(11) UNSIGNED,
     unidades JSON,

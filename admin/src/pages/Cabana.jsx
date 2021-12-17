@@ -66,7 +66,7 @@ function Cabana() {
                 window.location.reload();
                 // navigate(archiveLink);
             })
-    
+
         }
     }
 
@@ -242,6 +242,33 @@ function Cabana() {
                                 <Form.Text muted>
                                     ID do elemento na ilustração SVG.
                                 </Form.Text>
+                            </Form.Group>
+
+                            <Form.Group className='form-row' controlId="reservada">
+                                <Form.Label>Reservada:</Form.Label>
+                                <div>
+                                    <Form.Check
+                                        onChange={handleChange}
+                                        inline
+                                        type='radio'
+                                        name='reservada'
+                                        value={1}
+                                        label='Sim'
+                                        defaultChecked={(fields.reservada)}
+                                    />
+                                    <Form.Check
+                                        onChange={handleChange}
+                                        inline
+                                        type='radio'
+                                        name='reservada'
+                                        value={0}
+                                        label='Não'
+                                        defaultChecked={(!fields.reservada)}
+                                    />
+                                </div>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
                             </Form.Group>
 
                             <div className="d-flex mt-4 m-auto ms-md-0">

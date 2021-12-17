@@ -1,5 +1,4 @@
 .Proposta {
-
     height: 100%;
     display: flex;
 
@@ -10,16 +9,16 @@
 
     .form-col {
         padding: 1rem 3rem;
-        
+
         .form-inner {
             max-width: 600px;
         }
-    
+
         .back-button {
             display: inline;
             cursor: pointer;
-            color: #7F8298;
-            font-size: .9rem;
+            color: #7f8298;
+            font-size: 0.9rem;
             text-decoration: none;
         }
 
@@ -28,8 +27,8 @@
                 display: block;
                 width: 100%;
                 height: 10px;
-                margin: 0 .25rem;
-                background-color: #E5E7ED;
+                margin: 0 0.25rem;
+                background-color: #e5e7ed;
 
                 position: relative;
                 overflow: hidden;
@@ -39,7 +38,7 @@
                     border-top-left-radius: 8px;
                     border-bottom-left-radius: 8px;
                 }
-                
+
                 &:last-child {
                     margin-right: 0;
                     border-top-right-radius: 8px;
@@ -47,12 +46,12 @@
                 }
 
                 &::before {
-                    content: '';
+                    content: "";
                     position: absolute;
                     inset: 0;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(90deg, #FFC038 0%, #FF6D13 100%);
+                    background: linear-gradient(90deg, #ffc038 0%, #ff6d13 100%);
                     left: -100%;
                 }
 
@@ -65,9 +64,9 @@
                 &.active {
                     &::before {
                         animation-name: slideIn;
-                        animation-duration: .75s;
+                        animation-duration: 0.75s;
                         animation-timing-function: ease;
-                        animation-delay: .1s;
+                        animation-delay: 0.1s;
                         animation-fill-mode: forwards;
                     }
                 }
@@ -92,7 +91,7 @@
                 margin-left: 1rem;
 
                 .section-content {
-                    border-left: solid 3px #E5E7ED;
+                    border-left: solid 3px #e5e7ed;
                     padding-left: 1rem;
 
                     .form-section {
@@ -113,16 +112,16 @@
                 }
 
                 .field-view {
-                    margin-bottom: .75rem;
-                    
+                    margin-bottom: 0.75rem;
+
                     small {
-                        font-size: .875rem;
-                        margin-bottom: .25rem;
-                        color: #4C516F;
+                        font-size: 0.875rem;
+                        margin-bottom: 0.25rem;
+                        color: #4c516f;
                     }
 
                     p {
-                        margin-top: -.25rem;
+                        margin-top: -0.25rem;
                         margin-bottom: 0;
                         font-weight: 600;
                         color: #051133;
@@ -132,28 +131,29 @@
 
             .form-label {
                 font-weight: 600;
-                font-size: .875rem;
-                margin-bottom: .25rem;
+                font-size: 0.875rem;
+                margin-bottom: 0.25rem;
             }
 
-            .form-control, .form-select {
-                border: solid 1px #B6B6E2;
+            .form-control,
+            .form-select {
+                border: solid 1px #b6b6e2;
                 border-radius: 5px;
 
                 &::placeholder {
-                    color: #4C516F;
+                    color: #4c516f;
                 }
             }
-            
+
             .form-row {
-                margin-bottom: .625rem;
+                margin-bottom: 0.625rem;
             }
         }
     }
 
     .details-col {
         padding: 3rem 1.5rem 1rem 2rem;
-        background-color: #E5E7ED;
+        background-color: #e5e7ed;
         height: 100%;
 
         > .title {
@@ -162,35 +162,48 @@
         }
 
         .brief {
-
             > .title {
                 margin: 0;
-                color: #4C516F;
-                font-size: .9rem;
+                color: #4c516f;
+                font-size: 0.9rem;
             }
-    
+
             .brief-section {
                 .brief-title {
                     color: #051133;
                     font-weight: 600;
-                    margin: .25rem 0 0;
+                    margin: 0.25rem 0 0;
                 }
-    
+
                 .brief-section {
-                    color: #4C516F;
+                    color: #4c516f;
                     margin-left: 1rem;
                     .nome-cota {
                         font-weight: 600;
                     }
                 }
             }
-    
+
             .total-price {
                 color: #051133;
                 font-weight: 600;
                 font-size: 1.1rem;
             }
         }
+    }
 
+    button.not-approved {
+    }
+
+    @keyframes rotating {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    .rotating {
+        animation: rotating 1s linear infinite;
     }
 }

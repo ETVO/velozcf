@@ -128,7 +128,7 @@
             }
 
             // Print error if something goes wrong
-            // printf("Error: %s\n", $stmt->err);
+            printf($stmt->errorInfo());
             return false;
         }
 

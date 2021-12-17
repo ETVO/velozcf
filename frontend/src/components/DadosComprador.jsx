@@ -3,9 +3,8 @@ import { Form, Col, Row, Button } from 'react-bootstrap'
 import InputMask from 'react-input-mask';
 import moment from 'moment'
 
-import { errors } from '../helpers';
+import { errors, estado_civil_options } from '../helpers';
 
-const estado_civil_options = ['Solteiro', 'Casado', 'Separado', 'Divorciado', 'Viúvo'];
 
 export default function DadosComprador({ fields, setFields, submit }) {
 

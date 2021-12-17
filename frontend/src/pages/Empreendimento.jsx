@@ -251,9 +251,16 @@ export default function Empreendimento() {
 
                 </Col>
                 <Col lg={8} className='mapa'>
-                    {/* <div className="svg"></div> */}
-                    {/* <img src={mapUrl} alt="" /> */}
-                    <MapEmpreendimento mapSlug={empreendimento.map_slug} />
+                    
+                    <MapEmpreendimento 
+                        mapSlug={empreendimento.map_slug}
+                        active={active}
+                        showUnidade={showUnidade}
+                        selected={selected} 
+                        cabanas={data.data} 
+                        setCabanas={setCabanas} 
+                    />
+
                     <div className="count-wrap">
                         <div className="count">
                             Cotas selecionadas

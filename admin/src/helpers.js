@@ -73,6 +73,8 @@ export async function apiCreate(endpoint, fields) {
         },
         body: JSON.stringify(fields)
     })
+    
+    console.log(JSON.stringify(fields));
 
     const data = await response.json()
 

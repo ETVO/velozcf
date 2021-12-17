@@ -172,18 +172,18 @@
             // Fetch row & set properties
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if($row) {
-                $this->set_properties($row);
+                if($row) {
+                    $this->set_properties($row);
 
-                // read single for foreign keys
-                $this->info->id = $row['info_id'];
-                $this->info->read_single();
-                
-                $this->photo->id = $row['photo_id'];
-                $this->photo->read_single();
+                    // read single for foreign keys
+                    $this->info->id = $row['info_id'];
+                    $this->info->read_single();
+                    
+                    $this->photo->id = $row['photo_id'];
+                    $this->photo->read_single();
 
-                $this->imobiliaria->id = $row['imob_id'];
-                $this->imobiliaria->read_single();
+                    $this->imobiliaria->id = $row['imob_id'];
+                    $this->imobiliaria->read_single();
                 
                 return true;
             }

@@ -15,14 +15,6 @@ import '../scss/View.scss'
 const API_URL = process.env.REACT_APP_API_URL
 
 const initialFields = {
-    logo: {
-        value: '',
-        updated_at: ''
-    },
-    cover: {
-        value: '',
-        updated_at: ''
-    },
     desconto_max: {
         value: '',
         updated_at: ''
@@ -101,8 +93,6 @@ function Config() {
         handleFormChange(e, fields, setFields)
     }
 
-    console.log(parseInt(fields.logo.value));
-
     return (
         <Container className='Config View Single my-5'>
 
@@ -125,44 +115,6 @@ function Config() {
 
                 <Row className='single-inner'>
                     <Col className='edit'>
-
-                        <Form.Group className='form-row' controlId="logo.value">
-                            <Form.Label>Logo Veloz:</Form.Label>
-                            <Form.Control onChange={handleChange}
-                                value={fields.logo.value}
-                                type="number"
-                                min={0}
-                                required
-                            />
-                            <Form.Text text-muted>
-                                <small className='fw-normal text-muteder d-block'>
-                                    Atualizado em: {moment(fields.logo.updated_at).format('DD/MM/YYYY HH:mm')}
-                                </small>
-                                Insira o ID da imagem, ou 0 para valor nulo.
-                            </Form.Text>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.requiredText}
-                            </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group className='form-row' controlId="cover.value">
-                            <Form.Label>Cover Veloz:</Form.Label>
-                            <Form.Control onChange={handleChange}
-                                value={fields.cover.value}
-                                type="number"
-                                min={0}
-                                required
-                            />
-                            <Form.Text text-muted>
-                                <small className='fw-normal text-muteder d-block'>
-                                    Atualizado em: {moment(fields.cover.updated_at).format('DD/MM/YYYY HH:mm')}
-                                </small>
-                                Insira o ID da imagem, ou 0 para valor nulo.
-                            </Form.Text>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.requiredText}
-                            </Form.Control.Feedback>
-                        </Form.Group>
 
                         <Form.Group className='form-row' controlId="desconto_max.value">
                             <Form.Label>Desconto máximo (%):</Form.Label>

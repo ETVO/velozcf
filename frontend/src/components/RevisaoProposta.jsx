@@ -1,8 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { div, Col, Button } from 'react-bootstrap'
 import moment from 'moment'
+import { fieldsChange } from '../helpers'
 
-export default function RevisaoProposta({ fields, submit }) {
+const API_URL = process.env.REACT_APP_API_URL
+
+async function getConfigs() {
+    const response = await fetch(API_URL + 'configs/read.php')
+
+    const data = await response.json()
+
+    return data;
+}
+
+export default function RevisaoProposta({ fields, setFields, submit }) {
+
+    var [configs, setConfigs] = useState(null);
+    var [loading, setLoading] = useState(false);
+
+    (async () => {
+        if (!configs) {
+            const configData = await getConfigs();
+            setConfigs(configData.data);
+        }
+        else {
+            const entrada_min = configs.entrada_min.value;
+            const desconto_max = configs.desconto_max.value;
+
+            if (fields.pagamento.desconto > desconto_max || fields.pagamento.entrada < entrada_min) {
+                if (fields.aprovada !== 0)
+                    fieldsChange(0, 'aprovada', fields, setFields);
+            }
+            else {
+                if (fields.aprovada !== 1)
+                    fieldsChange(1, 'aprovada', fields, setFields);
+            }
+        }
+    })()
+
+    const handleSubmit = () => {
+
+        setLoading(true);
+        submit();
+    }
+
     return (
         <div className='RevisaoProposta'>
             <h3>Resumo da proposta</h3>
@@ -130,10 +171,31 @@ export default function RevisaoProposta({ fields, submit }) {
             </div>
 
 
-            <Button className='ms-auto d-flex' type="submit" onClick={submit}>
-                <span className='my-auto'>finalizar e enviar proposta por email</span>
-                <span className='my-auto ms-1 bi bi-chevron-right'></span>
-            </Button>
+            <div className="ms-auto d-flex">
+                {(loading) ? (
+                    <div className='d-inline-block rotating m-auto me-3 fs-5'> <span className="bi-arrow-clockwise"></span> </div>
+                ) : (<div className='m-auto me-0'></div>)}
+
+                {(fields.aprovada) ? (
+                    <Button className='d-flex' type="submit" onClick={handleSubmit}>
+                        <span className='my-auto'>
+                            finalizar e enviar proposta por email
+                        </span>
+                        <span className='my-auto ms-1 bi bi-chevron-right'></span>
+                    </Button>
+                ) : (
+                    <Button className='d-flex' type="submit" onClick={handleSubmit}
+                        title='Algumas das informações de pagamento inseridas não puderam ser automaticamente aprovadas.'>
+                        <span
+                            className='my-auto'
+                        >
+                            enviar para aprovação
+                        </span>
+                        <span className='my-auto ms-1 bi bi-chevron-right'></span>
+                    </Button>
+                )}
+
+            </div>
         </div>
     )
 }

@@ -86,8 +86,8 @@ export default function CotasCabana({cabana, selected, setSelected}) {
                     }
                 
                     return (
-                        <Col sm={3} key={cota.id} className="cota-option-wrap" onClick={() => changeSelect(cota.disponivel, cota)}>
-                            <div className={cotaClassName} title={'R$ ' + formatNumber(cota.valor)}>
+                        <Col sm={3} key={cota.id} className="cota-option-wrap" >
+                            <div className={cotaClassName} title={'R$ ' + formatNumber(cota.valor)} onClick={() => changeSelect(cota.disponivel, cota)}>
                                 <div className="sold-out-text">
                                     <span>VENDIDA</span>
                                 </div>
