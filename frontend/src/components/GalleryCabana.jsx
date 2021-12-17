@@ -14,7 +14,7 @@ export default function GalleryCabana({ id, galeria }) {
     const [images, setImages] = useState([]);
 
     useEffect(() => {
-        const getImages = async () => {
+        const getImages = async (galeria) => {
             let tmp = [];
 
             let imagesArr = galeria.split(',').map(s => s.trim());
@@ -33,13 +33,13 @@ export default function GalleryCabana({ id, galeria }) {
             if (tmp.length > 0)
                 setImages(tmp);
         }
-        getImages();
-    }, [])
+        getImages(galeria);
+    }, [galeria])
 
     return (
 
         <div className='GalleryCabana'>
-            <Carousel activeIndex={index} indicators={false} onSelect={(i, e) => setIndex(i)}>
+            <Carousel activeIndex={index} indicators={false} controls={(images.length > 1)} onSelect={(i, e) => setIndex(i)}>
                 {images.map((image, i) => {
 
                     
@@ -55,7 +55,7 @@ export default function GalleryCabana({ id, galeria }) {
                 })}
             </Carousel>
             <div className="selectors d-flex justify-content-between">
-                {images.map((image, i) => {
+                {(images.length > 1) && images.map((image, i) => {
                     if (i === 3) {
                         return (
                             <div className='selector view-more' key={'selMore'}>

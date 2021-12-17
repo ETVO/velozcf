@@ -1,7 +1,16 @@
 import React, { useState } from 'react'
 import { Row, Col, Container, Button } from 'react-bootstrap'
 import { useParams, useNavigate, Navigate, Link } from 'react-router-dom'
-import { apiRead, apiReadSingle, fetchImage, formatNumber, initialInfo, initialPagamento } from '../helpers'
+import { 
+    estado_civil_options, 
+    apiRead, 
+    apiReadSingle, 
+    fetchImage, 
+    formatNumber, 
+    initialInfo, 
+    initialPagamento 
+} from '../helpers'
+    
 import { enviarProposta } from '../helpers/enviarProposta'
 
 import '../scss/Proposta.scss'
@@ -30,12 +39,12 @@ const initialFields = {
     cidade: '',
     telefone: '',
     email: '',
-    estado_civil: '',
+    estado_civil: estado_civil_options[0],
     regime_casamento: '',
     comprador: initialInfo,
     conjuge: initialInfo,
     pagamento: initialPagamento,
-    aprovada: 0,
+    aprovada: 1,
     empreendimento: 0,
     vendedor: 0,
 }
@@ -225,7 +234,7 @@ export default function Proposta({ user }) {
     const stages = [
         <DadosComprador fields={fields} setFields={setFieldsFilter} submit={submitNext} />,
         <DadosPagamento paymentFields={fields.pagamento} setPaymentFields={setPaymentFields} submit={submitNext} />,
-        <RevisaoProposta fields={fields} submit={submitNext} />
+        <RevisaoProposta fields={fields} setFields={setFieldsFilter} submit={submitNext} />
     ]
 
     const prevText = [

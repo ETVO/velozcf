@@ -46,6 +46,13 @@
             ? htmlspecialchars(strip_tags(strval($value)))
             : null;
     }
+
+    function sanitizeJSON($value) {
+        return 
+            (!empty($value)) 
+            ? strip_tags(strval($value))
+            : null;
+    }
     
     function sanitizeInt($value) {
         return 

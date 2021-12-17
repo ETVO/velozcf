@@ -59,13 +59,17 @@
                 $query .= "
                     WHERE
                         empreendimento = :empreendimento
+                    ORDER BY 
+                        LENGTH(cabana.nome), cabana.nome
+                ";
+            }
+            else {
+                $query .= "
+                    ORDER BY 
+                        e.nome ASC
                 ";
             }
 
-            $query .= "
-                ORDER BY 
-                    e.nome ASC
-            ";
 
             // Prepare query
             $stmt = $this->conn->prepare($query);

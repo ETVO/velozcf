@@ -14,9 +14,11 @@ export default function ListCabanas({selected, cabanas, showUnidade}) {
 
                 let selecionada = selected.cabanas.map(el => { if(el.cotas.length > 0) return el.id; else return -1; }).indexOf(uni.id) !== -1
 
+                let disponivel = cycleCotas(uni);
+
                 return (
 
-                    <div key={uni.id} className={'unidade-card' + ((uni.reservada || !uni.disponivel) ? ' muted' : '')} onClick={() => showUnidade(uni)}>
+                    <div key={uni.id} className={'unidade-card' + ((uni.reservada || !uni.disponivel || !disponivel) ? ' muted' : '')} onClick={() => showUnidade(uni)}>
                         <div className={'foto' + ((selecionada) ? ' selected' : '')}>
                             <img src={uni.imagem.url} />
                             <div className="icon">
@@ -39,7 +41,7 @@ export default function ListCabanas({selected, cabanas, showUnidade}) {
                                 (uni.reservada) ? (
                                     <span className='reservada'>RESERVADA</span>
                                 ) : (
-                                    (uni.disponivel) ? (
+                                    (uni.disponivel && disponivel) ? (
                                         <span className='disponivel'>DISPONÍVEL</span>
                                     )
                                         : (
