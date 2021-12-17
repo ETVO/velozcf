@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Col, Row, Toast, Button, Container } from 'react-bootstrap'
 import { useParams, Link } from 'react-router-dom'
+import { ReactSVG } from 'react-svg';
 
 import '../scss/Empreendimento.scss'
 
@@ -8,7 +9,7 @@ import '../scss/Empreendimento.scss'
 import useGet from '../hooks/useGet';
 
 // helpers & functions
-import { apiRead, formatNumber } from '../helpers';
+import { apiRead, formatNumber, apiReadSingle } from '../helpers';
 import { CabanaIcon, cycleCotas } from '../helpers/cabanas';
 
 // components
@@ -16,6 +17,20 @@ import GalleryCabana from '../components/GalleryCabana';
 import CotasCabana from '../components/CotasCabana';
 import FilterCabanas from '../components/FilterCabanas'
 import ListCabanas from '../components/ListCabanas'
+import MapEmpreendimento from '../components/MapEmpreendimento'
+
+const initialEmpreendimento = {
+    nome: '',
+    endereco: '',
+    area_cabana: '',
+    map_slug: '',
+    logo: {
+        id: 0
+    },
+    cover: {
+        id: 0
+    },
+};
 
 const initialSelected = {
     cabanas: []
@@ -28,8 +43,9 @@ export default function Empreendimento() {
 
     const { loading, error, data } = useGet(API_URL + 'cabanas/read.php?empreendimento=' + id)
 
-    
+
     const [cabanas, setCabanas] = useState()
+    const [empreendimento, setEmpreendimento] = useState(initialEmpreendimento)
 
     // active cabana
     const [active, setActive] = useState()
@@ -42,45 +58,45 @@ export default function Empreendimento() {
     const [toastText, setToastText] = useState('Empreendimento');
 
     // conditions in which the page cannot be displayed normally
-    if(loading) {
+    if (loading) {
         return (
             <div className='Empreendimento d-flex h-100'>
                 <p className='m-auto'>Carregando...</p>
             </div>
-        ) 
+        )
     }
-    if(error) {
+    if (error) {
         return (
             <div className='Empreendimento d-flex h-100'>
                 <p className='m-auto'>Ocorreu um erro ao carregar a página.</p>
             </div>
         )
     }
-    if(data.success === false) {
+    if (data.success === false) {
         window.href.location = '/'
     }
 
     /** read cotas for cabanas */
     (async () => {
-        if(!cabanas) {
+        if (!cabanas) {
             let tmp = data.data
-            
+
             // read cotas for each cabana
             await tmp.forEach(async cabana => {
                 let { data: cotas } = await apiRead('cotas', "?cabana_id=" + cabana.id)
-                
+
                 // store cotas as a property of cabana
                 cabana.cotas = cotas;
             })
 
             // set cabanas accordingly
-            setCabanas(tmp)   
+            setCabanas(tmp)
         }
 
         let storedSelected = JSON.parse(sessionStorage.getItem('selectedUnidades'))
-        
-        if(selected === initialSelected && storedSelected) {
-            if(storedSelected.empreendimentoId === id) {
+
+        if (selected === initialSelected && storedSelected) {
+            if (storedSelected.empreendimentoId === id) {
                 setSelected(storedSelected.selected)
             }
         }
@@ -88,12 +104,12 @@ export default function Empreendimento() {
 
     /** set selected cotas */
     const setSelectedFilter = selected => {
-        if(selected) {
+        if (selected) {
             let selectedJSON = JSON.stringify({
                 empreendimentoId: id,
                 selected: selected
             })
-            
+
             sessionStorage.setItem('selectedUnidades', selectedJSON)
             setSelected(selected)
         }
@@ -106,9 +122,9 @@ export default function Empreendimento() {
 
     /** clear selected cotas */
     const limparClick = e => {
-        if(window.confirm('Deseja realmente limpar a sua seleção de cotas?')) {
+        if (window.confirm('Deseja realmente limpar a sua seleção de cotas?')) {
             setSelectedFilter(null);
-        }        
+        }
     }
 
     /** function called to show unidade */
@@ -134,7 +150,7 @@ export default function Empreendimento() {
     /** calculate total price of selected cotas */
     const totalPrice = () => {
         let price = 0;
-        if(selected) {
+        if (selected) {
             selected.cabanas.map(cabana => {
                 cabana.cotas.map(cota => {
                     price += cota.valor;
@@ -147,13 +163,21 @@ export default function Empreendimento() {
     /** count the amount of selected cotas */
     const countSelected = () => {
         let count = 0
-        if(selected) {
+        if (selected) {
             selected.cabanas.map(cabana => {
                 count += cabana.cotas.length
             })
         }
         return count
     }
+
+    (async () => {
+        if (empreendimento === initialEmpreendimento) {
+            apiReadSingle('empreendimentos', id).then(res => {
+                setEmpreendimento(res);
+            });
+        }
+    })();
 
     return (
         <div className='Empreendimento'>
@@ -197,7 +221,7 @@ export default function Empreendimento() {
                         <div className="inner no-selection">
                             <div className="heading">
                                 <div className="d-flex">
-                                    <h1>Unidades</h1> 
+                                    <h1>Unidades</h1>
                                     <Button className='m-auto me-0 limpar' onClick={limparClick}>
                                         limpar seleção
                                     </Button>
@@ -216,8 +240,8 @@ export default function Empreendimento() {
                         </div>
                         <div className="action">
                             <Link
-                                disabled={(totalPrice() === 0)} 
-                                className='btn btn-primary' 
+                                disabled={(totalPrice() === 0)}
+                                className='btn btn-primary'
                                 to={((totalPrice() > 0) ? ('/proposta/' + id) : '')}
                             >
                                 enviar proposta
@@ -227,9 +251,12 @@ export default function Empreendimento() {
 
                 </Col>
                 <Col lg={8} className='mapa'>
+                    {/* <div className="svg"></div> */}
+                    {/* <img src={mapUrl} alt="" /> */}
+                    <MapEmpreendimento mapSlug={empreendimento.map_slug} />
                     <div className="count-wrap">
                         <div className="count">
-                            Cotas selecionadas 
+                            Cotas selecionadas
                             <div className={'count-number ms-2 rounded-circle' + ((countSelected() === 0) ? ' zero' : '')}>
                                 <span>{countSelected()}</span>
                             </div>

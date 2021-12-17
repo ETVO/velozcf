@@ -16,6 +16,7 @@ const initialFields = {
     nome: '',
     endereco: '',
     area_cabana: '',
+    map_slug: '',
     map: {
         id: 0
     },

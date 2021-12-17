@@ -1,13 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Veloz</title>
 </head>
+<style>
+
+</style>
+
 <body>
     <br>
-    Sistema Veloz
+
+    <div class="MapEmpreendimento">
+        <object id="mapFrame" data="/public/maps/urubici/map_urubici.svg" type="image/svg+xml"></object>
+    </div>
+    <div class="btn-wrap">
+        <button class="cabana-btn" id='cabana1'>Cabana 1</button>
+        <button class="cabana-btn" id='cabana2'>Cabana 2</button>
+        <button class="cabana-btn" id='cabana3'>Cabana 3</button>
+        <button class="cabana-btn" id='cabana4'>Cabana 4</button>
+        <button class="cabana-btn" id='cabana5'>Cabana 5</button>
+        <button class="cabana-btn" id='cabana6'>Cabana 6</button>
+    </div>
 </body>
+<script>
+    var frame = document.getElementById('mapFrame');
+
+    frame.contentWindow.onload = () => {
+        var idoc = frame.contentDocument;
+
+        var cabanas = [
+            {
+                id_mapa: 'cabana1',
+                disponivel: 0
+            },
+            {
+                id_mapa: 'cabana2',
+                disponivel: 1
+            },
+            {
+                id_mapa: 'cabana3',
+                disponivel: 1
+            },
+            {
+                id_mapa: 'cabana4',
+                disponivel: 1
+            },
+            {
+                id_mapa: 'cabana5',
+                disponivel: 1
+            },
+            {
+                id_mapa: 'cabana6',
+                disponivel: 1
+            },
+            {
+                id_mapa: 'cabana7',
+                disponivel: 1
+            },
+        ];
+
+        for (var i = 0; i < cabanas.length; i++) {
+            let cabana = cabanas[i];
+            let mapCabana = idoc.getElementById(cabana.id_mapa);
+
+            if(!mapCabana) continue;
+
+            mapCabana.addEventListener('click', e => {
+                alert(cabana.id_mapa);
+            });
+
+            if (cabana.disponivel && !cabana.reservada) {
+
+                mapCabana.setAttribute('xlink:href', '#cabana_disp')
+            }
+            else {
+                mapCabana.setAttribute('xlink:href', '#cabana_indisp')
+            }
+
+            let btnCabana = document.getElementById(cabana.id_mapa);
+            if (btnCabana) {
+                btnCabana.addEventListener('click', (e) => {
+
+                    if (mapCabana.getAttribute('xlink:href') == '#cabana_selected') {
+                        mapCabana.setAttribute('xlink:href', '#cabana_disp')
+                    }
+                    else {
+                        mapCabana.setAttribute('xlink:href', '#cabana_selected')
+                    }
+
+                });
+            }
+        }
+    }
+</script>
+
 </html>
