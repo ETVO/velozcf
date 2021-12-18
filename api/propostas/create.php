@@ -56,12 +56,14 @@
                     $email->mail->Subject = 'Proposta - Sistema Veloz';
                     $email->mail->Body = 'A proposta foi recebida e aprovada. Para assiná-la, acesse o link: ' . $prop->sign_url;
     
-                    $email->send();
+                    if(!$email->mail->send()) {
+                        echo $email->mail->ErrorInfo;
+                    }
     
                     $message = 'Proposta enviada com sucesso.';
                     $sent = true;
                 } catch (Exception $e) {
-                
+                    
                     $message = 'A proposta não foi enviada, contate um administrador.';
                 }
             }

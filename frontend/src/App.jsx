@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 // import pages & components
@@ -15,21 +15,28 @@ import history from './helpers/history';
 
 // import styling
 import './scss/App.scss'
+import { apiRead } from './helpers'
 
 const API_URL = process.env.REACT_APP_API_URL
 
 function App() {
 
-	// const { token, setToken } = useToken()
+	const [userId, setUserId] = useState(3)
 
 	const token = true;
 	const setToken = (val) => {
 		console.log('setToken with ', val)
 	}
 
+	apiRead('users').then(res => {
+		if(res.success !== false) {
+			setUserId(res.data[0].id)
+		}
+	})
+
 	const user = {
 		fullname: 'Usuário Teste',
-		id: 2,
+		id: userId,
 		photo: { url: '../public/images/snow.jpg' }
 	}
 
