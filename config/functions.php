@@ -7,6 +7,7 @@
 
         foreach($lines as $line) {
             if(trim($line) != '') {
+                if($line[0] == '#') continue;
                 [$name, $value] = explode('=', $line);
     
                 $_ENV[$name] = $value;

@@ -83,9 +83,9 @@ function App() {
 				<Routes>
 					<Route path="*" element={<Navigate to="/" />}></Route>
 					<Route exact path="/" element={(<Home />)}></Route>
-					<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
+					{/* <Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
 					<Route exact path="/empreendimento" element={(<Empreendimento />)}></Route>
-					<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
+					<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route> */}
 					<Route exact path="/cabanas" element={(<Cabanas />)}></Route>
 					<Route exact path="/cabana" element={(<Cabana />)}></Route>
 					<Route exact path="/cabana/:id" element={(<Cabana />)}></Route>

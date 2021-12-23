@@ -31,7 +31,7 @@ export default function Header() {
             <Navbar.Collapse className='justify-content-start'>
                 <Nav activeKey={location.pathname}>
                     <Nav.Link as={Link} to='/' eventKey='/'>Home</Nav.Link>
-                    <Nav.Link as={Link} to='/empreendimentos' eventKey='/empreendimentos'>Empreendimentos</Nav.Link>
+                    {/* <Nav.Link as={Link} to='/empreendimentos' eventKey='/empreendimentos'>Empreendimentos</Nav.Link> */}
                     <Nav.Link as={Link} to='/cabanas' eventKey='/cabanas'>Cabanas</Nav.Link>
                     <Nav.Link as={Link} to='/images' eventKey='/images'>Imagens</Nav.Link>
                     <Nav.Link as={Link} to='/users' eventKey='/users'>Usuários</Nav.Link>

@@ -139,7 +139,7 @@ export default function MapEmpreendimento({ mapSlug, active, showUnidade, cabana
                         mapCabana.setAttribute('title', cabana.nome + ' Selecionada')
                     }
                     else if(active != null && cabana.id_mapa === active.id_mapa) {
-                        mapCabana.setAttribute('xlink:href', '#cabana_active')
+                        mapCabana.setAttribute('xlink:href', '#cabana_selected')
                         mapCabana.setAttribute('title', cabana.nome + ' Ativa')
                     }
                     else if (cabana.disponivel && !cabana.reservada) {

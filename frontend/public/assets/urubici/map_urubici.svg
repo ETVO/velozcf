@@ -86,10 +86,15 @@
             }
         </style>
         <symbol id="cabana_normal" class="cabana" data-name="Normal" viewBox="0 0 18.37 23.28">
-            <rect class="normal-1" width="18.37" height="23.28" />
+            <!-- <rect class="normal-1" width="18.37" height="23.28" />
             <rect class="normal-2" y="11.64" width="18.37" height="11.64" />
             <rect class="normal-3" x="15.24" y="14.24" width="2.22" height="2.22" />
-            <path class="normal-4" d="M15.49,14.49h1.72v1.72H15.49V14.49M15,14v2.72h2.72V14Z" />
+            <path class="normal-4" d="M15.49,14.49h1.72v1.72H15.49V14.49M15,14v2.72h2.72V14Z" /> -->
+            
+            <rect class="indisp-1" width="18.37" height="23.28" />
+            <rect class="indisp-2" y="11.64" width="18.37" height="11.64" />
+            <rect class="indisp-3" x="15.24" y="14.24" width="2.22" height="2.22" />
+            <path class="indisp-3" d="M15.49,14.49h1.72v1.72H15.49V14.49M15,14v2.72h2.72V14Z" />
         </symbol>
         <symbol id="cabana_indisp" class="cabana" data-name="Indisponível" viewBox="0 0 18.37 23.28">
             <rect class="indisp-1" width="18.37" height="23.28" />
