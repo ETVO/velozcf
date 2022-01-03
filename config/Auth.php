@@ -24,8 +24,12 @@
             $this->user = $user;
         }
 
-        public function setPass($pass) {
-            $this->pass = $pass;
+        public function setPass($pass, $encrypted = false) {
+            if(!$encrypted)
+                $this->pass = md5($pass);
+            else {
+                $this->pass = $pass;
+            }
         }
 
         public function authenticate($echo_json) {

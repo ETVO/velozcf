@@ -109,11 +109,19 @@ function Users() {
                                                 to={singleLink + item.id}>
                                             </Link>
                                             &nbsp;&nbsp;
+
+                                            {(item.id !== 1) ? 
                                             <span
                                                 title='Bloquear'
                                                 className='text-danger bi bi-lock-fill'
                                                 onClick={() => { blockUser(item.id) }}>
-                                            </span>
+                                            </span> : 
+                                            <span
+                                                title='Este usuário não pode ser bloqueado'
+                                                className='text-danger icon-disabled bi bi-lock-fill'
+                                                onClick={(e) => { alert(e.target.getAttribute('title')) }}>
+                                            </span> } 
+
                                         </div>
                                     ) : (
                                         

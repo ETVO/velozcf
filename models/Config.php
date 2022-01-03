@@ -102,10 +102,10 @@
                 FROM 
                     {$this->table};
                 
-                INSERT INTO {$this->table} SET name = 'logo', value = '0';
-                INSERT INTO {$this->table} SET name = 'cover', value = '0';
                 INSERT INTO {$this->table} SET name = 'desconto_max', value = '10';
                 INSERT INTO {$this->table} SET name = 'entrada_min', value = '15000';
+                INSERT INTO {$this->table} SET name = 'representante_cf', value = '0';
+                INSERT INTO {$this->table} SET name = 'testemunha', value = '0';
             ";
 
             // Prepare statement

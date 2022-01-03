@@ -1,3 +1,5 @@
+import md5 from 'md5'
+
 export const API_URL = process.env.REACT_APP_API_URL;
 
 export const errors = {
@@ -8,7 +10,6 @@ export const errors = {
 
 export const roles = {
     venda: 'Vendas',
-    geren: 'Gerência',
     admin: 'Administração'
 }
 
@@ -43,11 +44,19 @@ export async function fetchImage(id) {
 
 export async function authUser(username, password) {
 
-    const response = await fetch(API_URL + '/auth', {
-        method: 'GET',
+    // let authString = Buffer.from(username + ':' + password).toString('base64');
+
+    let fields = {
+        username: username,
+        password: md5(password)
+    } 
+
+    const response = await fetch(API_URL + '/auth/index.php', {
+        method: 'POST',
         headers: {
-            'Authorization': 'Basic ' + btoa(username + ':' + password)
-        }
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fields)
     })
 
     const data = await response.json()

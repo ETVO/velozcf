@@ -43,35 +43,35 @@
 
     function sanitizeText($value) {
         return 
-            (!empty($value)) 
+            (isset($value) && strlen($value)) 
             ? htmlspecialchars(strip_tags(strval($value)))
             : null;
     }
 
     function sanitizeJSON($value) {
         return 
-            (!empty($value)) 
+            (isset($value) && strlen($value)) 
             ? strip_tags(strval($value))
             : null;
     }
     
     function sanitizeInt($value) {
         return 
-            (!empty($value)) 
+            (isset($value) && strlen($value)) 
             ? intval(htmlspecialchars(strip_tags(strval($value)))) 
             : null;
     }
 
     function sanitizeFloat($value) {
         return 
-            (!empty($value)) 
+            (isset($value) && strlen($value)) 
             ? floatval(htmlspecialchars(strip_tags(strval($value)))) 
             : null;
     }
 
     function sanitizeBoolean($value) {
         return 
-            ($value !== '') 
+            (isset($value) && strlen($value))  
             ? floatval(htmlspecialchars(strip_tags(strval($value)))) 
             : null;
     }

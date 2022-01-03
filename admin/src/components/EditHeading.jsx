@@ -9,7 +9,7 @@ export default class EditHeading extends React.Component {
     render() {
         let { title, showReload = false, iconLink } = this.props;
 
-        return <div className="d-flex flex-column flex-md-row heading">
+        return <div className="EditHeading d-flex flex-column flex-md-row heading">
             <div className="d-flex m-auto ms-md-0">
                 <h1 className='title'>{title}</h1>
                 <span className='m-auto ms-3'>

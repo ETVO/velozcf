@@ -20,7 +20,13 @@
 
     $user->id = $data->id;
 
-    if($user->delete()) {
+    if($user->id == 1) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Este usuário não pode ser excluído.'
+        ]);
+    }
+    else if($user->delete()) {
         echo json_encode([
             'success' => true,
             'message' => 'Usuário excluído com sucesso.'

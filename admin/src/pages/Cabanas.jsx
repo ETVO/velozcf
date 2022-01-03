@@ -72,74 +72,77 @@ function Cabanas() {
         <Container className='Cabanas View my-5'>
             <ViewHeading showReload={true} title='Cabanas' addNew='Adicionar Nova' addNewLink={singleLink} />
 
-            <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
-                {(empres) ? (
-                    <Form.Select className='smaller filter-select' onChange={changeFilterEmpre}>
-                        <option value=''>Filtrar empreendimentos</option>
-                        {(empres.data) ? empres.data.map(empre => {
-                            return (
-                                <option key={empre.id} value={empre.id}>{empre.nome}</option>
-                            );
-                        }) : ''}
-                    </Form.Select>
-                ) : 'Nenhum empreendimento encontrado.'}
-            </small>
 
-            {(data.data) ? <Table responsive className='mb-3'>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Empreendimento</th>
-                        <th>Valor base</th>
-                        {/* <th>Nº Cotas</th> */}
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.data.map(item => {
-
-                        let hide = (filter !== '' && item.empreendimento.id != filter)
-
-                        return (
-                            <tr key={item.id} className={(hide) ? 'd-none' : ''}>
-                                <td>#{item.id}</td>
-                                <td>{item.nome}</td>
-                                <td>
-                                    <Link to={singleEmpreLink + item.empreendimento.id}
-                                        target="_blank" rel="noopener noreferrer"
-                                        title='Ver empreendimento'
-                                        className='text-decoration-none'
-                                    >
-                                        {item.empreendimento.nome} <span className='smaller bi-arrow-up-right'></span>
-                                    </Link>
-                                </td>
-                                <td>{'R$ ' + formatNumber(item.valor_base, true)}</td>
-                                {/* <td>{8}</td> */}
-                                <td className={'fw-bold ' + ((item.disponivel) ? ((item.reservada) ? 'text-warning' : 'text-green') : 'text-danger')}>
-                                    {(item.disponivel) ? ((item.reservada) ? 'Reservada' : 'Disponível') : 'Vendida'}
-                                </td>
-                                <td className='actions'>
-                                    <div>
-                                        <Link
-                                            title='Editar'
-                                            className='text-primary bi bi-pencil-fill'
-                                            to={singleLink + item.id}>
-                                        </Link>
-                                        &nbsp;&nbsp;
-                                        <span
-                                            title='Excluir permanentemente'
-                                            className='text-danger bi bi-x-circle-fill'
-                                            onClick={() => { deleteCabana(item.id, true) }}>
-                                        </span>
-                                    </div>
-                                </td>
+            {(data.data) ?
+                <div>
+                    <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
+                        {(empres) ? (
+                            <Form.Select className='smaller filter-select' onChange={changeFilterEmpre}>
+                                <option value=''>Filtrar empreendimentos</option>
+                                {(empres.data) ? empres.data.map(empre => {
+                                    return (
+                                        <option key={empre.id} value={empre.id}>{empre.nome}</option>
+                                    );
+                                }) : ''}
+                            </Form.Select>
+                        ) : 'Nenhum empreendimento encontrado.'}
+                    </small>
+                    <Table responsive className='mb-3'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Empreendimento</th>
+                                <th>Valor base</th>
+                                {/* <th>Nº Cotas</th> */}
+                                <th>Status</th>
+                                <th></th>
                             </tr>
-                        )
-                    })}
-                </tbody>
-            </Table> : data.message}
+                        </thead>
+                        <tbody>
+                            {data.data.map(item => {
+
+                                let hide = (filter !== '' && item.empreendimento.id != filter)
+
+                                return (
+                                    <tr key={item.id} className={(hide) ? 'd-none' : ''}>
+                                        <td>#{item.id}</td>
+                                        <td>{item.nome}</td>
+                                        <td>
+                                            <Link to={singleEmpreLink + item.empreendimento.id}
+                                                target="_blank" rel="noopener noreferrer"
+                                                title='Ver empreendimento'
+                                                className='text-decoration-none'
+                                            >
+                                                {item.empreendimento.nome} <span className='smaller bi-arrow-up-right'></span>
+                                            </Link>
+                                        </td>
+                                        <td>{'R$ ' + formatNumber(item.valor_base, true)}</td>
+                                        {/* <td>{8}</td> */}
+                                        <td className={'fw-bold ' + ((item.disponivel) ? ((item.reservada) ? 'text-warning' : 'text-green') : 'text-danger')}>
+                                            {(item.disponivel) ? ((item.reservada) ? 'Reservada' : 'Disponível') : 'Vendida'}
+                                        </td>
+                                        <td className='actions'>
+                                            <div>
+                                                <Link
+                                                    title='Editar'
+                                                    className='text-primary bi bi-pencil-fill'
+                                                    to={singleLink + item.id}>
+                                                </Link>
+                                                &nbsp;&nbsp;
+                                                <span
+                                                    title='Excluir permanentemente'
+                                                    className='text-danger bi bi-x-circle-fill'
+                                                    onClick={() => { deleteCabana(item.id, true) }}>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
+                </div> : data.message}
         </Container>
     )
 }

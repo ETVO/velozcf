@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
 import { authUser } from './helpers';
@@ -27,49 +27,53 @@ import './scss/App.scss'
 const API_URL = process.env.REACT_APP_API_URL
 
 const initialUser = {
-    username: '',
-    email: '',
-    password: '',
-    role: '',
-    info: {
-		nome_completo: ''
-	},
-    photo: {
-        id: 0,
-    }
+	username: '',
+	email: '',
+	password: '',
+	role: ''
 }
 
 function App() {
 
-	// const [user, setUser] = useState(initialUser)
+	const [token, setToken] = useState();
 
-	const [loggedIn, setLoggedIn] = useState(false);
+	// Filter function to set token state value
+	const setTokenFilter = (value) => {
+		if (value) {
+			// Stringify JSON then encode it as base64 (to prevent adulteration)
+			localStorage.setItem(
+				'token',
+				Buffer.from(
+					JSON.stringify(value)
+				).toString('base64')
+			);
+			setToken(value);
+		}
+		else {
+			localStorage.removeItem('token');
+			setToken(value);
+		}
+	}
 
-	// if (user === initialUser) {
-	// 	let sessionUser = sessionStorage.getItem('user');
-	// 	if(sessionUser) {
-	// 		setUser(sessionUser);
-	// 	}
-	// }
-	// else {
-	// 	if(authUser(user.username, user.password)) {
-	// 		console.log('authenticated', user.info.nome_completo);
-	// 	}
-	// 	else {
-	// 		user = initialUser;
-	// 	}
-	// }
-
-	if (!loggedIn) {
-		if (sessionStorage.getItem('loggedIn'))
-			setLoggedIn(true);
+	if (!token) {
+		// Decode token from base64 then parse to JSON
+		let sessionToken = localStorage.getItem('token')
+		if (sessionToken)
+			setToken(
+				JSON.parse(
+					Buffer.from(
+						sessionToken,
+						'base64'
+					).toString('utf8')
+				)
+			);
 
 		return (
 			<Router>
 				<div className="App">
 					<Routes>
 						<Route exact path="*" element={(<Navigate to="/login" />)}></Route>
-						<Route path="/login" element={(<Login setLoggedIn={setLoggedIn} />)}></Route>
+						<Route path="/login" element={(<Login setToken={setTokenFilter} />)}></Route>
 					</Routes>
 				</div>
 			</Router>
@@ -78,31 +82,43 @@ function App() {
 
 	return (
 		<Router>
-			<Header />
+			<Header token={token} />
 			<div className="App">
 				<Routes>
 					<Route path="*" element={<Navigate to="/" />}></Route>
 					<Route exact path="/" element={(<Home />)}></Route>
-					{/* <Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
-					<Route exact path="/empreendimento" element={(<Empreendimento />)}></Route>
-					<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route> */}
-					<Route exact path="/cabanas" element={(<Cabanas />)}></Route>
-					<Route exact path="/cabana" element={(<Cabana />)}></Route>
-					<Route exact path="/cabana/:id" element={(<Cabana />)}></Route>
-					<Route exact path="/images" element={(<Images />)}></Route>
-					<Route exact path="/image" element={(<Image />)}></Route>
-					<Route exact path="/image/:id" element={(<Image />)}></Route>
-					<Route exact path="/users" element={(<Users />)}></Route>
-					<Route exact path="/user" element={(<User />)}></Route>
-					<Route exact path="/user/:id" element={(<User />)}></Route>
-					<Route exact path="/propostas" element={(<Propostas />)}></Route>
-					<Route exact path="/imobiliarias" element={(<Imobiliarias />)}></Route>
-					<Route exact path="/imobiliaria" element={(<Imobiliaria />)}></Route>
-					<Route exact path="/imobiliaria/:id" element={(<Imobiliaria />)}></Route>
-					<Route exact path="/configuracoes" element={(<Config />)}></Route>
+
+					{(token.role === 'venda') ?
+						<Fragment>
+							<Route exact path="/users" element={<Navigate to={'/user/' + token.id} />}></Route>
+							<Route exact path="/user" element={<Navigate to={'/user/' + token.id} />}></Route>
+							<Route path="/user/*" element={<Navigate to={'/user/' + token.id} />}></Route>
+							<Route exact path='/user/:id' element={(<User token={token} />)}></Route>
+						</Fragment>
+						:
+						<Fragment>
+							<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
+							<Route exact path="/empreendimento" element={(<Empreendimento />)}></Route>
+							<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
+							<Route exact path="/cabanas" element={(<Cabanas />)}></Route>
+							<Route exact path="/cabana" element={(<Cabana />)}></Route>
+							<Route exact path="/cabana/:id" element={(<Cabana />)}></Route>
+							<Route exact path="/images" element={(<Images />)}></Route>
+							<Route exact path="/image" element={(<Image />)}></Route>
+							<Route exact path="/image/:id" element={(<Image />)}></Route>
+							<Route exact path="/users" element={(<Users />)}></Route>
+							<Route exact path="/user" element={(<User token={token} />)}></Route>
+							<Route exact path="/user/:id" element={(<User token={token} />)}></Route>
+							<Route exact path="/propostas" element={(<Propostas />)}></Route>
+							<Route exact path="/imobiliarias" element={(<Imobiliarias />)}></Route>
+							<Route exact path="/imobiliaria" element={(<Imobiliaria />)}></Route>
+							<Route exact path="/imobiliaria/:id" element={(<Imobiliaria />)}></Route>
+							<Route exact path="/configuracoes" element={(<Config />)}></Route>
+						</Fragment>
+					}
 				</Routes>
 			</div>
-			<Footer setLoggedIn={setLoggedIn} />
+			<Footer token={token} setToken={setTokenFilter} />
 		</Router>
 	)
 }

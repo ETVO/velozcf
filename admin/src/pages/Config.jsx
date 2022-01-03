@@ -22,6 +22,14 @@ const initialFields = {
     entrada_min: {
         value: '',
         updated_at: ''
+    },
+    representante_cf: {
+        value: '',
+        updated_at: ''
+    },
+    testemunha: {
+        value: '',
+        updated_at: ''
     }
 };
 
@@ -143,6 +151,40 @@ function Config() {
                             <Form.Text text-muted>
                                 <small className='fw-normal text-muteder d-block'>
                                     Atualizado em: {moment(fields.entrada_min.updated_at).format('DD/MM/YYYY HH:mm')}
+                                </small>
+                            </Form.Text>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.requiredText}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className='form-row' controlId="representante_cf.value">
+                            <Form.Label>Representante CF:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.representante_cf.value}
+                                type="number"
+                                required
+                            />
+                            <Form.Text text-muted>
+                                <small className='fw-normal text-muteder d-block'>
+                                    Atualizado em: {moment(fields.representante_cf.updated_at).format('DD/MM/YYYY HH:mm')}
+                                </small>
+                            </Form.Text>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.requiredText}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className='form-row' controlId="testemunha.value">
+                            <Form.Label>Testemunha:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.testemunha.value}
+                                type="number"
+                                required
+                            />
+                            <Form.Text text-muted>
+                                <small className='fw-normal text-muteder d-block'>
+                                    Atualizado em: {moment(fields.testemunha.updated_at).format('DD/MM/YYYY HH:mm')}
                                 </small>
                             </Form.Text>
                             <Form.Control.Feedback type="invalid">

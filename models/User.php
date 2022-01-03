@@ -191,6 +191,18 @@
             return false;
         }
 
+        // Auth function
+        public function authenticate() {
+
+            $password = $this->password;
+
+            if($this->read_single(false) && $this->password === $password) {
+                return true;
+            }
+            
+            return false;
+        }
+
         // CREATE
         public function create() {
             // Create query
@@ -213,6 +225,9 @@
             
             // Only follow ahead if info exists and is created
             if($this->info && $this->info->create()) {
+                
+                $this->imobiliaria->read_single();
+
                 // Sanitize data & Bind params
                 $stmt->bindParam(':username', sanitizeText($this->username));
                 $stmt->bindParam(':email', sanitizeText($this->email));
@@ -270,6 +285,10 @@
 
             if(!$this->info->update()) return false;
 
+            $this->imobiliaria->read_single();
+
+            if($this->id == 1) $this->blocked = 0;
+
             // Sanitize data & Bind params
             $stmt->bindParam(':username', sanitizeText($this->username));
             $stmt->bindParam(':email', sanitizeText($this->email));
@@ -309,13 +328,10 @@
             $stmt->bindParam(':id', sanitizeInt($this->id));	
 
             // Execute query
-
             if(!empty($this->id) && $stmt->execute()) {
                 return true;
             }
 
-            // Print error if something goes wrong
-            // printf("Error: %s\n", $stmt->err);
             return false;
         }
 

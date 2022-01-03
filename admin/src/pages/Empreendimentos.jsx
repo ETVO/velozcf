@@ -72,75 +72,76 @@ function Empreendimentos() {
         <Container className='Empreendimentos View my-5'>
             <ViewHeading showReload={true} title='Empreendimentos' addNew='Adicionar Novo' addNewLink={singleLink} />
 
-            <small className='m-auto cursor-pointer d-block mt-2 mt-md-0'>
-                <span className={(showDeleted) ? 'text-decoration-underline' : 'text-muted'} onClick={() => { setDeletedShow(!showDeleted) }}>
-                    Ver Excluídos
-                </span>
-            </small>
+            {(data.data) ? <div>
+                <small className='m-auto cursor-pointer d-block mt-2 mt-md-0'>
+                    <span className={(showDeleted) ? 'text-decoration-underline' : 'text-muted'} onClick={() => { setDeletedShow(!showDeleted) }}>
+                        Ver Excluídos
+                    </span>
+                </small>
+                <Table responsive className={(showDeleted) ? 'mb-3 show-deleted' : 'mb-3'}>
+                    <thead>
+                        <tr>
+                            <th className='d-none d-sm-table-cell'></th>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th className='d-none d-sm-table-cell'>Última modificação</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.data.map(item => {
 
-            {(data.data) ? <Table responsive className={(showDeleted) ? 'mb-3 show-deleted' : 'mb-3'}>
-                <thead>
-                    <tr>
-                        <th className='d-none d-sm-table-cell'></th>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th className='d-none d-sm-table-cell'>Última modificação</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.data.map(item => {
+                            let updatedAt = moment(item.updated_at).format('DD/MM/YYYY HH:mm')
 
-                        let updatedAt = moment(item.updated_at).format('DD/MM/YYYY HH:mm')
+                            return (
+                                <tr key={item.id} className={(item.deleted == 1) ? 'deleted' : ''}>
+                                    <td className='logo d-none d-sm-table-cell'>
+                                        <Link to={singleLink + item.id}>
+                                            <img src={item.logo.url} alt="" />
+                                        </Link>
+                                    </td>
+                                    <td>#{item.id}</td>
+                                    <td>{item.nome}</td>
+                                    <td className='updatedAt d-none d-sm-table-cell'>{updatedAt}</td>
+                                    <td className='actions'>
 
-                        return (
-                            <tr key={item.id} className={(item.deleted == 1) ? 'deleted' : ''}>
-                                <td className='logo d-none d-sm-table-cell'>
-                                    <Link to={singleLink + item.id}>
-                                        <img src={item.logo.url} alt="" />
-                                    </Link>
-                                </td>
-                                <td>#{item.id}</td>
-                                <td>{item.nome}</td>
-                                <td className='updatedAt d-none d-sm-table-cell'>{updatedAt}</td>
-                                <td className='actions'>
+                                        {(item.deleted != 1) ? (
+                                            <div>
+                                                <Link
+                                                    title='Editar'
+                                                    className='text-primary bi bi-pencil-fill'
+                                                    to={singleLink + item.id}>
+                                                </Link>
+                                                &nbsp;&nbsp;
+                                                <span
+                                                    title='Excluir'
+                                                    className='text-danger bi bi-trash-fill'
+                                                    onClick={() => { deleteEmpre(item.id) }}>
+                                                </span>
+                                            </div>
+                                        ) : (
 
-                                    {(item.deleted != 1) ? (
-                                        <div>
-                                            <Link
-                                                title='Editar'
-                                                className='text-primary bi bi-pencil-fill'
-                                                to={singleLink + item.id}>
-                                            </Link>
-                                            &nbsp;&nbsp;
-                                            <span
-                                                title='Excluir'
-                                                className='text-danger bi bi-trash-fill'
-                                                onClick={() => { deleteEmpre(item.id) }}>
-                                            </span>
-                                        </div>
-                                    ) : (
-
-                                        <div>
-                                            <span
-                                                title='Recuperar'
-                                                className='text-primary bi bi-check-circle-fill'
-                                                onClick={() => { recoverEmpre(item.id) }}>
-                                            </span>
-                                            &nbsp;&nbsp;
-                                            <span
-                                                title='Excluir permanentemente'
-                                                className='text-danger bi bi-x-circle-fill'
-                                                onClick={() => { deleteEmpre(item.id, true) }}>
-                                            </span>
-                                        </div>
-                                    )}
-                                </td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </Table> : data.message}
+                                            <div>
+                                                <span
+                                                    title='Recuperar'
+                                                    className='text-primary bi bi-check-circle-fill'
+                                                    onClick={() => { recoverEmpre(item.id) }}>
+                                                </span>
+                                                &nbsp;&nbsp;
+                                                <span
+                                                    title='Excluir permanentemente'
+                                                    className='text-danger bi bi-x-circle-fill'
+                                                    onClick={() => { deleteEmpre(item.id, true) }}>
+                                                </span>
+                                            </div>
+                                        )}
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </Table>
+            </div> : data.message}
         </Container>
     )
 }

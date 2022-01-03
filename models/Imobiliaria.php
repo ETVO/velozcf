@@ -70,7 +70,7 @@
                     COUNT(u.id) AS user_count
                 FROM 
                     {$this->table} i
-                LEFT JOIN
+                INNER JOIN
                     users u ON u.imobiliaria = i.id
                 WHERE
                     i.id = ?
@@ -90,6 +90,7 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if($row) {
+                if(!isset($this->id)) $this->id = 0;
                 $this->set_properties($row);
                 
                 return true;

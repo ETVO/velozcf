@@ -64,7 +64,10 @@ export default function PasswordControl({ classes, label, controlId, handleChang
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                     required={!editMode}
                 />
-                <span className='toggle-view cursor-pointer' onClick={() => setView(!view)}>
+                <span onClick={() => setView(!view)} 
+                    className='toggle-view cursor-pointer' 
+                    title={(view) ? 'Ocultar' : 'Exibir'}
+                >
                     <span className={(view) ? 'bi-eye-fill' : 'bi-eye'}></span>
                 </span>
             </div>

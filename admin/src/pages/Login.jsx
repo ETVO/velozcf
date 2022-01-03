@@ -5,31 +5,39 @@ import md5 from 'md5'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
-import { errors } from '../helpers'
+import { errors, authUser } from '../helpers'
 
 import '../scss/Home.scss'
 import '../scss/View.scss'
 
-const API_URL = process.env.REACT_APP_API_URL
+const API_URL = process.env.REACT_APP_API_URL;
 
-const SYSTEM_URL = process.env.REACT_APP_SYSTEM_URL
+const SYSTEM_URL = process.env.REACT_APP_SYSTEM_URL;
 
-function Login({ setLoggedIn }) {
+const defaultErrorMessage = 'Usuário ou senha incorretos.';
+
+function Login({ setToken }) {
 
     const [user, setUser] = useState('')
     const [pass, setPass] = useState('')
-    const [error, showError] = useState(false)
+    const [error, setError] = useState({show: false, message: defaultErrorMessage})
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        showError(false);
-        if (user === 'velozadm' && md5(pass) === '5172065abed82ace9fa6c180ecef364c') {
-            sessionStorage.setItem('loggedIn', true)
-            setLoggedIn(true);
-        }
-        else {
-            showError(true);
-        }
+        setError({show: false, message: defaultErrorMessage });
+
+        authUser(user, pass).then(res => {
+            if(res.success === false) {
+                if(res.message !== '')
+                    setError({show: true, message: res.message});
+                else 
+                    setError({show: true});
+            }
+            else {
+                // console.log(res);
+                setToken(res);
+            }
+        });
     }
 
     return (
@@ -39,13 +47,13 @@ function Login({ setLoggedIn }) {
                 <div className='top-bar'></div>
 
 
-                <div className="text-center mb-1">
-                    <h3 className='text-muted fw-light mb-0'>Login</h3>
-                    <h3 className='title mb-0'>Sistema Veloz</h3>
+                <div className="text-center">
+                    <h1 className='text-muted fw-light mb-0'>Login</h1>
+                    <h2 className='title mb-0'>Sistema Veloz</h2>
                 </div>
 
-                <small className='error text-danger d-block mb-2 text-center' style={(!error) ? {opacity:0} : null}>
-                    Usuário ou senha incorretos.
+                <small className='error text-danger d-block my-1 text-center' style={(!error.show) ? {opacity:0} : null}>
+                    {error.message}
                 </small>
 
                 <Form onSubmit={handleSubmit}>

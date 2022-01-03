@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import { Container, Form, Col, Row, Button, FloatingLabel } from 'react-bootstrap'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import InputMask from 'react-input-mask';
@@ -40,14 +40,19 @@ const imagesLink = '/images';
 const imobsLink = '/imobiliarias';
 const endpoint = 'users';
 
-function User() {
+function User({ token }) {
 
     let minDataNasc = moment().subtract(105, 'years')
     let maxDataNasc = moment().subtract(18, 'years')
 
-    const { id } = useParams()
+    const { id: param_id } = useParams()
 
     const navigate = useNavigate();
+
+    let id = param_id;
+
+    if(!param_id && !token) navigate('/');
+    if(token.role === 'venda') id = token.id;
 
     let editMode = (typeof id !== 'undefined');
 
@@ -139,12 +144,13 @@ function User() {
             <Form onSubmit={handleSubmit} onKeyDown={(e) => e.key !== 'Enter'} noValidate validated={validated}>
 
                 <EditHeading
-                    title={((editMode) ? 'Alterar' : 'Novo') + ' Usuário'}
-                    iconLink={archiveLink}
+                    title={((token.role === 'venda') ? 'Meu' : (editMode) ? 'Alterar' : 'Novo') + ' Usuário'}
+                    iconLink={(token.role === 'admin') ? archiveLink : ''}
                 >
                     <Button variant='primary' type="submit">
                         {(editMode) ? 'Atualizar' : 'Salvar'}
                     </Button>
+                    {(token.role === 'admin' && token.id !== id) ?
                     <Button
                         variant='outline-danger'
                         className='ms-2'
@@ -153,6 +159,7 @@ function User() {
                         onClick={() => { if (editMode) deleteUser(data.id) }}>
                         Excluir
                     </Button>
+                    : '' }
                 </EditHeading>
 
                 <Row className='single-inner'>
@@ -191,43 +198,48 @@ function User() {
                             editMode={(editMode)}
                         />
 
-                        <Form.Group className='form-row' controlId="role">
-                            <Form.Label>Categoria:</Form.Label>
-                            <Form.Select onChange={handleChange} value={fields.role}>
-                                {Object.keys(roles).map(key => {
-                                    return (
-                                        <option key={key} value={key}>{roles[key]}</option>
-                                    );
-                                })}
-                            </Form.Select>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.requiredText}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                        {(token.role === 'admin') ?
 
-                        <Form.Group className='form-row' controlId="imobiliaria.id">
-                            <Form.Label>Imobiliária
-                                (<Link
-                                    title='Consultar empreendimentos'
-                                    to={imobsLink}
-                                    target="_blank" rel="noopener noreferrer"
-                                >
-                                    <small>Consultar imobiliárias</small>
-                                </Link>):
-                            </Form.Label>
-                            <Form.Control onChange={handleChange}
-                                value={fields.imobiliaria.id}
-                                type="number"
-                                min={0}
-                                required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.requiredText}
-                            </Form.Control.Feedback>
-                            <Form.Text muted>
-                                Insira o ID da Imobiliária à qual este usuário está associado.
-                            </Form.Text>
-                        </Form.Group>
+                            <Fragment>
+                                <Form.Group className='form-row' controlId="role">
+                                    <Form.Label>Função:</Form.Label>
+                                    <Form.Select onChange={handleChange} value={fields.role}>
+                                        {Object.keys(roles).map(key => {
+                                            return (
+                                                <option key={key} value={key}>{roles[key]}</option>
+                                            );
+                                        })}
+                                    </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.requiredText}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+
+                                <Form.Group className='form-row' controlId="imobiliaria.id">
+                                    <Form.Label>Imobiliária
+                                        (<Link
+                                            title='Consultar empreendimentos'
+                                            to={imobsLink}
+                                            target="_blank" rel="noopener noreferrer"
+                                        >
+                                            <small>Consultar imobiliárias</small>
+                                        </Link>):
+                                    </Form.Label>
+                                    <Form.Control onChange={handleChange}
+                                        value={(fields.imobiliaria.id === null) ? 0 : fields.imobiliaria.id}
+                                        type="number"
+                                        min={0}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.requiredText}
+                                    </Form.Control.Feedback>
+                                    <Form.Text muted>
+                                        Insira o ID da Imobiliária à qual este usuário está associado.
+                                    </Form.Text>
+                                </Form.Group>
+                            </Fragment>
+
+                            : ''}
 
                         <h3 className='mt-4 mb-0'>Informações</h3>
                         <hr className='mt-2' />
@@ -275,7 +287,6 @@ function User() {
                                 <Form.Control onChange={handleChange}
                                     value={fields.info.nacionalidade}
                                     type="text"
-                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}
@@ -287,7 +298,6 @@ function User() {
                                 <Form.Control onChange={handleChange}
                                     value={fields.info.profissao}
                                     type="text"
-                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}
@@ -302,7 +312,6 @@ function User() {
                                 min={minDataNasc.format('YYYY-MM-DD')}
                                 max={maxDataNasc.format('YYYY-MM-DD')}
                                 type="date"
-                                required
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.invalidDate}
@@ -318,7 +327,6 @@ function User() {
                                     mask="999.999.999-99"
                                     maskChar="_"
                                     placeholder='000.000.000-00'
-                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}
@@ -329,7 +337,7 @@ function User() {
                                 <Form.Label>RG:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
                                     defaultValue={fields.info.rg}
-                                    required />
+                                />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}
                                 </Form.Control.Feedback>
@@ -339,7 +347,7 @@ function User() {
                                 <Form.Label>Órgão Exp.:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
                                     defaultValue={fields.info.orgao_exp}
-                                    required />
+                                />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}
                                 </Form.Control.Feedback>

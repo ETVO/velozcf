@@ -1,5 +1,3 @@
-SET FOREIGN_KEY_CHECKS=0;
-
 DROP TABLE IF EXISTS propostas;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS imobiliarias;
@@ -16,9 +14,6 @@ CREATE TABLE configs (
     value VARCHAR(255) NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
-INSERT INTO configs SET name = 'desconto_max', value = '10';
-INSERT INTO configs SET name = 'entrada_min', value = '15000';
 
 CREATE TABLE images (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -71,13 +66,13 @@ CREATE TABLE cotas (
 
 CREATE TABLE infos (
     id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	nome_completo VARCHAR(255) NOT NULL,
-	nacionalidade VARCHAR(255) NOT NULL,
-	profissao VARCHAR(255) NOT NULL,
-	data_nasc VARCHAR(255) NOT NULL,
-	cpf VARCHAR(255) NOT NULL,
-	rg VARCHAR(255) NOT NULL,
-	orgao_exp VARCHAR(255) NOT NULL
+	nome_completo VARCHAR(255),
+	nacionalidade VARCHAR(255),
+	profissao VARCHAR(255),
+	data_nasc VARCHAR(255),
+	cpf VARCHAR(255),
+	rg VARCHAR(255),
+	orgao_exp VARCHAR(255)
 );
 
 CREATE TABLE pagamentos (
@@ -114,9 +109,9 @@ CREATE TABLE users (
     info INT(11) UNSIGNED,
     photo INT(11) UNSIGNED,
     imobiliaria INT(11) UNSIGNED,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY info_fk (info) REFERENCES infos(id) ON DELETE SET NULL,
-    FOREIGN KEY imobiliaria_fk (imobiliaria) REFERENCES imobiliarias(id) ON DELETE SET NULL
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -- FOREIGN KEY info_fk (info) REFERENCES infos(id) ON DELETE SET NULL,
+    -- FOREIGN KEY imobiliaria_fk (imobiliaria) REFERENCES imobiliarias(id) ON DELETE SET NULL
 );
 
 CREATE TABLE propostas (
@@ -144,5 +139,3 @@ CREATE TABLE propostas (
     FOREIGN KEY empreendimento_fk (empreendimento) REFERENCES empreendimentos(id) ON DELETE CASCADE,
     FOREIGN KEY vendedor_fk (vendedor) REFERENCES users(id) ON DELETE CASCADE
 );
-
-SET FOREIGN_KEY_CHECKS=1;

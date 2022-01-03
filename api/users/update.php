@@ -28,7 +28,7 @@
     if($user->update()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Usuário atualizado.'
+            'message' => 'Usuário atualizado.' 
         ]);
     }
     else {

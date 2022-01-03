@@ -16,3 +16,8 @@
 .text-muteder {
     color: var(--bs-gray-500) !important;
 }
+
+.icon-disabled {
+    opacity: .5;
+    cursor: not-allowed !important;
+}
