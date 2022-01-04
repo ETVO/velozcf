@@ -1,24 +1,21 @@
 <?php
 
-    // Headers
-    header('Access-Control-Allow-Origin: *');
-    header('Content-Type: application/json');
-
     include_once '../../config/setup.php';
+    include_once '../../config/authenticate.php';
     include_once '../../models/Empreendimento.php';
-
+    
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
-
+    
     // Instantiate request
     $empre = new Empreendimento($db);
-
+    
     // Get ID from URL
-    $empre->id = isset($_GET['id']) ? $_GET['id'] : die();
+    $empre->id = isset($_GET['id']) ? $_GET['id'] : null;
 
     // Read single
-    if($empre->read_single()) {
+    if(isset($empre->id) && $empre->read_single()) {
 
         $empre_arr = get_object_vars($empre);
     

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Accordion, Form, Button, Row, Col } from 'react-bootstrap'
 
-import { errors, fieldsChangeArray, fieldsChange, formatNumber } from '../helpers'
+import { errors, fieldsChangeArray, fieldsChange, formatNumber } from '../helpers/helpers'
 
 import '../scss/Components.scss'
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
-import { apiDelete, apiUpdate } from '../helpers'
+import { apiDelete, apiUpdate } from '../helpers/helpers'
 
 import ViewHeading from '../components/ViewHeading'
 

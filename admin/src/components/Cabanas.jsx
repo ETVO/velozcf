@@ -4,7 +4,7 @@ import { Accordion, Button } from 'react-bootstrap'
 
 import CabanaControl from './CabanaControl';
 
-import { handleFormChange } from '../helpers';
+import { handleFormChange } from '../helpers/helpers';
 
 const { forwardRef, useRef, useImperativeHandle } = React;
 

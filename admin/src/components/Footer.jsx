@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Navbar, Button, Nav } from 'react-bootstrap'
 import moment from 'moment'
-import { apiReadSingle } from '../helpers';
+import { apiReadSingle } from '../helpers/helpers';
 
 export default function Footer({token, setToken}) {
 

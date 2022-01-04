@@ -9,7 +9,7 @@ import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
 import PasswordControl from '../components/PasswordControl'
 import EditHeading from '../components/EditHeading'
-import { errors, initialInfo, handleFormChange, apiCreate, apiUpdate, apiDelete, roles, fieldsChange } from '../helpers'
+import { errors, initialInfo, handleFormChange, apiCreate, apiUpdate, apiDelete, roles, fieldsChange } from '../helpers/helpers'
 
 import '../scss/View.scss'
 

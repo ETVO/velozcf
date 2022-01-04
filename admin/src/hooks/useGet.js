@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { getAuthString } from "../helpers/helpers"
 
 const useGet = (url) => {
     const [data, setData] = useState(null)
@@ -10,7 +11,12 @@ const useGet = (url) => {
             setLoading(true)
 
             try {
-                const res = await fetch(url)
+                const res = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Basic ' + getAuthString()
+                    }
+                })
                 const json = await res.json()
 
                 setData(json)

@@ -8,7 +8,7 @@ import ImageControl from '../components/ImageControl'
 import GalleryControl from '../components/GalleryControl'
 import EditHeading from '../components/EditHeading'
 import Cotas from '../components/Cotas'
-import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers'
+import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers/helpers'
 
 import '../scss/View.scss'
 

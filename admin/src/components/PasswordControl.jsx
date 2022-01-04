@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 
-import { errors, fetchImage } from '../helpers'
+import { errors, fetchImage } from '../helpers/helpers'
 
 import '../scss/Components.scss'
 

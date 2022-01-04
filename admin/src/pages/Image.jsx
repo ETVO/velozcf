@@ -5,7 +5,7 @@ import moment from 'moment'
 import reactImageSize from 'react-image-size'
 
 import useGet from '../hooks/useGet'
-import { handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers'
+import { handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers/helpers'
 
 import '../scss/View.scss'
 import { useNavigate } from 'react-router-dom'

@@ -64,6 +64,12 @@ body {
         cursor: pointer;
         position: absolute;
         right: 1rem;
+
+        transition: color .1s;
+
+        &:hover, &:active, &:focus {
+            color: var(--bs-yellow);
+        }
     }
 }
 

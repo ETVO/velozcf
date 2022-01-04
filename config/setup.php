@@ -1,14 +1,12 @@
 <?php 
+
+    // Headers
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With, Authentication');
+
     require __DIR__ . '/../vendor/autoload.php';
 
-    include_once __DIR__ . '/Auth.php';
+    include_once __DIR__ . '/functions.php';
+    include_once __DIR__ . '/env_constants.php';
     include_once __DIR__ . '/Database.php';
-
-
-    // $auth_db = new Database();
-    // $auth = new Auth($_SERVER['REQUEST_METHOD'], $auth_db->connect());
-    // $auth->setUser($_SERVER['PHP_AUTH_USER']);
-    // $auth->setPass($_SERVER['PHP_AUTH_PW']);
-    // $auth_db->close();
-
-    // if(!$auth->authenticate(true)) die();

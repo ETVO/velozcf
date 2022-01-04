@@ -8,7 +8,7 @@ import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
 import PasswordControl from '../components/PasswordControl'
 import EditHeading from '../components/EditHeading'
-import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, roles } from '../helpers'
+import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, roles } from '../helpers/helpers'
 
 import '../scss/View.scss'
 

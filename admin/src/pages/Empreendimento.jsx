@@ -6,7 +6,7 @@ import moment from 'moment'
 import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
 import EditHeading from '../components/EditHeading'
-import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete } from '../helpers'
+import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete } from '../helpers/helpers'
 
 import '../scss/View.scss'
 

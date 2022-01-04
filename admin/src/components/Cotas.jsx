@@ -4,7 +4,7 @@ import { Accordion, Button } from 'react-bootstrap'
 
 import CotaControl from './CotaControl';
 
-import { handleFormChange ,apiCreate, apiUpdate, apiDelete } from '../helpers';
+import { handleFormChange ,apiCreate, apiUpdate, apiDelete } from '../helpers/helpers';
 import useGet from '../hooks/useGet';
 
 const { forwardRef, useRef, useImperativeHandle } = React;

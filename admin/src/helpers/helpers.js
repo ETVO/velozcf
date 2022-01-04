@@ -1,6 +1,4 @@
-import md5 from 'md5'
-
-export const API_URL = process.env.REACT_APP_API_URL;
+export * from './api';
 
 export const errors = {
     requiredText: 'Campo obrigatório.',
@@ -31,94 +29,6 @@ export function formatNumber(x, isMoney = false) {
     x = x.replace('.', ',')
     x = x.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     return x
-}
-
-export async function fetchImage(id) {
-
-    const response = await fetch(API_URL + 'imagens/read_single.php?id=' + id)
-
-    const data = await response.json()
-
-    return data
-}
-
-export async function authUser(username, password) {
-
-    // let authString = Buffer.from(username + ':' + password).toString('base64');
-
-    let fields = {
-        username: username,
-        password: md5(password)
-    } 
-
-    const response = await fetch(API_URL + '/auth/index.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(fields)
-    })
-
-    const data = await response.json()
-
-    return data
-}
-
-export async function apiReadSingle(endpoint, id) {
-
-    const response = await fetch(API_URL + endpoint + '/read_single.php?id=' + id)
-
-    const data = await response.json()
-
-    return data
-}
-
-export async function apiCreate(endpoint, fields) {
-
-    const response = await fetch(API_URL + endpoint + '/create.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(fields)
-    })
-    
-    console.log(JSON.stringify(fields));
-
-    const data = await response.json()
-
-    return data
-}
-
-export async function apiUpdate(endpoint, fields) {
-
-    const response = await fetch(API_URL + endpoint + '/update.php', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(fields)
-    })
-    
-    console.log(JSON.stringify(fields));
-
-    const data = await response.json()
-
-    return data
-}
-
-export async function apiDelete(endpoint, id) {
-    const response = await fetch(API_URL + endpoint + '/delete.php', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: id })
-    })
-
-    const data = await response.json()
-
-    return data
 }
 
 export function handleFormChange(e, fields, setFields) {

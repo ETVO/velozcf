@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react'
 import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 
-import { authUser } from './helpers';
+import { authUser } from './helpers/helpers';
 
 // import pages & components
 import Login from './pages/Login'

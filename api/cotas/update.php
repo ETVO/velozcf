@@ -1,12 +1,7 @@
 <?php
 
-    // Headers
-    header('Access-Control-Allow-Origin: *');
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Methods: PUT');
-    header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Authorization, X-Requested-With');
-
     include_once '../../config/setup.php';
+    include_once '../../config/authenticate.php';
     include_once '../../models/Cota.php';
 
     // Instantiate Database & connect

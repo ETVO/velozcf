@@ -5,7 +5,7 @@ import md5 from 'md5'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
-import { errors, authUser } from '../helpers'
+import { errors, authUser } from '../helpers/helpers'
 
 import '../scss/Home.scss'
 import '../scss/View.scss'

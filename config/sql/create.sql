@@ -9,6 +9,15 @@ DROP TABLE IF EXISTS empreendimentos;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS configs;
 
+CREATE TABLE privileges (
+    endpoint VARCHAR(255) PRIMARY KEY,
+    can_create VARCHAR(255) NOT NULL,
+    can_update VARCHAR(255) NOT NULL,
+    can_delete VARCHAR(255) NOT NULL,
+    can_read VARCHAR(255) NOT NULL,
+    can_read_single VARCHAR(255) NOT NULL,
+);
+
 CREATE TABLE configs (
     name VARCHAR(255) PRIMARY KEY,
     value VARCHAR(255) NOT NULL,

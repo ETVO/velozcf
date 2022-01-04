@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 
-import { fetchImage } from '../helpers'
+import { fetchImage } from '../helpers/helpers'
 
 import '../scss/Components.scss'
 
