@@ -2,6 +2,7 @@ import md5 from 'md5'
 
 export const API_URL = process.env.REACT_APP_API_URL;
 
+// Interact with auth endpoint in API
 export async function authUser(username, password) {
 
     let fields = {
@@ -23,6 +24,7 @@ export async function authUser(username, password) {
     return data
 }
 
+// Get string for the Authorization header's Basic token 
 export function getAuthString() {
 
     // Get user data from localStorage
@@ -44,6 +46,7 @@ export function getAuthString() {
     return Buffer.from(user.username + ':' + user.password).toString('base64');
 }
 
+// Read single
 export async function apiReadSingle(endpoint, id) {
 
     const response = await fetch(API_URL + endpoint + '/read_single.php?id=' + id, {
@@ -58,6 +61,7 @@ export async function apiReadSingle(endpoint, id) {
     return data
 }
 
+// Create
 export async function apiCreate(endpoint, fields, log = true) {
 
     const response = await fetch(API_URL + endpoint + '/create.php', {
@@ -77,6 +81,7 @@ export async function apiCreate(endpoint, fields, log = true) {
     return data
 }
 
+// Update
 export async function apiUpdate(endpoint, fields, log = true) {
 
     const response = await fetch(API_URL + endpoint + '/update.php', {
@@ -96,6 +101,7 @@ export async function apiUpdate(endpoint, fields, log = true) {
     return data
 }
 
+// Delete
 export async function apiDelete(endpoint, id, log = false) {
     var body = { id: id };
     const response = await fetch(API_URL + endpoint + '/delete.php', {
@@ -115,6 +121,7 @@ export async function apiDelete(endpoint, id, log = false) {
     return data
 }
 
+// Fetch image by id
 export async function fetchImage(id) {
 
     const response = await fetch(API_URL + 'imagens/read_single.php?id=' + id, {
