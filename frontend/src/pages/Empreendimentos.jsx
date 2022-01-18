@@ -39,7 +39,7 @@ function Empreendimentos() {
             {(data.success !== false) ? data.data.map(emp => (
                 <Link key={emp.id} to={'/empreendimento/' + emp.id}>
                     <div className='emp-card'>
-                        <img className='cover' src={emp.cover.url} />
+                        <img className='cover' src={emp.cover.url} alt={emp.cover.caption} />
 
                         <div className="overlay">
                             <div className="logo">

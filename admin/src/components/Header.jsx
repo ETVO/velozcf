@@ -4,6 +4,7 @@ import { Navbar, Button, Nav } from 'react-bootstrap'
 // styling
 
 const API_URL = process.env.REACT_APP_API_URL
+const SHOW_EMPRE = process.env.REACT_APP_SHOW_EMPRE
 
 export default function Header({ token }) {
 
@@ -37,7 +38,9 @@ export default function Header({ token }) {
                         </Fragment>
                         :
                         <Fragment>
-                            <Nav.Link as={Link} to='/empreendimentos' eventKey='/empreendimentos'>Empreendimentos</Nav.Link>
+                            {(SHOW_EMPRE) ? (
+                                <Nav.Link as={Link} to='/empreendimentos' eventKey='/empreendimentos'>Empreendimentos</Nav.Link>
+                            ) : ''}
                             <Nav.Link as={Link} to='/cabanas' eventKey='/cabanas'>Cabanas</Nav.Link>
                             <Nav.Link as={Link} to='/images' eventKey='/images'>Imagens</Nav.Link>
                             <Nav.Link as={Link} to='/users' eventKey='/users'>Usuários</Nav.Link>

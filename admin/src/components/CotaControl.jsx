@@ -8,26 +8,9 @@ import '../scss/Components.scss'
 
 const imagesLink = '/images';
 
-const initialFields = {
-    numero: '',
-    valor: '',
-    data_inicio: '',
-    data_fim: '',
-    disponivel: 1,
-    reservada: 0,
-    cabana_id: 0
-}
-
-function CotaControl ({ fields, cabanaId, parentChangeHandle, accordionChange, removeCota }) {
-
-    // const [fields, setFields] = useState(initialFields);
+function CotaControl({ fields, parentChangeHandle, accordionChange, removeCota }) {
 
     const index = fields.index;
-
-    // if (fields === initialFields) {
-    //     fieldsChange(cabanaId, 'cabana_id', fields, setFields);
-    //     fieldsChange(index+1, 'numero', fields, setFields);
-    // }
 
     const handleChange = (e) => {
         parentChangeHandle(e, index);
@@ -36,50 +19,68 @@ function CotaControl ({ fields, cabanaId, parentChangeHandle, accordionChange, r
     return (
         <Accordion.Item className='CotaControl' eventKey={fields.index}>
             <Accordion.Header onClick={() => accordionChange(index)}>
-                    <div className="d-flex align-items-center">
-                        <b>{fields.numero}</b>&nbsp;
-                        {(fields.data_inicio && fields.data_fim) ? (
-                            <small className='text-muted mx-2 d-flex flex-column'>
-                                <span>
-                                    {fields.data_inicio}
-                                </span>
-                                <span>
-                                    {fields.data_fim}
-                                </span>
-                            </small>
-                        ) : ''}
-                        {(fields.valor) ? (
-                            <div className='fw-bold text-primary d-flex flex-column'>
-                                <span>
-                                    {'R$ ' + formatNumber(fields.valor)}
-                                </span>
-                            </div>
-                        ) : ''} 
+                <div className="d-flex align-items-center">
+                    <b className='text-dark'>{fields.numero}</b>&nbsp;
+                    {(fields.valor) ? (
+                        <div className='ms-3 fw-bold text-primary d-flex flex-column'>
+                            <span>
+                                {'R$ ' + formatNumber(fields.valor)}
+                            </span>
+                        </div>
+                    ) : ''}
+
+                    <div className="ms-3 tag">
+                        {
+                            (fields.status === 'd') ? (
+                                <span className='disponivel'>Disponível</span>
+                            ) : (
+                                (fields.status === 'r') ? (
+                                    <span className='reservada'>Reservada</span>
+                                ) : (
+                                    <span className='vendida'>Vendida</span>   
+                                )
+                            )
+                        }
                     </div>
-                </Accordion.Header>
+                </div>
+            </Accordion.Header>
             <Accordion.Body>
-                <Row className='form-row'>
-                    <Form.Group as={Col} className='form-row' controlId={index + ".data_inicio"}>
-                        <Form.Label>Data Início:</Form.Label>
-                        <Form.Control onChange={handleChange}
-                            value={fields.data_inicio}
-                            type="text"
+
+                <Form.Group className='form-row' controlId={index + ".status"}>
+                    <Form.Label>Situação:</Form.Label>
+                    <div>
+                        <Form.Check
+                            onChange={handleChange}
+                            inline
+                            type='radio'
+                            name={index + ".status"}
+                            value={'d'}
+                            label='Disponível'
+                            defaultChecked={(fields.status === 'd')}
                         />
-                        <Form.Control.Feedback type="invalid">
-                            {errors.requiredText}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col} className='form-row' controlId={index + ".data_fim"}>
-                        <Form.Label>Data Fim:</Form.Label>
-                        <Form.Control onChange={handleChange}
-                            value={fields.data_fim}
-                            type="text"
+                        <Form.Check
+                            onChange={handleChange}
+                            inline
+                            type='radio'
+                            name={index + ".status"}
+                            value={'r'}
+                            label='Reservada'
+                            defaultChecked={(fields.status === 'r')}
                         />
-                        <Form.Control.Feedback type="invalid">
-                            {errors.requiredText}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Row>
+                        <Form.Check
+                            onChange={handleChange}
+                            inline
+                            type='radio'
+                            name={index + ".status"}
+                            value={'v'}
+                            label='Vendida'
+                            defaultChecked={(fields.status === 'v')}
+                        />
+                    </div>
+                    <Form.Control.Feedback type="invalid">
+                        {errors.requiredText}
+                    </Form.Control.Feedback>
+                </Form.Group>
 
                 <Form.Group className='form-row' controlId={index + ".valor"}>
                     <Form.Label>Valor (R$):</Form.Label>
@@ -93,7 +94,7 @@ function CotaControl ({ fields, cabanaId, parentChangeHandle, accordionChange, r
                         {errors.requiredText}
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Button variant='outline-danger' onClick={()=> removeCota(index)}>
+                <Button variant='outline-danger' onClick={() => removeCota(index)}>
                     <small>Excluir cota</small>
                 </Button>
             </Accordion.Body>

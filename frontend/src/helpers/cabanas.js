@@ -2,18 +2,24 @@ import React from 'react'
 
 // returns true if available, false if sold out
 export function cycleCotas(cabana) {
-    var available = false
+    let available = 0;
+    let status = 'v';
+
     if (cabana.cotas) {
         for(var i = 0; i < cabana.cotas.length; i++) {
-            let cota = cabana.cotas[i]
+            let cota = cabana.cotas[i];
             
-            if (cota.disponivel) {
-                available = true;
-                break;
+            if (cota.status === 'd') {
+                if(status !== 'r') status = 'd';
+                available++;
+            }
+            if (cota.status === 'r') {
+                status = 'r';
             }
         }
     }
-    return available
+
+    return {status, available}
 }
 
 // simple component containing an svg icon

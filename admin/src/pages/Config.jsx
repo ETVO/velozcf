@@ -90,8 +90,7 @@ function Config() {
                 if (response) {
 
                     alert(response.message);
-                    if (response.success !== false)
-                        window.location.reload()
+                    window.location.reload();
                 }
             })
         }

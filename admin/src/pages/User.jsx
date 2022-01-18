@@ -51,13 +51,15 @@ function User({ token }) {
 
     let id = param_id;
 
-    if(!param_id && !token) navigate('/');
-    if(token.role === 'venda') id = token.id;
+    if (!param_id && !token) navigate('/');
+    if (token.role === 'venda') id = token.id;
 
     let editMode = (typeof id !== 'undefined');
 
     const [fields, setFields] = useState(initialFields)
     const [validated, setValidated] = useState(false);
+    const [showImob, setShowImob] = useState(false);
+    const [didMount, setDidMount] = useState(false);
 
     const { loading, error, data } = useGet(API_URL + endpoint + '/read_single.php?id=' + id);
 
@@ -87,6 +89,11 @@ function User({ token }) {
         setFields(data)
     }
 
+    if(editMode && fields.imobiliaria.id && showImob === false && didMount === false) {
+        setShowImob(true);
+        setDidMount(true);
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -96,16 +103,23 @@ function User({ token }) {
             setValidated(true)
         }
         else {
+            let formFields = JSON.parse(JSON.stringify(fields));
+
+            if(!showImob) {
+                formFields.imobiliaria.id = 0;
+            }
+            
+            console.log(formFields);
+
             if (!editMode) {
                 // submit form data
-                apiCreate(endpoint, fields).then(response => {
+                apiCreate(endpoint, formFields).then(response => {
                     if (response) {
 
                         alert(response.message);
                         if (response.username_taken === true) {
                             document.getElementById('username').value = '';
                             document.getElementById('username').focus();
-                            // fieldsChange('', 'username', fields, setFields);
                         }
                         else if (response.success !== false)
                             navigate(singleLink + response.data.id)
@@ -113,14 +127,13 @@ function User({ token }) {
                 })
             }
             else {
-                apiUpdate(endpoint, fields, data).then(response => {
+                apiUpdate(endpoint, formFields, data).then(response => {
                     if (response) {
 
                         alert(response.message);
                         if (response.username_taken === true) {
                             document.getElementById('username').value = '';
                             document.getElementById('username').focus();
-                            // fieldsChange('', 'username', fields, setFields);
                         }
                         else if (response.success !== false)
                             window.location.reload()
@@ -137,6 +150,11 @@ function User({ token }) {
         }
         fieldsChange(value, id, fields, setFields);
     }
+    
+    const changeShowImob = (e) => {
+        console.log(e.target.checked);
+        setShowImob(e.target.checked);
+    }
 
     return (
         <Container className='User View Single my-5'>
@@ -151,15 +169,15 @@ function User({ token }) {
                         {(editMode) ? 'Atualizar' : 'Salvar'}
                     </Button>
                     {(token.role === 'admin' && token.id !== id) ?
-                    <Button
-                        variant='outline-danger'
-                        className='ms-2'
-                        type="button"
-                        disabled={(!editMode)}
-                        onClick={() => { if (editMode) deleteUser(data.id) }}>
-                        Excluir
-                    </Button>
-                    : '' }
+                        <Button
+                            variant='outline-danger'
+                            className='ms-2'
+                            type="button"
+                            disabled={(!editMode)}
+                            onClick={() => { if (editMode) deleteUser(data.id) }}>
+                            Excluir
+                        </Button>
+                        : ''}
                 </EditHeading>
 
                 <Row className='single-inner'>
@@ -215,28 +233,38 @@ function User({ token }) {
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
-                                <Form.Group className='form-row' controlId="imobiliaria.id">
-                                    <Form.Label>Imobiliária
-                                        (<Link
-                                            title='Consultar empreendimentos'
-                                            to={imobsLink}
-                                            target="_blank" rel="noopener noreferrer"
-                                        >
-                                            <small>Consultar imobiliárias</small>
-                                        </Link>):
-                                    </Form.Label>
-                                    <Form.Control onChange={handleChange}
-                                        value={(fields.imobiliaria.id === null) ? 0 : fields.imobiliaria.id}
-                                        type="number"
-                                        min={0}
+                                <Form.Group className='form-row' controlId='showImob'>
+                                    <Form.Check onChange={changeShowImob}
+                                        type="checkbox"
+                                        checked={showImob}
+                                        label="Associar a imobiliária?"
                                     />
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.requiredText}
-                                    </Form.Control.Feedback>
-                                    <Form.Text muted>
-                                        Insira o ID da Imobiliária à qual este usuário está associado.
-                                    </Form.Text>
                                 </Form.Group>
+
+                                {(showImob) ? (
+                                    <Form.Group className='form-row' controlId="imobiliaria.id">
+                                        <Form.Label>Imobiliária
+                                            (<Link
+                                                title='Consultar empreendimentos'
+                                                to={imobsLink}
+                                                target="_blank" rel="noopener noreferrer"
+                                            >
+                                                <small>Consultar imobiliárias</small>
+                                            </Link>):
+                                        </Form.Label>
+                                        <Form.Control onChange={handleChange}
+                                            value={(fields.imobiliaria.id === null) ? 0 : fields.imobiliaria.id}
+                                            type="number"
+                                            min={0}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.requiredText}
+                                        </Form.Control.Feedback>
+                                        <Form.Text muted>
+                                            Insira o ID da Imobiliária à qual este usuário está associado.
+                                        </Form.Text>
+                                    </Form.Group>
+                                ) : ''}
                             </Fragment>
 
                             : ''}
@@ -275,6 +303,7 @@ function User({ token }) {
                             <Form.Control onChange={handleChange}
                                 value={fields.creci}
                                 type="text"
+                                // required={fields.role === 'venda'}
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.requiredText}
@@ -327,6 +356,7 @@ function User({ token }) {
                                     mask="999.999.999-99"
                                     maskChar="_"
                                     placeholder='000.000.000-00'
+                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}

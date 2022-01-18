@@ -25,6 +25,7 @@ import Config from './pages/Config'
 import './scss/App.scss'
 
 const API_URL = process.env.REACT_APP_API_URL
+const SHOW_EMPRE = process.env.REACT_APP_SHOW_EMPRE
 
 const initialUser = {
 	username: '',
@@ -97,9 +98,13 @@ function App() {
 						</Fragment>
 						:
 						<Fragment>
-							<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
-							<Route exact path="/empreendimento" element={(<Empreendimento />)}></Route>
-							<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
+							{(SHOW_EMPRE) ? (
+								<Fragment>
+									<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
+									<Route exact path="/empreendimento" element={(<Empreendimento />)}></Route>
+									<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
+								</Fragment>	
+							) : ''}
 							<Route exact path="/cabanas" element={(<Cabanas />)}></Route>
 							<Route exact path="/cabana" element={(<Cabana />)}></Route>
 							<Route exact path="/cabana/:id" element={(<Cabana />)}></Route>

@@ -1,17 +1,40 @@
 <?php
 
     include_once '../../config/setup.php';
-include_once '../../config/authenticate.php';
+    include_once '../../config/authenticate.php';
     include_once '../../models/User.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
+    
+    // Get auth username
+    $auth = new User($db);
+    
+    // Get data from HTTP Authorization Header (Basic token)
+    $auth->username = $_SERVER['PHP_AUTH_USER'];
+    $auth->password = $_SERVER['PHP_AUTH_PW'];
 
+    $auth->read_single();
+    
+    $data = json_decode(file_get_contents('php://input'));
+        
     // Instantiate request
     $user = new User($db);
 
-    $data = json_decode(file_get_contents('php://input'));
+    $user->id = $data->id;
+
+    $user->read_single();
+    
+    if($data->id == $auth->id && $data->blocked != $user->blocked) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Usuário não pode bloquear/desbloquear a si próprio.' 
+        ]);
+        exit;
+    }
+    
+    $user = new User($db);
 
     $user->set_properties($data, ['info', 'photo', 'imobiliaria']);
     

@@ -15,68 +15,72 @@ import history from './helpers/history';
 
 // import styling
 import './scss/App.scss'
-import { apiRead } from './helpers'
+import { apiRead } from './helpers/helpers'
 
 const API_URL = process.env.REACT_APP_API_URL
 
 function App() {
+	
+	const [token, setToken] = useState();
 
-	const [userId, setUserId] = useState(3)
-
-	const token = true;
-	const setToken = (val) => {
-		console.log('setToken with ', val)
-	}
-
-	apiRead('users').then(res => {
-		if(res.success !== false) {
-			setUserId(res.data[0].id)
+	// Filter function to set token state value
+	const setTokenFilter = (value) => {
+		if (value) {
+			// Stringify JSON then encode it as base64 (to prevent adulteration)
+			localStorage.setItem(
+				'token',
+				Buffer.from(
+					JSON.stringify(value)
+				).toString('base64')
+			);
+			setToken(value);
 		}
-	})
-
-	const user = {
-		fullname: 'Usuário Teste',
-		id: userId,
-		photo: { url: '../public/images/snow.jpg' }
+		else {
+			localStorage.removeItem('token');
+			setToken(value);
+		}
 	}
 
 	if (!token) {
+		// Decode token from base64 then parse to JSON
+		let sessionToken = localStorage.getItem('token')
+		if (sessionToken)
+			setToken(
+				JSON.parse(
+					Buffer.from(
+						sessionToken,
+						'base64'
+					).toString('utf8')
+				)
+			);
+
 		return (
 			<Router history={history}>
 				<div className="App">
 					<Routes>
 						<Route exact path="*" element={(<Navigate to="/login" />)}></Route>
-						<Route path="/login" element={(<Login setToken={setToken} />)}></Route>
+						<Route path="/login" element={(<Login setToken={setTokenFilter} />)}></Route>
 					</Routes>
 				</div>
 			</Router>
 		)
 	}
-	// else if(token.user.confirmed && !token.user.blocked) {
-	else if (token) {
 
-		const logOut = e => {
-			sessionStorage.clear()
-			localStorage.clear()
-			window.location.href = '/';
-		}
+	return (
+		<Router history={history}>
+			<Header token={token} setToken={setTokenFilter} ></Header>
 
-		return (
-			<Router history={history}>
-				<Header logOut={logOut} user={user}></Header>
-
-				<div className="App">
-					<Routes>
-						<Route path="*" element={<Navigate to="/" />}></Route>
-						<Route exact path="/" element={(<Empreendimentos />)}></Route>
-						<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
-						<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
-						<Route exact path="/proposta/:id" element={(<Proposta user={user} />)}></Route>
-					</Routes>
-				</div>
-			</Router>
-		)
-	}
+			<div className="App">
+				<Routes>
+					<Route path="*" element={<Navigate to="/" />}></Route>
+					<Route exact path="/" element={(<Empreendimentos />)}></Route>
+					<Route exact path="/empreendimentos" element={(<Empreendimentos />)}></Route>
+					<Route exact path="/empreendimento/:id" element={(<Empreendimento />)}></Route>
+					<Route exact path="/proposta/:id" element={(<Proposta user={token} />)}></Route>
+				</Routes>
+			</div>
+		</Router>
+	)
 }
 
 export default App

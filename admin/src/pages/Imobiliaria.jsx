@@ -8,7 +8,7 @@ import useGet from '../hooks/useGet'
 import ImageControl from '../components/ImageControl'
 import PasswordControl from '../components/PasswordControl'
 import EditHeading from '../components/EditHeading'
-import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, roles } from '../helpers/helpers'
+import { errors, handleFormChange, apiCreate, apiUpdate, apiDelete, roles, initialInfo } from '../helpers/helpers'
 
 import '../scss/View.scss'
 
@@ -19,6 +19,9 @@ const estado_civil_options = ['Solteiro', 'Casado', 'Separado', 'Divorciado', 'V
 const initialFields = {
     nome: '',
     cnpj: '',
+    crecij: '',
+    creci_rep: '',
+    info_rep: initialInfo,
     endereco: '',
     bairro: '',
     cep: '',
@@ -134,7 +137,7 @@ function Imobiliaria() {
                     <Col className='edit'>
 
                         <Form.Group className='form-row' controlId="nome">
-                            <Form.Label>Nome:</Form.Label>
+                            <Form.Label>Nome da Imobiliária:</Form.Label>
                             <Form.Control onChange={handleChange}
                                 value={fields.nome}
                                 type="text"
@@ -145,20 +148,34 @@ function Imobiliaria() {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group className='form-row' controlId="cnpj">
-                            <Form.Label>CNPJ:</Form.Label>
-                            <Form.Control onChange={handleChange}
-                                as={InputMask}
-                                defaultValue={fields.cnpj}
-                                mask="99.999.999/9999-99"
-                                maskChar="_"
-                                placeholder='00.000.000/0000-00'
-                                required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.requiredText}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                        <Row className='form-row'>
+                            <Form.Group as={Col} lg={6} controlId="cnpj">
+                                <Form.Label>CNPJ:</Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    as={InputMask}
+                                    defaultValue={fields.cnpj}
+                                    mask="99.999.999/9999-99"
+                                    maskChar="_"
+                                    placeholder='00.000.000/0000-00'
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group as={Col} lg={6} controlId="crecij">
+                                <Form.Label>CRECI-J:</Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    as={InputMask}
+                                    defaultValue={fields.crecij}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Row>
 
                         <Form.Group className='form-row' controlId="endereco">
                             <Form.Label>Endereço:</Form.Label>
@@ -197,7 +214,7 @@ function Imobiliaria() {
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Row>
-                        
+
 
                         <Form.Group className='form-row' controlId="cidade">
                             <Form.Label>Cidade/UF:</Form.Label>
@@ -210,6 +227,133 @@ function Imobiliaria() {
                                 {errors.requiredText}
                             </Form.Control.Feedback>
                         </Form.Group>
+
+                        <h3 className='mt-4 mb-0'>Informações Representante Imobiliária</h3>
+                        <hr className='mt-2' />
+
+                        <Form.Group className='form-row' controlId="info_rep.nome_completo">
+                            <Form.Label>Nome Completo:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.info_rep.nome_completo}
+                                type="text"
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.requiredText}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className='form-row' controlId="email">
+                            <Form.Label>Email:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.email}
+                                type="text"
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.requiredText}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Row className='form-row'>
+                            <Form.Group as={Col} lg={6} controlId="estado_civil">
+                                <Form.Label>Estado civil:</Form.Label>
+                                <Form.Select onChange={handleChange} value={fields.estado_civil}>
+                                    {estado_civil_options.map(option => {
+                                        return (
+                                            <option key={option} value={option}>{option}</option>
+                                        );
+                                    })}
+                                </Form.Select>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group as={Col} lg={6} controlId="creci_rep">
+                                <Form.Label>CRECI:</Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    value={fields.creci_rep}
+                                    type="text"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Row>
+
+                        <Row className='form-row'>
+                            <Form.Group as={Col} controlId="info_rep.nacionalidade">
+                                <Form.Label>Nacionalidade:</Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    value={fields.info_rep.nacionalidade}
+                                    type="text"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group as={Col} controlId="info_rep.profissao">
+                                <Form.Label>Profissão:</Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    value={fields.info_rep.profissao}
+                                    type="text"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Row>
+
+                        <Form.Group className='form-row' controlId="info_rep.data_nasc">
+                            <Form.Label>Data de nascimento:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.info_rep.data_nasc}
+                                min={minDataNasc.format('YYYY-MM-DD')}
+                                max={maxDataNasc.format('YYYY-MM-DD')}
+                                type="date"
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.invalidDate}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Row className="form-row">
+                            <Form.Group as={Col} controlId="info_rep.cpf">
+                                <Form.Label>CPF:</Form.Label>
+                                <Form.Control onChange={handleChange}
+                                    as={InputMask}
+                                    defaultValue={fields.info_rep.cpf}
+                                    mask="999.999.999-99"
+                                    maskChar="_"
+                                    placeholder='000.000.000-00'
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group as={Col} controlId="info_rep.rg">
+                                <Form.Label>RG:</Form.Label>
+                                <Form.Control onChange={handleChange} type="text"
+                                    defaultValue={fields.info_rep.rg}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group as={Col} controlId="info_rep.orgao_exp">
+                                <Form.Label>Órgão Exp.:</Form.Label>
+                                <Form.Control onChange={handleChange} type="text"
+                                    defaultValue={fields.info_rep.orgao_exp}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.requiredText}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                        </Row>
 
                     </Col>
                     <Col className='options'>

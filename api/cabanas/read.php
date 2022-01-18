@@ -11,7 +11,10 @@
     // Instantiate request
     $cabana = new Cabana($db);
 
+    $by_empre = false;
+    
     if(isset($_GET['empreendimento'])) {
+        $by_empre = true;
         $cabana->empreendimento->id = $_GET['empreendimento'];
     }
 
@@ -29,19 +32,15 @@
 
             $cabana_item = [
                 'id' => intval($id),
-                'nome' => $nome,
-                'tamanho' => $tamanho,
-                'quartos' => $quartos,
-                'valor_base' => floatval($valor_base),
+                'numero' => intval($numero),
                 'disponivel' => boolval($disponivel),
-                'reservada' => boolval($reservada),
+                'id_mapa' => $id_mapa,
                 'imagem' => [
                     'id' => intval($imagem_id),
                     'url' => $imagem_url,
                     'caption' => $imagem_caption
                 ],
                 'galeria' => $galeria,
-                'id_mapa' => $id_mapa,
                 'empreendimento' => [
                     'id' => intval($empre_id),
                     'nome' => $empre_nome,
@@ -56,9 +55,11 @@
         echo json_encode($cabanas_arr);
     }
     else {
+
+        $message = ($by_empre) ? 'Nenhuma cabana foi encontrada para este empreendimento.' : 'Nenhuma cabana foi encontrada.';
         // Nothing found
         echo json_encode([
             'success' => false,
-            'message' => 'Nenhuma cabana foi encontrada.'
+            'message' => $message
         ]);
     }

@@ -34,7 +34,6 @@ function Login({ setToken }) {
                     setError({show: true});
             }
             else {
-                // console.log(res);
                 setToken(res);
             }
         });

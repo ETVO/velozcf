@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { div, Col, Button } from 'react-bootstrap'
 import moment from 'moment'
-import { fieldsChange } from '../helpers'
+import { fieldsChange } from '../helpers/helpers'
 
 const API_URL = process.env.REACT_APP_API_URL
 

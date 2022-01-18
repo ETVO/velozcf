@@ -31,13 +31,10 @@
                 'id' => intval($id),
                 'numero' => intval($numero),
                 'valor' => floatval($valor),
-                'data_inicio' => $data_inicio,
-                'data_fim' => $data_fim,
-                'disponivel' => boolval($disponivel),
-                'reservada' => boolval($reservada),
+                'status' => $status,
                 'cabana' => [
                     'id' => intval($cabana_id),
-                    'nome' => $cabana_nome,
+                    'numero' => intval($cabana_numero),
                 ]
             ];
 

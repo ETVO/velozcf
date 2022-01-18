@@ -5,7 +5,7 @@ import moment from 'moment'
 import reactImageSize from 'react-image-size'
 
 import useGet from '../hooks/useGet'
-import { handleFormChange, apiCreate, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers/helpers'
+import { handleFormChange, apiCreateImage, apiUpdate, apiDelete, fieldsChangeArray } from '../helpers/helpers'
 
 import '../scss/View.scss'
 import { useNavigate } from 'react-router-dom'
@@ -120,11 +120,43 @@ function Image() {
                     }
                 })
             }
+            else {
+                e.preventDefault();
+
+                let file = document.getElementById('file').files[0];
+                
+                apiCreateImage(endpoint, fields, file).then(request => {
+                    if (request) {
+                        request.onreadystatechange = function () {
+                            if (request.readyState === 4 && request.status === 200) {
+                                let response = JSON.parse(request.response);
+
+                                if(response) {
+                                    alert(response.message);
+                                    
+                                    if (response.success !== false)
+                                        navigate(singleLink + '/' + response.data.id);
+                                }
+                            }
+                        };
+                    }
+                })
+
+            }
         }
     }
 
     const handleChange = (e) => {
         handleFormChange(e, fields, setFields)
+    }
+
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
     }
 
     const handleFileChange = (e) => {
@@ -135,15 +167,11 @@ function Image() {
         let size = selectedFile.size;
         let filename = selectedFile.name;
 
-        fetch(url).then(async (r) => {
-            let blob = await r.blob();
-        });
-
         fieldsChangeArray({
             url: url,
             size: size,
-            filename: filename,
-        }, ['url', 'size', 'filename'], fields, setFields);
+            filename: filename
+        }, ['url', 'size', 'filename', 'file'], fields, setFields);
     }
 
     // console.log(JSON.stringify(fields))
@@ -153,8 +181,8 @@ function Image() {
 
             <Form
                 onSubmit={handleSubmit}
-                action={(!editMode) ? API_URL + endpoint + '/create.php' : null}
-                method='post'
+                // action={(!editMode) ? API_URL + endpoint + '/create.php' : null}
+                // method='post'
                 encType='multipart/form-data'
                 noValidate
                 validated={validated}>

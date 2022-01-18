@@ -3,7 +3,7 @@ import { Form, Col, Row, Button } from 'react-bootstrap'
 import InputMask from 'react-input-mask';
 import moment from 'moment'
 
-import { errors, estado_civil_options } from '../helpers';
+import { errors, estado_civil_options } from '../helpers/helpers';
 
 
 export default function DadosComprador({ fields, setFields, submit }) {

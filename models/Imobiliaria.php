@@ -1,6 +1,7 @@
 <?php
 
     include_once 'Model.php';
+    include_once 'User.php';
 
     class Imobiliaria extends Model {
         // DB stuff
@@ -11,6 +12,8 @@
         public $id;
         public $nome;
         public $cnpj;
+        public $crecij;
+        public $representante;
         public $endereco;
         public $bairro;
         public $cep;
@@ -21,6 +24,8 @@
         // Construct with DB
         public function __construct($db) {
             $this->conn = $db;
+
+            $this->representante = new User($db);
         }
 
         // READ
@@ -30,6 +35,9 @@
                     i.id, 
                     nome,
                     cnpj,
+                    crecij,
+                    representante,
+                    rep_info.nome_completo as nome_rep,
                     endereco,
                     bairro,
                     cep,
@@ -40,6 +48,10 @@
                     {$this->table} i
                 LEFT JOIN
                     users u ON u.imobiliaria = i.id
+                LEFT JOIN 
+                    users rep_user ON i.representante = rep_user.id
+                LEFT JOIN 
+                    infos rep_info ON rep_user.info = rep_info.id
                 GROUP BY
                     i.id
                 ORDER BY 
@@ -62,6 +74,8 @@
                     i.id, 
                     i.nome,
                     cnpj,
+                    crecij,
+                    representante as representante_id,
                     endereco,
                     bairro,
                     cep,
@@ -92,6 +106,9 @@
             if($row) {
                 if(!isset($this->id)) $this->id = 0;
                 $this->set_properties($row);
+
+                $this->representante->id = $row['representante_id'];
+                $this->representante->read_single();
                 
                 return true;
             }
@@ -106,6 +123,8 @@
                 SET 
                     nome = :nome,
                     cnpj = :cnpj,
+                    crecij = :crecij,
+                    representante = :representante,
                     endereco = :endereco,
                     bairro = :bairro,
                     cep = :cep,
@@ -118,6 +137,8 @@
             // Sanitize data & Bind params
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':cnpj', sanitizeText($this->cnpj));
+            $stmt->bindParam(':crecij', sanitizeText($this->crecij));
+            $stmt->bindParam(':representante', sanitizeInt($this->representante));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':bairro', sanitizeText($this->bairro));
             $stmt->bindParam(':cep', sanitizeText($this->cep));
@@ -141,6 +162,8 @@
                 SET
                     nome = IFNULL(:nome, nome),
                     cnpj = IFNULL(:cnpj, cnpj),
+                    crecij = IFNULL(:crecij, crecij),
+                    representante = IFNULL(:representante, representante),
                     endereco = IFNULL(:endereco, endereco),
                     bairro = IFNULL(:bairro, bairro),
                     cep = IFNULL(:cep, cep),
@@ -155,6 +178,8 @@
             // Sanitize data & Bind params
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':cnpj', sanitizeText($this->cnpj));
+            $stmt->bindParam(':crecij', sanitizeText($this->crecij));
+            $stmt->bindParam(':representante', sanitizeInt($this->representante));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':bairro', sanitizeText($this->bairro));
             $stmt->bindParam(':cep', sanitizeText($this->cep));

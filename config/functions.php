@@ -16,7 +16,7 @@ $env = file_get_contents(__DIR__ . '/../.env');
     }
     
     // Set error_reporting after getting the (ENV)IRONMENT variables
-    error_reporting(ifset($_ENV['ERROR_REPORTING'], 0));
+    error_reporting(ifset($_ENV['ERROR_REPORTING'], 1));
 
     function ifset($val, $def) {
         return (isset($val)) ? $val : $def;

@@ -1,4 +1,4 @@
-import { apiCreate } from '../helpers';
+import { apiCreate } from './helpers';
 
 export async function enviarProposta(fields) {
     let P = parseFloat(fields.pagamento.valor_proposta)
@@ -8,12 +8,9 @@ export async function enviarProposta(fields) {
     fields.pagamento.valor_parcela = calcParcela(P, n, e)
     fields.pagamento.valor_final = e + (n * fields.pagamento.valor_parcela)
 
-    // alert('Envio de email encontra-se em manutenção temporária.\nPor favor tente novamente mais tarde. Para preservar os campos dos formulários, não faça log-out.')
-
     console.log(JSON.stringify(fields));
 
     // submit form data
-    
     apiCreate('propostas', fields).then(response => {
         if (response) {
 
@@ -23,13 +20,6 @@ export async function enviarProposta(fields) {
 			window.location.href = '/';
         }
     })
-
-    // createProposta - api
-
-    // generate document - clicksign
-
-    // updateProposta (signer URL) - api 
-    // create hook to send email once the proposta is updated with the signer URL
 
 }
 

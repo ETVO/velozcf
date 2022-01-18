@@ -27,15 +27,6 @@ async function deleteCabana(id) {
 
 }
 
-async function getEmpres() {
-
-    const response = await fetch(API_URL + 'empreendimentos/read.php')
-
-    const data = await response.json()
-
-    return data
-}
-
 
 function Cabanas() {
     const { loading, error, data } = useGet(API_URL + endpoint + '/read.php')
@@ -43,11 +34,11 @@ function Cabanas() {
     const [empres, setEmpres] = useState([]);
     const [filter, setFilter] = useState('');
 
-    (async () => {
-        if (empres.length === 0) {
-            setEmpres(await getEmpres());
-        }
-    })()
+    // (async () => {
+    //     if (empres.length === 0) {
+    //         setEmpres(await getEmpres());
+    //     }
+    // })()
 
     if (loading) return (
         <Container className='Cabanas View my-5'>
@@ -75,7 +66,7 @@ function Cabanas() {
 
             {(data.data) ?
                 <div>
-                    <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
+                    {/* <small className='m-auto cursor-pointer d-flex mt-2 m-md-0 mb-2'>
                         {(empres) ? (
                             <Form.Select className='smaller filter-select' onChange={changeFilterEmpre}>
                                 <option value=''>Filtrar empreendimentos</option>
@@ -86,15 +77,14 @@ function Cabanas() {
                                 }) : ''}
                             </Form.Select>
                         ) : 'Nenhum empreendimento encontrado.'}
-                    </small>
+                    </small> */}
                     <Table responsive className='mb-3'>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nome</th>
+                                <th>Imagem</th>
+                                <th>Número</th>
                                 <th>Empreendimento</th>
-                                <th>Valor base</th>
-                                {/* <th>Nº Cotas</th> */}
                                 <th>Status</th>
                                 <th></th>
                             </tr>
@@ -106,8 +96,9 @@ function Cabanas() {
 
                                 return (
                                     <tr key={item.id} className={(hide) ? 'd-none' : ''}>
-                                        <td>#{item.id}</td>
-                                        <td>{item.nome}</td>
+                                        <td className='id'>#{item.id}</td>
+                                        <td className='square-image'><img src={item.imagem.url} alt={item.imagem.caption} /></td>
+                                        <td>{item.numero}</td>
                                         <td>
                                             <Link to={singleEmpreLink + item.empreendimento.id}
                                                 target="_blank" rel="noopener noreferrer"
@@ -117,10 +108,8 @@ function Cabanas() {
                                                 {item.empreendimento.nome} <span className='smaller bi-arrow-up-right'></span>
                                             </Link>
                                         </td>
-                                        <td>{'R$ ' + formatNumber(item.valor_base, true)}</td>
-                                        {/* <td>{8}</td> */}
-                                        <td className={'fw-bold ' + ((item.disponivel) ? ((item.reservada) ? 'text-warning' : 'text-green') : 'text-danger')}>
-                                            {(item.disponivel) ? ((item.reservada) ? 'Reservada' : 'Disponível') : 'Vendida'}
+                                        <td className={'fw-bold ' + ((item.disponivel) ? 'text-green' : 'text-danger')}>
+                                            {(item.disponivel) ? 'Disponível' : 'Indisponível'}
                                         </td>
                                         <td className='actions'>
                                             <div>

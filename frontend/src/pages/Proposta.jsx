@@ -9,7 +9,7 @@ import {
     formatNumber, 
     initialInfo, 
     initialPagamento 
-} from '../helpers'
+} from '../helpers/helpers'
     
 import { enviarProposta } from '../helpers/enviarProposta'
 
@@ -147,7 +147,6 @@ export default function Proposta({ user }) {
                     unidades.push(cabana);
                 });
             }
-
 
             selected.cabanas.forEach(cabana => {
                 cabana.cotas.forEach(cota => {
@@ -335,7 +334,7 @@ export default function Proposta({ user }) {
                                                             {'Cota ' + cota.numero}
                                                         </span>
                                                         <span className='datas ms-2'>
-                                                            {cota.data_inicio + ' – ' + cota.data_fim}
+                                                            {'R$ ' + formatNumber(cota.valor)}
                                                         </span>
                                                     </div>
                                                 )

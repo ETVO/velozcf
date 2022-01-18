@@ -4,24 +4,13 @@ import { Accordion, Button } from 'react-bootstrap'
 
 import CotaControl from './CotaControl';
 
-import { handleFormChange ,apiCreate, apiUpdate, apiDelete } from '../helpers/helpers';
+import { handleFormChange, initialCota, apiCreate, apiUpdate, apiDelete } from '../helpers/helpers';
 import useGet from '../hooks/useGet';
 
 const { forwardRef, useRef, useImperativeHandle } = React;
 
 async function deleteCota(id) {
     apiDelete(endpoint, id);
-}
-
-const initialFields = {
-    id: 0,
-    numero: '',
-    valor: '',
-    data_inicio: '',
-    data_fim: '',
-    disponivel: 1,
-    reservada: 0,
-    cabana_id: 0
 }
 
 const API_URL = process.env.REACT_APP_API_URL
@@ -39,8 +28,12 @@ const Cotas = forwardRef(({cabanaId}, ref) => {
 
         saveChanges() {
             cotas.forEach(cota => {
-                if (cota.id === 0) {
-                    apiCreate(endpoint, cota);
+                if (!cota.id) {
+                    apiCreate(endpoint, cota).then(response => {
+                        if (response) {
+                            console.log('response:', response.message);
+                        }
+                    });
                 }
                 else {
                     apiUpdate(endpoint, cota);
@@ -72,7 +65,7 @@ const Cotas = forwardRef(({cabanaId}, ref) => {
 
     const addCota = () => {
         var temp = JSON.parse(JSON.stringify(cotas));
-        var newCota = JSON.parse(JSON.stringify(initialFields));
+        var newCota = JSON.parse(JSON.stringify(initialCota));
         
         newCota.index = cotas.length;
         newCota.numero = newCota.index + 1;

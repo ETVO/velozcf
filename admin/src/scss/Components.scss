@@ -37,3 +37,26 @@
     box-shadow: 0 5px 5px -5px rgba(#000, .2);
     margin-bottom: 1rem;
 }
+
+
+.tag{
+    margin: auto;
+
+    span {
+        // border: solid 1px black;
+        // padding: .1rem .5rem;
+        font-weight: bold;
+
+        &.reservada {
+            color: var(--bs-warning);
+        }
+        
+        &.disponivel {
+            color: var(--bs-green);
+        }
+        
+        &.vendida {
+            color: var(--bs-danger);
+        }
+    }
+}

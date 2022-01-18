@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import moment from 'moment'
 
 import useGet from '../hooks/useGet'
-import { apiDelete, apiUpdate, apiReadSingle, formatNumber, roles } from '../helpers/helpers'
+import { apiDelete, apiUpdate, apiReadSingle, getUserSession, formatNumber, roles } from '../helpers/helpers'
 
 import ViewHeading from '../components/ViewHeading'
 
@@ -63,6 +63,8 @@ function Users() {
         </Container>
     );
 
+    const user = getUserSession();
+
     return (
         <Container className='Users View my-5'>
             <ViewHeading showReload={true} title='Usuários' addNew='Adicionar Novo' addNewLink={singleLink} />
@@ -110,7 +112,7 @@ function Users() {
                                             </Link>
                                             &nbsp;&nbsp;
 
-                                            {(item.id !== 1) ? 
+                                            {(item.id !== 1 && item.username !== user.username) ? 
                                             <span
                                                 title='Bloquear'
                                                 className='text-danger bi bi-lock-fill'

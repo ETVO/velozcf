@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Col, Row, Toast, Button, Container } from 'react-bootstrap'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ReactSVG } from 'react-svg';
 
 import '../scss/Empreendimento.scss'
@@ -9,7 +9,7 @@ import '../scss/Empreendimento.scss'
 import useGet from '../hooks/useGet';
 
 // helpers & functions
-import { apiRead, formatNumber, apiReadSingle } from '../helpers';
+import { apiRead, formatNumber, apiReadSingle } from '../helpers/helpers';
 import { CabanaIcon, cycleCotas } from '../helpers/cabanas';
 
 // components
@@ -43,6 +43,7 @@ export default function Empreendimento() {
 
     const { loading, error, data } = useGet(API_URL + 'cabanas/read.php?empreendimento=' + id)
 
+    const navigate = useNavigate();
 
     const [cabanas, setCabanas] = useState()
     const [empreendimento, setEmpreendimento] = useState(initialEmpreendimento)
@@ -73,24 +74,46 @@ export default function Empreendimento() {
         )
     }
     if (data.success === false) {
-        window.href.location = '/'
+        return (
+            <div className='Empreendimento d-flex h-100'>
+                <p className='m-auto text-center'>
+                    {data.message}
+                    <br />
+                    <Link to='/'>voltar ao início</Link>
+                </p>
+            </div>
+        )
     }
 
     /** read cotas for cabanas */
     (async () => {
         if (!cabanas) {
-            let tmp = data.data
+            let tmp = data.data;
 
-            // read cotas for each cabana
-            await tmp.forEach(async cabana => {
-                let { data: cotas } = await apiRead('cotas', "?cabana_id=" + cabana.id)
+            if (tmp) {
+                // read cotas for each cabana
+                await tmp.forEach(async cabana => {
+                    let { data: cotas } = await apiRead('cotas', "?cabana_id=" + cabana.id)
 
-                // store cotas as a property of cabana
-                cabana.cotas = cotas;
-            })
+                    // store cotas as a property of cabana
+                    cabana.cotas = cotas;
+                })
 
-            // set cabanas accordingly
-            setCabanas(tmp)
+                // set cabanas accordingly
+                setCabanas(tmp)
+            }
+            else {
+                return (
+                    <div className='Empreendimento d-flex h-100'>
+                        <p className='m-auto'>
+                            Não há cabanas cadastradas para este empreendimento.
+                            <br />
+                            <Link to='/'>voltar ao início</Link>
+                        </p>
+                    </div>
+                )
+            }
+
         }
 
         let storedSelected = JSON.parse(sessionStorage.getItem('selectedUnidades'))
@@ -130,18 +153,12 @@ export default function Empreendimento() {
     /** function called to show unidade */
     const showUnidade = uni => {
         // check if unidade is sold out of cotas
-        let disponivel = cycleCotas(uni);
+        let { status, available } = cycleCotas(uni);
 
-        if (uni.reservada) {
-            setToastShow(true)
-            setToastText('A unidade selecionada encontra-se reservada.')
-        }
-        else if (!disponivel) {
+        if (status === 'v') {
             setToastShow(true)
             setToastText('A unidade selecionada já foi vendida.')
-
         }
-        // if it's available, set it as active
         else {
             setActive(uni)
         }
@@ -251,17 +268,27 @@ export default function Empreendimento() {
 
                 </Col>
                 <Col lg={8} className='mapa'>
-                    
-                    <MapEmpreendimento 
+
+                    <MapEmpreendimento
                         mapSlug={empreendimento.map_slug}
                         active={active}
                         showUnidade={showUnidade}
-                        selected={selected} 
-                        cabanas={data.data} 
-                        setCabanas={setCabanas} 
+                        selected={selected}
+                        cabanas={data.data}
+                        setCabanas={setCabanas}
                     />
 
-                    <div className="count-wrap">
+                    <div className="count-wrap d-flex">
+                        <div className="pdf d-flex me-2">
+                            <a className='m-auto' 
+                                href={empreendimento.pdf_url} 
+                                download
+                                title='Baixar Tabela de Referência de Cotas' 
+                                target='_blank' 
+                                rel="noreferrer">
+                                <span className='bi bi-table'></span>
+                            </a>
+                        </div>
                         <div className="count">
                             Cotas selecionadas
                             <div className={'count-number ms-2 rounded-circle' + ((countSelected() === 0) ? ' zero' : '')}>

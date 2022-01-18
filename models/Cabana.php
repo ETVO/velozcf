@@ -1,21 +1,18 @@
 <?php
 
+    include_once 'Model.php';
     include_once 'Empreendimento.php';
     include_once 'Image.php';
 
-    class Cabana {
+    class Cabana extends Model {
         // DB stuff
         private $conn;
         private $table = 'cabanas';
 
         // Properties
         public $id;
-        public $nome;
-        public $tamanho;
-        public $quartos;
-        public $valor_base;
+        public $numero;
         public $disponivel;
-        public $reservada;
         public $id_mapa;
         public $imagem;
         public $galeria;
@@ -34,12 +31,8 @@
             // Create query
             $query = "SELECT 
                     cabana.id, 
-                    cabana.nome,
-                    cabana.tamanho,
-                    cabana.quartos,
-                    cabana.valor_base,
+                    cabana.numero,
                     cabana.disponivel,
-                    cabana.reservada,
                     i.id as imagem_id,
                     i.url as imagem_url,
                     i.caption as imagem_caption,
@@ -60,7 +53,7 @@
                     WHERE
                         empreendimento = :empreendimento
                     ORDER BY 
-                        LENGTH(cabana.nome), cabana.nome
+                        cabana.numero
                 ";
             }
             else {
@@ -91,18 +84,13 @@
             // Create query
             $query = "SELECT
                     c.id, 
-                    nome,
-                    tamanho,
-                    quartos,
-                    valor_base,
+                    numero,
                     disponivel,
-                    reservada,
                     i.id as imagem_id,
-                    i.url as imagem_url,
-                    i.caption as imagem_caption,
                     galeria,
                     id_mapa,
-                    empreendimento
+                    empreendimento as empreendimento_id,
+                    updated_at
                 FROM 
                     {$this->table} c
                 LEFT JOIN 
@@ -125,22 +113,13 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if($row) {
-                $this->nome = $row['nome'];
-                $this->tamanho = $row['tamanho'];
-                $this->quartos = $row['quartos'];
-                $this->valor_base = $row['valor_base'];
-                
-                $this->disponivel = $row['disponivel'];
-                $this->reservada = $row['reservada'];
+                $this->set_properties($row);
 
                 $this->imagem->id = $row['imagem_id'];
-                $this->imagem->url = $row['imagem_url'];
-                $this->imagem->caption = $row['imagem_caption'];
-                
-                $this->galeria = $row['galeria'];
-                $this->id_mapa = $row['id_mapa'];
-                
-                $this->empreendimento->id = $row['empreendimento'];
+                $this->imagem->read_single();
+
+                $this->empreendimento->id = $row['empreendimento_id'];
+                $this->empreendimento->read_single();
 
                 return true;
             }
@@ -153,10 +132,7 @@
             // Create query
             $query = "INSERT INTO {$this->table}
                 SET
-                    nome = :nome,
-                    tamanho = :tamanho,
-                    quartos = :quartos,
-                    valor_base = :valor_base,
+                    numero = :numero,
                     disponivel = IFNULL(:disponivel, 1),
                     imagem_id = :imagem_id,
                     galeria = :galeria,
@@ -168,10 +144,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Sanitize data & Bind params
-            $stmt->bindParam(':nome', sanitizeText($this->nome));
-            $stmt->bindParam(':tamanho', sanitizeText($this->tamanho));
-            $stmt->bindParam(':quartos', sanitizeText($this->quartos));
-            $stmt->bindParam(':valor_base', sanitizeFloat($this->valor_base));
+            $stmt->bindParam(':numero', sanitizeInt($this->numero));
             $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
             $stmt->bindParam(':imagem_id', sanitizeInt($this->imagem->id));
             $stmt->bindParam(':galeria', sanitizeText($this->galeria));
@@ -195,11 +168,7 @@
             $query = "UPDATE {$this->table}
                 SET
                     
-                    nome = IFNULL(:nome, nome),
-                    tamanho = IFNULL(:tamanho, tamanho),
-                    quartos = IFNULL(:quartos, quartos),
-                    valor_base = IFNULL(:valor_base, valor_base),
-                    reservada = IFNULL(:reservada, reservada),
+                    numero = IFNULL(:numero, numero),
                     disponivel = IFNULL(:disponivel, disponivel),
                     imagem_id = IFNULL(:imagem_id, imagem_id),
                     galeria = IFNULL(:galeria, galeria),
@@ -213,11 +182,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Sanitize data & Bind params
-            $stmt->bindParam(':nome', sanitizeText($this->nome));
-            $stmt->bindParam(':tamanho', sanitizeText($this->tamanho));
-            $stmt->bindParam(':quartos', sanitizeText($this->quartos));
-            $stmt->bindParam(':valor_base', sanitizeFloat($this->valor_base));
-            $stmt->bindParam(':reservada', sanitizeBoolean($this->reservada));
+            $stmt->bindParam(':numero', sanitizeText($this->numero));
             $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
             $stmt->bindParam(':imagem_id', sanitizeText($this->imagem->id));
             $stmt->bindParam(':galeria', sanitizeText($this->galeria));

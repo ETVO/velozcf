@@ -1,5 +1,6 @@
 .env
 config/env_constants.php
+config/sql/insert.sql
 vendor
 composer.lock
 public/images/

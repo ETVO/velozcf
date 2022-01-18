@@ -6,10 +6,17 @@ export const errors = {
     invalidPassword: 'Senha inválida.',
 }
 
-export const roles = {
-    venda: 'Vendas',
-    admin: 'Administração'
-}
+export const estado_civil_options = ['Solteiro', 'Casado', 'Separado', 'Divorciado', 'Viúvo'];
+
+export const initialPagamento = {
+    valor_proposta: 0,
+    valor_final: 0,
+    valor_parcela: 0,
+    n_parcelas: 1,
+    entrada: 0,
+    desconto: 0,
+    meio_pagamento: 'Transferência / PIX'
+};
 
 export const initialInfo = {
     nome_completo: '',
@@ -20,13 +27,6 @@ export const initialInfo = {
     rg: '',
     orgao_exp: ''
 };
-
-export const initialCota = {
-    numero: '',
-    valor: '',
-    status: 'd',
-    cabana_id: 0
-}
 
 // Format number with dots between the thousands 
 export function formatNumber(x, isMoney = false) {

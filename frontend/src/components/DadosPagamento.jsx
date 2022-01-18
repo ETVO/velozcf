@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Col, Row, Button } from 'react-bootstrap'
-import { formatNumber } from '../helpers';
+import { formatNumber } from '../helpers/helpers';
 import { calcParcela } from '../helpers/enviarProposta';
 
 const API_URL = process.env.REACT_APP_API_URL

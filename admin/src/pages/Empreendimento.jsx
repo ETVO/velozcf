@@ -17,6 +17,7 @@ const initialFields = {
     endereco: '',
     area_cabana: '',
     map_slug: '',
+    pdf_url: '',
     map: {
         id: 0
     },
@@ -175,6 +176,18 @@ function Empreendimento() {
                             <Form.Label>Slug do mapa:</Form.Label>
                             <Form.Control onChange={handleChange}
                                 value={fields.map_slug}
+                                type="text"
+                                required
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.requiredText}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className='form-row' controlId="pdf_url">
+                            <Form.Label>Link do PDF de Cotas:</Form.Label>
+                            <Form.Control onChange={handleChange}
+                                value={fields.pdf_url}
                                 type="text"
                                 required
                             />

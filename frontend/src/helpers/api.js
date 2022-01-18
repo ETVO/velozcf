@@ -52,6 +52,8 @@ export function getAuthString() {
 
     let user = getUserSession();
 
+    if(!user) return null;
+
     // Return formatted authentication string 
     return Buffer.from(user.username + ':' + user.password).toString('base64');
 }
@@ -60,6 +62,22 @@ export function getAuthString() {
 export async function apiReadSingle(endpoint, id) {
 
     const response = await fetch(API_URL + endpoint + '/read_single.php?id=' + id, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Basic ' + getAuthString()
+        }
+    })
+
+    const data = await response.json()
+
+    return data
+}
+
+
+// Read
+export async function apiRead(endpoint, args = '') {
+
+    const response = await fetch(API_URL + endpoint + '/read.php' + args, {
         method: 'GET',
         headers: {
             'Authorization': 'Basic ' + getAuthString()
@@ -144,28 +162,4 @@ export async function fetchImage(id) {
     const data = await response.json()
 
     return data
-}
-
-// Create Image
-export async function apiCreateImage(endpoint, fields, file, alert = true, log = true) {
-
-    if(log)
-        console.log(file);
-
-    const uri = API_URL + endpoint + '/create.php';
-    const formData = new FormData();
-
-    const req = new XMLHttpRequest();
-    req.open('POST', uri, true);
-    req.setRequestHeader('Authorization', 'Basic ' + getAuthString());
-
-    formData.append('fields', JSON.stringify(fields));
-    formData.append('file', file);
-
-    if(log)
-        console.log(JSON.stringify(fields));
-
-    // Initiate a multipart/form-data upload
-    req.send(formData);
-    return req;
 }

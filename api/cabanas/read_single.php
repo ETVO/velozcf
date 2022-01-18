@@ -17,23 +17,7 @@
     // Read single
     if($cabana->read_single()) {
 
-        $cabana_arr = [
-            'id' => intval($cabana->id),
-            'nome' => $cabana->nome,
-            'tamanho' => $cabana->tamanho,
-            'quartos' => $cabana->quartos,
-            'valor_base' => floatval($cabana->valor_base),
-            'disponivel' => boolval($cabana->disponivel),
-            'reservada' => boolval($cabana->reservada),
-            'imagem' => [
-                'id' => intval($cabana->imagem->id),
-                'url' => $cabana->imagem->url,
-                'caption' => $cabana->imagem->caption
-            ],
-            'galeria' => $cabana->galeria,
-            'id_mapa' => $cabana->id_mapa,
-            'empreendimento_id' => intval($cabana->empreendimento->id)
-        ];
+        $cabana_arr = get_object_vars($cabana);
     
         // Make JSON
         print_r(json_encode($cabana_arr));

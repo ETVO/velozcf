@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Carousel } from 'react-bootstrap'
-import { fetchImage } from '../helpers'
+import { fetchImage } from '../helpers/helpers'
 
 import '../scss/GalleryCabana.scss'
 

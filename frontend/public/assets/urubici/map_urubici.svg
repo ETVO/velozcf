@@ -4,70 +4,52 @@
             .normal-1 {
                 fill: #e68d45;
             }
-
             .normal-2 {
                 fill: #d1742a;
             }
-
             .normal-3 {
                 fill: #6b3b15;
             }
-
             .normal-4 {
                 fill: #9e5217;
             }
 
             .indisp-1 {
-                fill: #b6b1a3;
+                fill: #E3591C;
             }
-
             .indisp-2 {
-                fill: #afaa9b;
+                fill: #e65e24;
             }
-
             .indisp-3 {
-                fill: #939994;
+                fill: #e95b1e;
             }
 
             .selected-1 {
-                fill: #35e666;
+                fill: #00BAFF;
             }
-
             .selected-2 {
-                fill: #31e161;
+                fill: #39c8fc;
             }
-
             .selected-3 {
-                fill: #1cd55c;
-            }
-
-            .selected-4 {
-                fill: none;
-                stroke: #fff;
-                stroke-width: 1px;
-                stroke-linecap: round;
+                fill: #12b8f5;
             }
 
             .disp-1 {
-                fill: #2fb1d9;
+                fill: #4DD32D;
             }
-
             .disp-2 {
-                fill: #2bacd4;
+                fill: #5fe23e;
             }
-
             .disp-3 {
-                fill: #16a0cf;
+                fill: #49db24;
             }
 
             .active-1 {
                 fill: #fcba03;
             }
-
             .active-2 {
                 fill: #f0b102;
             }
-
             .active-3 {
                 fill: #e3a805;
             }

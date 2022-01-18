@@ -85,11 +85,7 @@
                 border: solid 1px black;
                 padding: .25rem .5rem;
                 border-radius: 5px;
-
-                &.reservada {
-                    color: #E2A023;
-                    border-color: #E2A023;
-                }
+                text-transform: uppercase;
 
                 &.disponivel {
                     color: #7A913C;

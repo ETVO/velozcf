@@ -14,19 +14,17 @@ import '../scss/View.scss'
 
 const { forwardRef, useRef, useImperativeHandle } = React;
 
+const DEFAULT_EMPRE_ID = process.env.REACT_APP_DEFAULT_EMPRE_ID ?? 1
+
 const initialFields = {
-    nome: '',
-    tamanho: '',
-    quartos: '',
-    valor_base: '',
+    numero: '',
     id_mapa: '',
     imagem: {
         id: 0
     },
     galeria: '',
     disponivel: 1,
-    reservada: 0,
-    empreendimento_id: 0,
+    empreendimento_id: DEFAULT_EMPRE_ID,
 };
 
 const API_URL = process.env.REACT_APP_API_URL
@@ -48,14 +46,14 @@ function Cabana() {
     const [fields, setFields] = useState(initialFields)
     const [validated, setValidated] = useState(false);
 
-    const changeNome = (e) => {
-        let { value: nome } = e.target;
-        let id_mapa = nome.replace(/\s/g, "").toLowerCase();
+    const changeNumero = (e) => {
+        let { value: numero } = e.target;
+        let id_mapa = 'cabana' + numero;
 
         fieldsChangeArray({
             id_mapa: id_mapa,
-            nome: nome
-        }, ['id_mapa', 'nome'], fields, setFields);
+            numero: numero
+        }, ['id_mapa', 'numero'], fields, setFields);
     }
 
     async function deleteCabana(id) {
@@ -112,7 +110,7 @@ function Cabana() {
             }
             else {
                 cotasRef.current.saveChanges();
-                apiUpdate(endpoint, fields, data).then(response => {
+                apiUpdate(endpoint, fields).then(response => {
                     if (response) {
 
                         alert(response.message);
@@ -127,7 +125,6 @@ function Cabana() {
     const handleChange = (e) => {
         handleFormChange(e, fields, setFields)
     }
-
 
     return (
         <Container className='Cabana View Single my-5'>
@@ -154,15 +151,8 @@ function Cabana() {
                     <Col className='edit'>
 
                         <div className="static-fields">
-                            <Form.Group className='form-row' controlId="empreendimento_id">
-                                <Form.Label>Empreendimento
-                                    (<Link
-                                        title='Consultar empreendimentos'
-                                        to={empresLink}
-                                        target="_blank" rel="noopener noreferrer"
-                                    >
-                                        <small>Consultar empreendimentos</small>
-                                    </Link>):
+                            {/* <Form.Group className='form-row' controlId="empreendimento_id">
+                                <Form.Label>Empreendimento:
                                 </Form.Label>
                                 <Form.Control onChange={handleChange}
                                     value={fields.empreendimento_id}
@@ -176,52 +166,15 @@ function Cabana() {
                                 <Form.Text muted>
                                     Insira o ID do Empreendimento ao qual esta cabana pertence.
                                 </Form.Text>
-                            </Form.Group>
+                            </Form.Group> */}
 
-                            <Form.Group className='form-row' controlId="nome">
-                                <Form.Label>Nome:</Form.Label>
-                                <Form.Control onChange={changeNome}
-                                    value={fields.nome}
-                                    type="text"
-                                    required
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.requiredText}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-
-                            <Row>
-                                <Form.Group as={Col} className='form-row' controlId="tamanho">
-                                    <Form.Label>Tamanho:</Form.Label>
-                                    <Form.Control onChange={handleChange}
-                                        value={fields.tamanho}
-                                        type="text"
-                                        placeholder='75m2'
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.requiredText}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-
-                                <Form.Group as={Col} className='form-row' controlId="quartos">
-                                    <Form.Label>Quartos:</Form.Label>
-                                    <Form.Control onChange={handleChange}
-                                        value={fields.quartos}
-                                        type="text"
-                                        placeholder='2 quartos'
-                                    />
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.requiredText}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Row>
-
-                            <Form.Group className='form-row' controlId="valor_base">
-                                <Form.Label>Valor base:</Form.Label>
-                                <Form.Control onChange={handleChange}
-                                    value={fields.valor_base}
+                            <Form.Group className='form-row' controlId="numero">
+                                <Form.Label>Número:</Form.Label>
+                                <Form.Control onChange={changeNumero}
+                                    value={fields.numero}
                                     type="number"
                                     min={0}
+                                    step={1}
                                     required
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -229,41 +182,26 @@ function Cabana() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group className='form-row' controlId="id_mapa">
-                                <Form.Label>ID Mapa:</Form.Label>
-                                <Form.Control
-                                    readOnly
-                                    value={fields.id_mapa}
-                                    type="text"
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.requiredText}
-                                </Form.Control.Feedback>
-                                <Form.Text muted>
-                                    ID do elemento na ilustração SVG.
-                                </Form.Text>
-                            </Form.Group>
-
-                            <Form.Group className='form-row' controlId="reservada">
-                                <Form.Label>Reservada:</Form.Label>
+                            <Form.Group className='form-row' controlId="disponivel">
+                                <Form.Label>Disponível:</Form.Label>
                                 <div>
                                     <Form.Check
                                         onChange={handleChange}
                                         inline
                                         type='radio'
-                                        name='reservada'
+                                        name='disponivel'
                                         value={1}
                                         label='Sim'
-                                        defaultChecked={(fields.reservada)}
+                                        defaultChecked={(fields.disponivel == true)}
                                     />
                                     <Form.Check
                                         onChange={handleChange}
                                         inline
                                         type='radio'
-                                        name='reservada'
+                                        name='disponivel'
                                         value={0}
                                         label='Não'
-                                        defaultChecked={(!fields.reservada)}
+                                        defaultChecked={(fields.disponivel == false)}
                                     />
                                 </div>
                                 <Form.Control.Feedback type="invalid">

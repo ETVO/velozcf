@@ -1,8 +1,9 @@
 <?php
 
+    include_once 'Model.php';
     include_once 'Cabana.php';
 
-    class Cota {
+    class Cota extends Model {
         // DB stuff
         private $conn;
         private $table = 'cotas';
@@ -11,10 +12,7 @@
         public $id;
         public $numero;
         public $valor;
-        public $data_inicio;
-        public $data_fim;
-        public $disponivel;
-        public $reservada;
+        public $status;
         public $cabana;
         public $updated_at;
 
@@ -31,12 +29,9 @@
                     cota.id, 
                     cota.numero,
                     cota.valor,
-                    cota.data_inicio,
-                    cota.data_fim,
-                    cota.disponivel,
-                    cota.reservada,
+                    cota.status,
                     cabana.id as cabana_id,
-                    cabana.nome as cabana_nome
+                    cabana.numero as cabana_numero
                 FROM 
                     {$this->table} cota
                 LEFT JOIN 
@@ -77,12 +72,9 @@
                     cota.id, 
                     cota.numero,
                     cota.valor,
-                    cota.data_inicio,
-                    cota.data_fim,
-                    cota.disponivel,
-                    cota.reservada,
+                    cota.status,
                     cabana.id as cabana_id,
-                    cabana.nome as cabana_nome
+                    cabana.numero as cabana_numero
                 FROM 
                     {$this->table} cota
                 LEFT JOIN 
@@ -105,16 +97,10 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if($row) {
-                $this->numero = $row['numero'];
-                $this->valor = $row['valor'];
-                $this->data_inicio = $row['data_inicio'];
-                $this->data_fim = $row['data_fim'];
-                
-                $this->disponivel = $row['disponivel'];
-                $this->reservada = $row['reservada'];
+                $this->set_properties($row);
                                 
                 $this->cabana->id = $row['cabana_id'];
-                $this->cabana->nome = $row['cabana_nome'];
+                $this->cabana->read_single();
 
                 return true;
             }
@@ -129,9 +115,7 @@
                 SET
                     numero = :numero,
                     valor = :valor,
-                    data_inicio = :data_inicio,
-                    data_fim = :data_fim,
-                    disponivel = IFNULL(:disponivel, 1),
+                    status = IFNULL(:status, 'd'),
                     cabana = :cabana
             ";
 
@@ -141,9 +125,7 @@
             // Sanitize data & Bind params
             $stmt->bindParam(':numero', sanitizeText($this->numero));
             $stmt->bindParam(':valor', sanitizeText($this->valor));
-            $stmt->bindParam(':data_inicio', sanitizeText($this->data_inicio));
-            $stmt->bindParam(':data_fim', sanitizeText($this->data_fim));
-            $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
+            $stmt->bindParam(':status', sanitizeText($this->status));
             $stmt->bindParam(':cabana', sanitizeInt($this->cabana->id));
             
             // Execute query
@@ -165,10 +147,7 @@
                     
                     numero = IFNULL(:numero, numero),
                     valor = IFNULL(:valor, valor),
-                    data_inicio = IFNULL(:data_inicio, data_inicio),
-                    data_fim = IFNULL(:data_fim, data_fim),
-                    reservada = IFNULL(:reservada, reservada),
-                    disponivel = IFNULL(:disponivel, disponivel),
+                    status = IFNULL(:status, status),
                     cabana = IFNULL(:cabana, cabana)
                 WHERE 
                     id = :id
@@ -180,10 +159,7 @@
             // Sanitize data & Bind params
             $stmt->bindParam(':numero', sanitizeText($this->numero));
             $stmt->bindParam(':valor', sanitizeText($this->valor));
-            $stmt->bindParam(':data_inicio', sanitizeText($this->data_inicio));
-            $stmt->bindParam(':data_fim', sanitizeText($this->data_fim));
-            $stmt->bindParam(':disponivel', sanitizeBoolean($this->disponivel));
-            $stmt->bindParam(':reservada', sanitizeBoolean($this->disponivel));
+            $stmt->bindParam(':status', sanitizeText($this->status));
             $stmt->bindParam(':cabana', sanitizeInt($this->cabana->id));
             $stmt->bindParam(':id', sanitizeInt($this->id));
             

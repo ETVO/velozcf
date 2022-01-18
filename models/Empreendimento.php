@@ -16,6 +16,7 @@
         public $map_slug;
         public $logo;
         public $cover;
+        public $pdf_url;
         public $updated_at;
 
         // Construct with DB
@@ -37,6 +38,7 @@
                     e.deleted,
                     e.map_slug,
                     e.logo_id,
+                    e.pdf_url,
                     logo.url as logo_url,
                     logo.caption as logo_caption,
                     e.cover_id,
@@ -82,7 +84,8 @@
                     e.deleted,
                     e.map_slug,
                     e.logo_id,
-                    e.cover_id
+                    e.cover_id,
+                    e.pdf_url
                 FROM 
                     {$this->table} e
                 LEFT JOIN
@@ -131,11 +134,18 @@
                     area_cabana = :area_cabana,
                     map_slug = :map_slug,
                     logo_id = :logo_id,
-                    cover_id = :cover_id
+                    cover_id = :cover_id,
+                    pdf_url = :pdf_url
             ";
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
+
+            $this->logo->id = sanitizeInt($this->logo->id);
+            if($this->logo->id === 0) $this->logo->id = null;
+            
+            $this->cover->id = sanitizeInt($this->cover->id);
+            if($this->cover->id === 0) $this->cover->id = null;
 
             // Sanitize data & Bind params
             $stmt->bindParam(':nome', sanitizeText($this->nome));
@@ -144,6 +154,7 @@
             $stmt->bindParam(':map_slug', sanitizeText($this->map_slug));
             $stmt->bindParam(':logo_id', sanitizeInt($this->logo->id));
             $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
+            $stmt->bindParam(':pdf_url', $this->pdf_url);
 
             // Execute query
             if($stmt->execute()) {
@@ -167,6 +178,7 @@
                     map_slug = IFNULL(:map_slug, map_slug),
                     logo_id = IFNULL(:logo_id, logo_id),
                     cover_id = IFNULL(:cover_id, cover_id),
+                    pdf_url = IFNULL(:pdf_url, pdf_url),
                     deleted = IFNULL(:deleted, deleted)
                 WHERE 
                     id = :id
@@ -182,6 +194,7 @@
             $stmt->bindParam(':map_slug', sanitizeText($this->map_slug));
             $stmt->bindParam(':logo_id', sanitizeInt($this->logo->id));
             $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
+            $stmt->bindParam(':pdf_url', $this->pdf_url);
             $stmt->bindParam(':deleted', sanitizeBoolean($this->deleted));
             $stmt->bindParam(':id', sanitizeInt($this->id));
             

@@ -13,16 +13,9 @@
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $cabana->id = $data->id;
-    $cabana->nome = $data->nome;
-    $cabana->tamanho = $data->tamanho;
-    $cabana->quartos = $data->quartos;
-    $cabana->valor_base = $data->valor_base;
-    $cabana->disponivel = $data->disponivel;
-    $cabana->reservada = $data->reservada;
+    $cabana->set_properties($data, ['imagem', 'empreendimento']);
+    
     $cabana->imagem->id = (isset($data->imagem_id)) ? $data->imagem_id : $data->imagem->id;
-    $cabana->galeria = $data->galeria;
-    $cabana->id_mapa = $data->id_mapa;
     $cabana->empreendimento->id = (isset($data->empreendimento_id)) ? $data->empreendimento_id : $data->empreendimento->id;
 
     if($cabana->update()) {

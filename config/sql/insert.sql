@@ -14,5 +14,6 @@ INSERT INTO users
     SET
         username = 'velozadm',
         email = 'veloz@cfnegocios.com.br',
+        password = 'b28c32b9a9fffb176161e8c122ce0586',
         role = 'admin',
         info = 1;

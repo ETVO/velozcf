@@ -285,8 +285,6 @@
 
             if(!$this->info->update()) return false;
 
-            $this->imobiliaria->read_single();
-
             if($this->id == 1) $this->blocked = 0;
 
             // Sanitize data & Bind params

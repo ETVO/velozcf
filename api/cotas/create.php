@@ -13,11 +13,8 @@
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $cota->numero = $data->numero;
-    $cota->valor = $data->valor;
-    $cota->data_inicio = $data->data_inicio;
-    $cota->data_fim = $data->data_fim;
-    $cota->disponivel = $data->disponivel;
+    $cota->set_properties($data, ['cabana']);
+
     $cota->cabana->id = (isset($data->cabana_id)) ? $data->cabana_id : $data->cabana->id;
 
     if($cota->create()) {

@@ -39,6 +39,20 @@
         tr.deleted {
             display: none;
         }
+       
+        td.id {
+            width: 50px;
+        }
+
+        td.square-image {
+            width: 100px;
+            img {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
     
         &.show-deleted {
             tr.deleted {
@@ -176,6 +190,12 @@
         
         .form-row {
             margin-bottom: .625rem;
+        }
+
+        input[type="checkbox"], 
+        input[type="radio"], 
+        label {
+            cursor: pointer;
         }
     }
 }
