@@ -113,43 +113,6 @@ export default function Proposta({ user }) {
             let tmp = data.data;
             let unidades = [];
 
-            if (false) {
-                await tmp.filter(async cabana => {
-
-                    // get current cabana index
-                    let cabanaIndex = selected.cabanas.map(c => c.id).indexOf(cabana.id)
-
-                    console.log(cabana.nome, '\n' + cabanaIndex);
-
-                    // return false if current cabana is not selected
-                    if (cabanaIndex === -1) return false;
-
-                    // Get array of IDs of selected cotas
-                    let cotasIDs = selected.cabanas[cabanaIndex].cotas.map(c => c.id);
-
-                    let cotasValores = selected.cabanas[cabanaIndex].cotas.map(c => c.valor);
-                    cotasValores.reduce((valor_proposta, v) => valor_proposta + v, valor_proposta);
-
-                    cabana.cotas = []
-                    // loop through all the fetched cotas
-                    cotasIDs.forEach(cota => {
-
-                        valor_proposta += parseFloat(cota.valor)
-
-                        const cotaData = new Promise(resolve => {
-                            apiReadSingle('cotas', cota)
-                                .then(res => {
-                                    resolve(res);
-                                });
-                        })
-                        cabana.cotas.push(cotaData);
-                    });
-
-                    cabana.cotas = await Promise.all(cabana.cotas);
-                    unidades.push(cabana);
-                });
-            }
-
             selected.cabanas.forEach(cabana => {
                 cabana.cotas.forEach(cota => {
                     valor_proposta += parseFloat(cota.valor)

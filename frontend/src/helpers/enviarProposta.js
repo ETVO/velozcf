@@ -16,8 +16,8 @@ export async function enviarProposta(fields) {
 
             alert(response.message);
             
-			// sessionStorage.clear();
-			// window.location.href = '/';
+			sessionStorage.clear();
+			window.location.href = '/';
         }
     })
 
