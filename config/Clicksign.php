@@ -32,6 +32,7 @@ class Clicksign
     {
         // Get vendedor;
         $vendedor = $this->proposta->vendedor;
+        $vendedor->read_single();
 
         // Check whether Vendedor is associated with an Imobiliaria
         if (isset($vendedor->imobiliaria) && $vendedor->imobiliaria->id != 0) {
@@ -152,12 +153,13 @@ class Clicksign
     {
         $content = "";
 
-        foreach ($this->proposta->unidades as $unidade) {
-            $content .= " $unidade->nome - ";
+        for($i = 0; $i < count($this->proposta->unidades); $i++) {
+            $cabana = $this->proposta->unidades[$i];
+            $content .= " {$cabana['numero']} - ";
 
-            foreach ($unidade->cotas as $i => $cota) {
-                if ($i > 0) $content .= ", ";
-                $content .= "Cota $cota->numero";
+            foreach($cabana['cotas'] as $j => $cota) {
+                if ($j > 0) $content .= ", ";
+                $content .= "Cota {$cota['numero']}";
             }
 
             $content .= "\n";

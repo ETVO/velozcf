@@ -19,6 +19,7 @@ import User from './pages/User'
 import Imobiliarias from './pages/Imobiliarias'
 import Imobiliaria from './pages/Imobiliaria'
 import Propostas from './pages/Propostas'
+import Proposta from './pages/Proposta'
 import Config from './pages/Config'
 
 // import styling
@@ -115,6 +116,7 @@ function App() {
 							<Route exact path="/user" element={(<User token={token} />)}></Route>
 							<Route exact path="/user/:id" element={(<User token={token} />)}></Route>
 							<Route exact path="/propostas" element={(<Propostas />)}></Route>
+							<Route exact path="/proposta/:id" element={(<Proposta />)}></Route>
 							<Route exact path="/imobiliarias" element={(<Imobiliarias />)}></Route>
 							<Route exact path="/imobiliaria" element={(<Imobiliaria />)}></Route>
 							<Route exact path="/imobiliaria/:id" element={(<Imobiliaria />)}></Route>

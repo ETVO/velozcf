@@ -12,7 +12,8 @@ const API_URL = process.env.REACT_APP_API_URL
 export default function Header({ setToken, token }) {
     
     const logOut = () => {
-        setToken(false);
+        if(window.confirm('Deseja realmente sair da sua conta?'))
+            setToken(false);
     }
 
     const logo = {

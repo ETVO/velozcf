@@ -16,7 +16,7 @@ export default function Header({ token }) {
     }
 
     return (
-        <Navbar collapseOnSelect expand="md" variant="dark" bg="dark" className='Header px-4'>
+        <Navbar collapseOnSelect expand="lg" variant="dark" bg="dark" className='Header px-4 bg-dark'>
             <Navbar.Brand>
                 {(logo) ? (
                     <Link to='/'>
@@ -29,7 +29,7 @@ export default function Header({ token }) {
                 )}
             </Navbar.Brand>
             <Navbar.Toggle />
-            <Navbar.Collapse className='justify-content-start'>
+            <Navbar.Collapse className='justify-content-start bg-dark' bg="dark">
                 <Nav activeKey={location.pathname}>
                     <Nav.Link as={Link} to='/' eventKey='/'>Home</Nav.Link>
                     {(token.role === 'venda') ?

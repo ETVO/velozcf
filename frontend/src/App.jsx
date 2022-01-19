@@ -36,7 +36,8 @@ function App() {
 			setToken(value);
 		}
 		else {
-			localStorage.removeItem('token');
+			localStorage.clear();
+			sessionStorage.clear();
 			setToken(value);
 		}
 	}

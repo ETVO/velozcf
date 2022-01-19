@@ -13,9 +13,9 @@ include_once '../../config/authenticate.php';
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $imob->set_properties($data, ['representante']);
-
-    $cota->representante->id = (isset($data->representante_id)) ? $data->representante_id : $data->representante->id;
+    $imob->set_properties($data, ['rep_info']);
+    
+    $imob->rep_info->set_properties($data->rep_info);
 
     if($imob->update()) {
         echo json_encode([

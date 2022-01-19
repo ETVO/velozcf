@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { cycleCotas } from '../helpers/cabanas';
+
 // styling
 import '../scss/MapEmpreendimento.scss'
 
@@ -61,7 +63,7 @@ export default function MapEmpreendimento({ mapSlug, active, showUnidade, cabana
 
                 var px = (-x > centerX) ? centerX + x : centerX - x;
                 var py = (-y > centerY) ? centerY + y : centerY - y;
-                
+
                 zoom(scale, px, py)
 
             }
@@ -112,7 +114,7 @@ export default function MapEmpreendimento({ mapSlug, active, showUnidade, cabana
             var idoc = frame.contentDocument;
 
             if (active != null) {
-                if(mapActive != active) {    
+                if (mapActive != active) {
                     setMapActive(active);
                 }
             }
@@ -134,21 +136,23 @@ export default function MapEmpreendimento({ mapSlug, active, showUnidade, cabana
                     }
                     ).indexOf(cabana.id) !== -1;
 
+                    let { status, available } = cycleCotas(cabana);
+
                     if (selecionada) {
                         mapCabana.setAttribute('xlink:href', '#cabana_selected')
                         mapCabana.setAttribute('title', cabana.nome + ' Selecionada')
                     }
-                    else if(active != null && cabana.id_mapa === active.id_mapa) {
+                    else if (active != null && cabana.id_mapa === active.id_mapa) {
                         mapCabana.setAttribute('xlink:href', '#cabana_selected')
                         mapCabana.setAttribute('title', cabana.nome + ' Ativa')
                     }
-                    else if (cabana.disponivel && !cabana.reservada) {
-                        mapCabana.setAttribute('xlink:href', '#cabana_disp')
-                        mapCabana.setAttribute('title', cabana.nome + ' Disponível')
-                    }
-                    else {
+                    else if (status === 'v') {
                         mapCabana.setAttribute('xlink:href', '#cabana_indisp')
                         mapCabana.setAttribute('title', cabana.nome + ' Indisponível')
+                    }
+                    else {
+                        mapCabana.setAttribute('xlink:href', '#cabana_disp')
+                        mapCabana.setAttribute('title', cabana.nome + ' Disponível')
                     }
                 }
 

@@ -21,6 +21,16 @@ export const initialInfo = {
     orgao_exp: ''
 };
 
+export const initialPagamento = {
+    valor_proposta: 0,
+    valor_final: 0,
+    valor_parcela: 0,
+    n_parcelas: 1,
+    entrada: 0,
+    desconto: 0,
+    meio_pagamento: 'Transferência / PIX'
+};
+
 export const initialCota = {
     numero: '',
     valor: '',

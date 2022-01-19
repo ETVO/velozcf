@@ -1,45 +1,74 @@
 <?php
-
+    
     include_once '../../config/setup.php';
-include_once '../../config/authenticate.php';
-    include_once '../../models/User.php';
-
+    include_once '../../config/authenticate.php';
+    include_once '../../config/Clicksign.php';
+    include_once '../../config/Email.php';
+    include_once '../../models/Proposta.php';
+    
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
-
     // Instantiate request
-    $user = new User($db);
+    $prop = new Proposta($db);
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $user->set_properties($data, ['info', 'photo', 'imobiliaria']);
-    
-    $user->info->set_properties($data->info);
-    
-    $user->photo->id = (isset($data->photo_id)) ? $data->photo_id : $data->photo->id;
-    $user->imobiliaria->id = (isset($data->imobiliaria_id)) ? $data->imobiliaria_id : $data->imobiliaria->id;
+    $prop->id = $data->id;
 
-    if($user->update()) {
+    $prop->read_single();
+    $aprovada_before = $prop->aprovada;
+    
+    // Create clean instance
+    $prop = new Proposta($db);
+
+    $prop->set_properties($data, ['comprador', 'conjuge', 'pagamento', 'empreendimento', 'vendedor', 'unidades']);
+    
+    $prop->comprador->set_properties($data->comprador);
+    $prop->conjuge->set_properties($data->conjuge);
+    $prop->pagamento->set_properties($data->pagamento);
+    
+    $prop->empreendimento->id = $data->empreendimento;
+    $prop->vendedor->id = $data->vendedor;
+
+    $prop->unidades = json_encode($data->unidades, JSON_FORCE_OBJECT);
+    if(empty($prop->unidades)) $prop->unidades = null;
+
+    if($prop->update()) {
+        $message = 'Proposta atualizada.';
+
+        // if(!$aprovada_before) {
+        //     $prop->read_single();
+    
+        //     // Reserve the selected cotas (which will be made available again if the deadline is met) 
+        //     $prop->reserve_cotas();
+
+        //     $clicksign = new Clicksign($prop, $db);
+
+        //     try {
+        //         if($clicksign->create(true)) {
+        //             $message = 'Proposta aprovada e enviada com sucesso.';
+        //             $sent = true;
+                    
+        //             if($prop->update()) {
+        //                 $message = 'Proposta aprovada, enviada e registrada com sucesso.';
+        //             }
+        
+        //         }
+        //     }
+        //     catch (Exception $e) {
+        //         $message = 'Erro ao enviar proposta.';
+        //     }
+        // }
+
         echo json_encode([
             'success' => true,
-            'message' => 'Usuário atualizado.'
+            'message' => $message
         ]);
     }
     else {
-        $message = 'Erro ao atualizar usuário.';
-
-        $usernameTaken = ($user->sqlstate == 23000);
-
-        if($usernameTaken) {
-            $message = 'O nome de usuário já está em uso!';
-        }
-
-        print_r($db->errorInfo());
-
         echo json_encode([
             'success' => false,
-            'message' => $message,
-            'username_taken' => $usernameTaken
+            'message' => 'Erro ao atualizar proposta.'
         ]);
     }

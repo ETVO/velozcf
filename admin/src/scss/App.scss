@@ -27,7 +27,6 @@ body {
 .Header {
     &.navbar {
 
-        height: 70px; 
         .navbar-brand {
             a {
                 text-decoration: none;
@@ -39,6 +38,15 @@ body {
         }
     }
 }
+
+@media all and (min-width: 1024px) {
+    .Header {
+        &.navbar {
+
+            height: 70px;
+        }
+    }
+} 
 
 .Footer {
     position: relative;

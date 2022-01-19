@@ -2,64 +2,68 @@
 
     include_once '../../config/setup.php';
 include_once '../../config/authenticate.php';
-    include_once '../../models/User.php';
+    include_once '../../models/Proposta.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $user = new User($db);
+    $prop = new Proposta($db);
 
-    if(isset($_GET['imobiliaria'])) {
-        $user->imobiliaria->id = $_GET['imobiliaria'];
+    if(isset($_GET['empreendimento'])) {
+        $prop->empreendimento->id = $_GET['empreendimento'];
     }
 
-    $showBlocked = (isset($_GET['blocked'])) ? boolval($_GET['blocked']) : true;
+    $showApproved = (isset($_GET['approved'])) ? boolval($_GET['approved']) : true;
 
     // Post query & row count
-    $result = $user->read($showBlocked);
+    $result = $prop->read($showApproved);
     $num = $result->rowCount();
 
     // Check if any rows exist
     if($num > 0) {
         // Post array
-        $users_arr = [];
-        $users_arr['data'] = [];
+        $props_arr = [];
+        $props_arr['data'] = [];
         while($row = $result->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
 
-            $user_item = [
+            $prop_item = [
                 'id' => intval($id),
-                'nome_completo' => $nome_completo,
-                'username' => $username,
+                'cidade' => $cidade,
+                'telefone' => $telefone,
                 'email' => $email,
-                'role' => $role,
-                'creci' => $creci,
-                'blocked' => boolval($blocked),
-                'updated_at' => $updated_at,
-                'photo' => [
-                    'id' => intval($photo_id),
-                    'url' => $photo_url,
-                    'caption' => $photo_caption
+                'comprador' => [
+                    'cpf' => $comprador_cpf,
+                    'nome_completo' => $comprador_nome
                 ],
-                'imobiliaria' => [
-                    'id' => intval($imob_id),
-                    'nome' => $imob_nome,
-                ]
+                'valor_final' => $valor_final,
+                'entrada' => $entrada,
+                'desconto' => intval($desconto),
+                'empreendimento' => [
+                    'id' => $empreendimento_id,
+                    'nome' => $empreendimento_nome
+                ],
+                'vendedor' => [
+                    'id' => $vendedor_id,
+                    'nome_completo' => $vendedor_nome
+                ],
+                'updated_at' => $updated_at,
+                'aprovada' => boolval($aprovada)
             ];
 
             // Push to data array
-            array_push($users_arr['data'], $user_item);
+            array_push($props_arr['data'], $prop_item);
         }
 
         // Encode into JSON & output 
-        echo json_encode($users_arr);
+        echo json_encode($props_arr);
     }
     else {
         // Nothing found
         echo json_encode([
             'success' => false,
-            'message' => 'Nenhum usuário foi encontrado.'
+            'message' => 'Nenhuma proposta foi encontrada.'
         ]);
     }

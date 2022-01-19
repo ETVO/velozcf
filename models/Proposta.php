@@ -1,10 +1,11 @@
 <?php
 
+    include_once 'Model.php';
     include_once 'Info.php';
     include_once 'Pagamento.php';
     include_once 'User.php';
     include_once 'Empreendimento.php';
-    include_once 'Model.php';
+    include_once 'Cota.php';
 
     class Proposta extends Model {
         // DB stuff
@@ -50,12 +51,16 @@
                     prop.telefone,
                     prop.email,
                     prop.aprovada,
-                    compra.nome_completo AS nome_comprador,
+                    compra.cpf AS comprador_cpf,
+                    compra.nome_completo AS comprador_nome,
                     pag.valor_final,
                     pag.entrada,
                     pag.desconto,
-                    emp.nome AS nome_empreendimento,
-                    vend_info.nome_completo AS nome_vendedor
+                    emp.id AS empreendimento_id,
+                    emp.nome AS empreendimento_nome,
+                    vend_info.id AS vendedor_id,
+                    vend_info.nome_completo AS vendedor_nome,
+                    prop.updated_at
                 FROM 
                     {$this->table} prop
                 LEFT JOIN 
@@ -70,7 +75,25 @@
                     empreendimentos emp ON prop.empreendimento = emp.id
             ";
 
-            if(!$showApproved)
+            if(!$showApproved) {
+                $query .= "
+                    WHERE
+                        prop.aprovada = 0
+                ";
+            }
+            
+            if($this->empreendimento->id) {
+                $query .= "
+                    WHERE
+                        prop.empreendimento = :empreendimento
+                ";
+
+                if(!$showApproved)
+                    $query .= "
+                        AND prop.aprovada = 0
+                    ";
+            }
+            else if(!$showApproved)
                 $query .= "
                     WHERE
                         prop.aprovada = 0
@@ -78,11 +101,17 @@
 
             $query .= "
                 ORDER BY 
-                    emp.nome ASC
+                    prop.id ASC
             ";
 
             // Prepare query
             $stmt = $this->conn->prepare($query);
+            
+            if($this->empreendimento->id) {
+                // Bind ID
+                // Sanitize data & Bind params
+                $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));
+            }
 
             // Execute statement
             $stmt->execute();
@@ -97,15 +126,36 @@
                     *
                 FROM 
                     {$this->table}
-                WHERE
-                    id = ?
-                LIMIT 1
             ";
+            $this->id = sanitizeInt($this->id);
+            $this->document_key = sanitizeText($this->document_key);
+
+            // If id is set, use it to select the user
+            if($this->id) {
+                $query .= "
+                    WHERE
+                        id = ?
+                ";
+            }
+            // Else, if username is set, use it instead
+            else if($this->document_key) {
+                $query .= "
+                    WHERE
+                        document_key = ?
+                ";
+            }
+            // If nothing is set, the user cannot be found 
+            else return false;
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            $stmt->bindParam(1, sanitizeInt($this->id));
+            // Bind ID
+            if($this->id)
+                $stmt->bindParam(1, sanitizeInt($this->id));
+            // Bind document_key
+            else if($this->document_key)
+                $stmt->bindParam(1, sanitizeText($this->document_key));
 
             // Execute stmt
             $stmt->execute();
@@ -133,7 +183,9 @@
 
                 $this->empreendimento->id = $row['empreendimento'];
                 $this->empreendimento->read_single();
-                
+
+                $this->unidades = json_decode($row['unidades'], true);
+
                 return true;
             }
 
@@ -274,7 +326,7 @@
             $stmt = $this->conn->prepare($query);
 
             // Sanitize data & Bind params
-            $stmt->bindParam(':id', sanitizeInt($this->id));	
+            $stmt->bindParam(':id', sanitizeInt($this->id));
 
             // Execute query
             if(!empty($this->id) && $stmt->execute()) {
@@ -282,6 +334,40 @@
             }
 
             return false;
+        }
+
+        // UNRESERVE COTAS
+        public function change_cotas_status($new_status) {
+            $unidades = $this->unidades;
+
+            for($i = 0; $i < count($unidades); $i++) {
+                $cabana = $unidades[$i];
+
+                foreach($cabana['cotas'] as $cota) {
+                    $new_cota = new Cota($this->conn);
+                    $new_cota->set_properties($cota);
+                    $new_cota->status = $new_status;
+                    $new_cota->update();
+                    $cota = $new_cota;
+                }
+            }
+
+            $this->unidades = $unidades;
+        }
+
+        // UNRESERVE COTAS
+        public function unreserve_cotas() {
+            $this->change_cotas_status('d');
+        }
+
+        // RESERVE COTAS
+        public function reserve_cotas() {
+            $this->change_cotas_status('r');
+        }
+
+        // SELL COTAS
+        public function sell_cotas() {
+            $this->change_cotas_status('v');
         }
 
     }

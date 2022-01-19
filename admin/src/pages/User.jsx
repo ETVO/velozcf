@@ -156,6 +156,8 @@ function User({ token }) {
         setShowImob(e.target.checked);
     }
 
+    console.log(fields);
+
     return (
         <Container className='User View Single my-5'>
 

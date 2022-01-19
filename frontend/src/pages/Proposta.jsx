@@ -62,6 +62,8 @@ export default function Proposta({ user }) {
     const [activeStage, setStage] = useState(0)
     const [fields, setFields] = useState(initialFields);
 
+    console.log(fields.vendedor);
+
     /** set states on initial load */
     (async () => {
 
@@ -89,7 +91,7 @@ export default function Proposta({ user }) {
             setFields(storedFields.fields)
         }
         else {
-
+            
             if (fields.vendedor === 0) {
                 let newFields = JSON.parse(JSON.stringify(fields));
                 newFields.vendedor = user.id
@@ -325,7 +327,7 @@ export default function Proposta({ user }) {
 
                                 return (cabana) ? (
                                     <div key={cabana.id} className="brief-section my-2">
-                                        <h5 className='brief-title'>{cabana.nome}</h5>
+                                        <h5 className='brief-title'>Cabana {cabana.numero}</h5>
                                         {(cabana.cotas) ? (
                                             cabana.cotas.map(cota => {
                                                 return (

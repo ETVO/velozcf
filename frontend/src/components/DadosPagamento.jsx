@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Col, Row, Button } from 'react-bootstrap'
-import { formatNumber } from '../helpers/helpers';
+import { formatNumber, apiRead } from '../helpers/helpers';
 import { calcParcela } from '../helpers/enviarProposta';
 
 const API_URL = process.env.REACT_APP_API_URL
@@ -22,12 +22,15 @@ export default function DadosPagamento({ paymentFields, setPaymentFields, submit
     
     (async () => {
         if (!configs) {
-            const configData = await getConfigs();
-            setConfigs(configData.data);
+            apiRead('configs').then(res => {
+                if(res) {
+                    if(res.success !== false) {
+                        setConfigs(res.data);
+                    }
+                }
+            });
         }
     })()
-
-    console.log(configs)
 
     const [validated, setValidated] = useState(false);
     const [advanced, setAdvanced] = useState(false);

@@ -111,7 +111,7 @@
             
             if($row) {
                 if(!isset($this->id)) $this->id = 0;
-                $this->set_properties($row);
+                $this->set_properties($row, ['rep_info']);
 
                 $this->rep_info->id = $row['rep_info_id'];
                 $this->rep_info->read_single();
@@ -142,19 +142,26 @@
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
+            
+            // Only follow ahead if info exists and is created
+            if($this->rep_info && $this->rep_info->create()) {
 
-            // Sanitize data & Bind params
-            $stmt->bindParam(':nome', sanitizeText($this->nome));
-            $stmt->bindParam(':cnpj', sanitizeText($this->cnpj));
-            $stmt->bindParam(':crecij', sanitizeText($this->crecij));
-            $stmt->bindParam(':rep_email', sanitizeText($this->rep_email));
-            $stmt->bindParam(':rep_estado_civil', sanitizeText($this->rep_estado_civil));
-            $stmt->bindParam(':rep_creci', sanitizeText($this->rep_creci));
-            $stmt->bindParam(':rep_info', sanitizeInt($this->rep_info));
-            $stmt->bindParam(':endereco', sanitizeText($this->endereco));
-            $stmt->bindParam(':bairro', sanitizeText($this->bairro));
-            $stmt->bindParam(':cep', sanitizeText($this->cep));
-            $stmt->bindParam(':cidade', sanitizeText($this->cidade));
+                // Sanitize data & Bind params
+                $stmt->bindParam(':nome', sanitizeText($this->nome));
+                $stmt->bindParam(':cnpj', sanitizeText($this->cnpj));
+                $stmt->bindParam(':crecij', sanitizeText($this->crecij));
+                $stmt->bindParam(':rep_email', sanitizeText($this->rep_email));
+                $stmt->bindParam(':rep_estado_civil', sanitizeText($this->rep_estado_civil));
+                $stmt->bindParam(':rep_creci', sanitizeText($this->rep_creci));
+                
+                $stmt->bindParam(':rep_info', sanitizeInt($this->rep_info->id));
+                
+                $stmt->bindParam(':endereco', sanitizeText($this->endereco));
+                $stmt->bindParam(':bairro', sanitizeText($this->bairro));
+                $stmt->bindParam(':cep', sanitizeText($this->cep));
+                $stmt->bindParam(':cidade', sanitizeText($this->cidade));
+            }
+
             
             // Execute query
             if($stmt->execute()) {
@@ -182,13 +189,15 @@
                     endereco = IFNULL(:endereco, endereco),
                     bairro = IFNULL(:bairro, bairro),
                     cep = IFNULL(:cep, cep),
-                    cidade = IFNULL(:cidade, cidade),
+                    cidade = IFNULL(:cidade, cidade)
                 WHERE 
                     id = :id
             ";
 
             // Prepare statement
             $stmt = $this->conn->prepare($query);
+
+            if(!$this->rep_info->update()) return false;
 
             // Sanitize data & Bind params
             $stmt->bindParam(':nome', sanitizeText($this->nome));
@@ -197,11 +206,15 @@
             $stmt->bindParam(':rep_email', sanitizeText($this->rep_email));
             $stmt->bindParam(':rep_estado_civil', sanitizeText($this->rep_estado_civil));
             $stmt->bindParam(':rep_creci', sanitizeText($this->rep_creci));
-            $stmt->bindParam(':rep_info', sanitizeInt($this->rep_info));
+
+            $stmt->bindParam(':rep_info', sanitizeInt($this->rep_info->id));
+
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':bairro', sanitizeText($this->bairro));
             $stmt->bindParam(':cep', sanitizeText($this->cep));
             $stmt->bindParam(':cidade', sanitizeText($this->cidade));
+            
+            $stmt->bindParam(':id', sanitizeInt($this->id));
             
             // Execute query
             if($stmt->execute()) {

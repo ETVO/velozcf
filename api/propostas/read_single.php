@@ -2,30 +2,30 @@
 
     include_once '../../config/setup.php';
 include_once '../../config/authenticate.php';
-    include_once '../../models/User.php';
+    include_once '../../models/Proposta.php';
 
     // Instantiate Database & connect
     $database = new Database();
     $db = $database->connect();
 
     // Instantiate request
-    $user = new User($db);
+    $prop = new Proposta($db);
 
     // Get ID from URL
-    $user->id = isset($_GET['id']) ? $_GET['id'] : null;
-    $user->username = isset($_GET['username']) ? $_GET['username'] : null;
+    $prop->id = isset($_GET['id']) ? $_GET['id'] : null;
+    $prop->document_key = isset($_GET['document_key']) ? $_GET['document_key'] : null;
 
     // Read single
-    if($user->read_single()) {
+    if($prop->read_single()) {
 
-        $user_arr = get_object_vars($user);
+        $prop_arr = get_object_vars($prop);
     
         // Make JSON
-        print_r(json_encode($user_arr));
+        print_r(json_encode($prop_arr));
     }
     else {
         echo json_encode([
             'success' => false,
-            'message' => 'Usuário não encontrado.'
+            'message' => 'Proposta não encontrada.'
         ]);
     }

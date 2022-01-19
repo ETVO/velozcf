@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { div, Col, Button } from 'react-bootstrap'
 import moment from 'moment'
-import { fieldsChange } from '../helpers/helpers'
+import { fieldsChange, apiRead } from '../helpers/helpers'
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -20,8 +20,13 @@ export default function RevisaoProposta({ fields, setFields, submit }) {
 
     (async () => {
         if (!configs) {
-            const configData = await getConfigs();
-            setConfigs(configData.data);
+            apiRead('configs').then(res => {
+                if(res) {
+                    if(res.success !== false) {
+                        setConfigs(res.data);
+                    }
+                }
+            });
         }
         else {
             const entrada_min = configs.entrada_min.value;

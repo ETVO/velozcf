@@ -169,3 +169,21 @@ export async function apiCreateImage(endpoint, fields, file, alert = true, log =
     req.send(formData);
     return req;
 }
+
+
+// Update
+export async function approveProposta(id) {
+    const endpoint = 'propostas';
+
+    const response = await fetch(API_URL + endpoint + '/approve.php?id=' + id, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + getAuthString()
+        }
+    })
+
+    const data = await response.json()
+
+    return data
+}

@@ -21,7 +21,7 @@ const initialFields = {
     cnpj: '',
     crecij: '',
     rep_email: '',
-    rep_estado_civil: '',
+    rep_estado_civil: 'Solteiro',
     rep_creci: '',
     rep_info: initialInfo,
     endereco: '',
@@ -76,6 +76,8 @@ function Imobiliaria() {
     if (editMode && data && fields === initialFields) {
         setFields(data)
     }
+
+    console.log(fields);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -248,7 +250,7 @@ function Imobiliaria() {
                         <Form.Group className='form-row' controlId="rep_email">
                             <Form.Label>Email:</Form.Label>
                             <Form.Control onChange={handleChange}
-                                value={fields.email}
+                                value={fields.rep_email}
                                 type="text"
                             />
                             <Form.Control.Feedback type="invalid">
@@ -259,7 +261,7 @@ function Imobiliaria() {
                         <Row className='form-row'>
                             <Form.Group as={Col} lg={6} controlId="rep_estado_civil">
                                 <Form.Label>Estado civil:</Form.Label>
-                                <Form.Select onChange={handleChange} value={fields.estado_civil}>
+                                <Form.Select onChange={handleChange} value={fields.rep_estado_civil}>
                                     {estado_civil_options.map(option => {
                                         return (
                                             <option key={option} value={option}>{option}</option>

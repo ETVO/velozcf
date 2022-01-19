@@ -1,7 +1,6 @@
 <?php
-    
     include_once '../../config/setup.php';
-include_once '../../config/authenticate.php';
+    include_once '../../config/authenticate.php';
     include_once '../../config/Clicksign.php';
     include_once '../../config/Email.php';
     include_once '../../models/Proposta.php';
@@ -23,23 +22,25 @@ include_once '../../config/authenticate.php';
     $prop->empreendimento->id = $data->empreendimento;
     $prop->vendedor->id = $data->vendedor;
 
-    echo json_encode($data->unidades, JSON_FORCE_OBJECT);
-
     $prop->unidades = json_encode($data->unidades, JSON_FORCE_OBJECT);
 
     if($prop->create()) {
 
-        $message = 'Proposta criada com sucesso';
+        $message = 'Proposta enviada para aprovação.';
         $success = true;
         $sent = false;
 
+        $prop->read_single();
+
+        // Reserve the selected cotas (which will be made available again if the deadline is met) 
+        $prop->reserve_cotas();
+
         if($prop->aprovada) {
-            $prop->read_single();
 
             $clicksign = new Clicksign($prop, $db);
 
             try {
-                if($clicksign->create(false)) {
+                if($clicksign->create(true)) {
                     $message = 'Proposta enviada com sucesso.';
                     $sent = true;
                     
@@ -50,10 +51,8 @@ include_once '../../config/authenticate.php';
                 }
             }
             catch (Exception $e) {
-                $message = 'Erro ao enviar proposta.';
-                $sent = false;
+                $message = 'Proposta registrada com sucesso.';
             }
-
         }
         
         echo json_encode([

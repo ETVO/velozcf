@@ -60,3 +60,64 @@
         }
     }
 }
+
+
+
+.review-section {
+    margin-left: 1rem;
+    // width: 450px;
+
+    .field-row {
+        display: flex;
+        > * {
+            margin-right: 2.25rem;
+        }
+    }
+
+    .field-view {
+        margin-bottom: 0.75rem;
+
+        small {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: #4c516f;
+        }
+
+        p {
+            margin-top: -0.25rem;
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #051133;
+        }
+    }
+}
+
+.brief {
+    > .title {
+        margin: 0;
+        color: #4c516f;
+        font-size: 0.9rem;
+    }
+
+    .brief-section {
+        .brief-title {
+            color: #051133;
+            font-weight: 600;
+            margin: 0.25rem 0 0;
+        }
+
+        .brief-section {
+            color: #4c516f;
+            margin-left: 1rem;
+            .nome-cota {
+                font-weight: 600;
+            }
+        }
+    }
+
+    .total-price {
+        color: #051133;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+}

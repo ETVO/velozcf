@@ -52,7 +52,7 @@ $env = file_get_contents(__DIR__ . '/../.env');
     function sanitizeJSON($value) {
         return 
             (isset($value) && strlen($value)) 
-            ? strip_tags(strval($value))
+            ? strval($value)
             : null;
     }
     
