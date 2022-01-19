@@ -27,6 +27,7 @@ function Login({ setToken }) {
         setError({show: false, message: defaultErrorMessage });
 
         authUser(user, pass).then(res => {
+            console.log('res', res);
             if(res.success === false) {
                 if(res.message !== '')
                     setError({show: true, message: res.message});

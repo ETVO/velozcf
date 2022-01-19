@@ -1,20 +1,24 @@
 <?php
 
 include_once __DIR__ . '/CurlPost.php';
-include_once __DIR__ . '../models/Config.php';
+include_once __DIR__ . '/Email.php';
+include_once __DIR__ . '/../models/Config.php';
 
-define("CREATE_SIGNER_URL", "https://sandbox.clicksign.com/api/v1/signers?access_token=65291441-eb58-4583-890a-eb8a4632b985");
-define("CREATE_DOC_URL", "https://sandbox.clicksign.com/api/v1/templates/76f19bab-384b-4ede-925c-f8e1a84ec0c8/documents?access_token=65291441-eb58-4583-890a-eb8a4632b985");
-define("SIGNER_TO_DOC_URL", "https://sandbox.clicksign.com/api/v1/lists?access_token=65291441-eb58-4583-890a-eb8a4632b985");
+define("ACCESS_TOKEN", "65291441-eb58-4583-890a-eb8a4632b985");
+define("CREATE_SIGNER_URL", "https://sandbox.clicksign.com/api/v1/signers");
+define("CREATE_DOC_URL", "https://sandbox.clicksign.com/api/v1/templates/{MODEL_KEY}/documents");
+define("SIGNER_TO_DOC_URL", "https://sandbox.clicksign.com/api/v1/lists");
+define("MODEL_IMOBILIARIA", "4371cff2-469b-477e-9154-b776925780cf");
+define("MODEL_AUTONOMO", "d2aa825a-aa31-4412-869a-5d3c8adcac3d");
 
 class Clicksign
 {
     private $conn;
 
     public $sign_url;
-    private $document_key;
+    public $document_key;
     private $comprador_key;
-    private $proposta;
+    public $proposta;
     private $vars_excluded = ['sqlstate', 'updated_at', 'password', 'photo', 'logo', 'cover', 'unidades', 'id'];
 
     public function __construct($proposta, $db)
@@ -24,16 +28,32 @@ class Clicksign
         $this->conn = $db;
     }
 
-    public function create() {
+    public function create($send_email = true)
+    {
+        // Get vendedor;
+        $vendedor = $this->proposta->vendedor;
+
+        // Check whether Vendedor is associated with an Imobiliaria
+        if (isset($vendedor->imobiliaria) && $vendedor->imobiliaria->id != 0) {
+
+            // Add Representante Imobiliaria to sign document
+            $rep_imobiliaria = new User($this->conn);
+            $rep_imobiliaria = $vendedor->imobiliaria;
+
+            $model_key = MODEL_IMOBILIARIA;
+        } else {
+            $model_key = MODEL_AUTONOMO;
+        }
+
         // Get Representante CF info from Config
         $config = new Config($this->conn);
         $config->name = 'representante_cf';
         $config->read_single();
-        
+
         $repcf = new User($this->conn);
         $repcf->id = $config->value;
         $repcf->read_single();
-        
+
         // Get Testemunha info from Config
         $config = new Config($this->conn);
         $config->name = 'testemunha';
@@ -43,97 +63,100 @@ class Clicksign
         $testemunha->id = $config->value;
         $testemunha->read_single();
 
-        if($this->create_model($repcf, $testemunha)) {
+        if ($this->create_model($repcf, $testemunha, $model_key)) {
             // Add Comprador to sign document
-            $comprador_key = $this->create_signer(
+            $signer_comprador = new Signer(
                 $this->proposta->email,
                 $this->proposta->comprador->nome_completo,
                 $this->proposta->comprador->cpf,
-                $this->proposta->comprador->data_nasc
+                $this->proposta->comprador->data_nasc,
+                'buyer'
             );
-            $this->add_signer_to_doc($comprador_key);
-            
-            // Add Corretor to sign document
-            $vendedor = new User($this->conn);
-            $vendedor = $this->proposta->vendedor;
+            $signer_comprador->create_add_send($this->document_key, $send_email);
 
-            $vendedor_key = $this->create_signer(
+            // Add Corretor to sign document
+            $signer_vendedor = new Signer(
                 $vendedor->email,
                 $vendedor->info->nome_completo,
                 $vendedor->info->cpf,
-                $vendedor->info->data_nasc
+                $vendedor->info->data_nasc,
+                'witness'
             );
-            $this->add_signer_to_doc($vendedor_key);
+            $signer_vendedor->create_add_send($this->document_key, $send_email);
 
             // Check whether Vendedor is associated with an Imobiliaria
-            if(isset($vendedor->imobiliaria) && $vendedor->imobiliaria->id != 0) {
+            if (isset($vendedor->imobiliaria) && $vendedor->imobiliaria->id != 0) {
 
                 // Add Representante Imobiliaria to sign document
-                $rep_imobiliaria = new User($this->conn);
-                $rep_imobiliaria = $vendedor->imobiliaria;
-    
-                $rep_imobiliaria_key = $this->create_signer(
+                $signer_rep_imobiliaria = new Signer(
                     $rep_imobiliaria->email,
                     $rep_imobiliaria->info->nome_completo,
                     $rep_imobiliaria->info->cpf,
-                    $rep_imobiliaria->info->data_nasc
+                    $rep_imobiliaria->info->data_nasc, 
+                    'party'
                 );
-                $this->add_signer_to_doc($rep_imobiliaria_key);
+                $signer_rep_imobiliaria->create_add_send($this->document_key, $send_email);
             }
-            
+
             // Add Representante CF to sign document
-            $repcf_key = $this->create_signer(
+            $signer_repcf = new Signer(
                 $repcf->email,
                 $repcf->info->nome_completo,
                 $repcf->info->cpf,
-                $repcf->info->data_nasc
+                $repcf->info->data_nasc,
+                'seller'
             );
-            $this->add_signer_to_doc($repcf_key);
+            $signer_repcf->create_add_send($this->document_key, $send_email);
 
             // Add Testemunha to sign document
-            $testemunha_key = $this->create_signer(
+            $signer_testemunha = new Signer(
                 $testemunha->email,
                 $testemunha->info->nome_completo,
                 $testemunha->info->cpf,
-                $testemunha->info->data_nasc
+                $testemunha->info->data_nasc,
+                'witness'
             );
-            $this->add_signer_to_doc($testemunha_key);
+            $signer_testemunha->create_add_send($this->document_key, $send_email);
+
+            return true;
         }
     }
 
     private function get_object_data($obj, $prev_parent = '')
     {
         $encoded = "";
-        foreach($obj as $parent => $child) {
-            if(is_object($child)) {
-                if($prev_parent != '') 
+        foreach ($obj as $parent => $child) {
+            if (is_object($child)) {
+                if ($prev_parent != '')
                     $encoded .= $this->get_object_data($child, $prev_parent . "_" . $parent);
-                else  
+                else
                     $encoded .= $this->get_object_data($child, $parent);
-            }
-            else {
-                if(in_array($child, $this->vars_excluded) 
-                || in_array($parent, $this->vars_excluded) 
-                || in_array($prev_parent, $this->vars_excluded)) 
+            } else {
+                if (
+                    in_array($child, $this->vars_excluded)
+                    || in_array($parent, $this->vars_excluded)
+                    || in_array($prev_parent, $this->vars_excluded)
+                )
                     continue;
 
                 $encoded .= ',"';
-                if($prev_parent != '') 
-                    $encoded .= $prev_parent . "_"; 
+                if ($prev_parent != '')
+                    $encoded .= $prev_parent . "_";
                 $encoded .= $parent . '": "' . $child . '"';
             }
         }
         return $encoded;
     }
 
-    private function formatUnidades() {
+    private function formatUnidades()
+    {
         $content = "";
 
-        foreach($this->proposta->unidades as $unidade) {
+        foreach ($this->proposta->unidades as $unidade) {
             $content .= " $unidade->nome - ";
 
-            foreach($unidade->cotas as $i => $cota) {
-                if($i > 0) $content .= ", ";
+            foreach ($unidade->cotas as $i => $cota) {
+                if ($i > 0) $content .= ", ";
                 $content .= "Cota $cota->numero";
             }
 
@@ -143,19 +166,21 @@ class Clicksign
         return $content;
     }
 
-    private function create_model($repcf, $testemunha)
+    private function create_model($repcf, $testemunha, $model_key = MODEL_AUTONOMO)
     {
-        $proposta = (array)$this->proposta;
-        $proposta['repcf'] = $repcf;
-        $proposta['testemunha'] = $testemunha;
-        
-        $proposta_data = '{ "data": "'. date('d/m/Y') .'" ' . $this->get_object_data($proposta) . "}";
+        $proposta_data = clone $this->proposta;
+        $proposta_data = (array) $proposta_data;
+        $proposta_data['repcf'] = $repcf;
+        $proposta_data['testemunha'] = $testemunha;
+        $proposta_data = (object) $proposta_data;
+
+        $proposta_data = '{ "data": "' . date('d/m/Y') . '" ' . $this->get_object_data($proposta_data) . "}";
 
         $proposta_data = json_decode($proposta_data);
         setlocale(LC_MONETARY, 'pt_BR');
         $money_values = ['pagamento_valor_proposta', 'pagamento_valor_final', 'pagamento_valor_parcela', 'pagamento_entrada'];
 
-        foreach($money_values as $i) {
+        foreach ($money_values as $i) {
             $proposta_data->{$i} = number_format($proposta_data->{$i}, 2, ',', '.');
         }
 
@@ -163,8 +188,9 @@ class Clicksign
 
         $deadline = new DateTime();
         $deadline->modify('+7 day');
+        $deadline = $deadline->format(DATE_W3C);
 
-        $url = CREATE_DOC_URL;
+        $url = str_replace('{MODEL_KEY}', $model_key, CREATE_DOC_URL) . '?access_token=' . ACCESS_TOKEN;
         $data = [
             "document" => [
                 "path"          => "/Veloz/Nova-Proposta-{$this->proposta->id}.docx",
@@ -190,20 +216,43 @@ class Clicksign
         }
 
         $this->document_key = json_decode($result)->document->key;
+
+        $this->proposta->document_key = $this->document_key;
+        $this->proposta->update();
         return true;
     }
+}
 
-    private function create_signer($email, $nome_completo, $cpf, $data_nasc)
+class Signer
+{
+
+    private $email;
+    private $nome_completo;
+    private $cpf;
+    private $data_nasc;
+    private $signer_key;
+    private $sign_url;
+    private $sign_as;
+
+    public function __construct($email, $nome_completo, $cpf, $data_nasc, $sign_as) {
+        $this->email = $email;
+        $this->nome_completo = $nome_completo;
+        $this->cpf = $cpf;
+        $this->data_nasc = $data_nasc;
+        $this->sign_as = $sign_as;
+    }
+
+    public function create_signer()
     {
-        $url = CREATE_SIGNER_URL;
+        $url = CREATE_SIGNER_URL . '?access_token=' . ACCESS_TOKEN;
 
         $data = [
             "signer" => [
-                "email" => $email,
+                "email" => $this->email,
                 "auths" => ["email"],
-                "name" => $nome_completo,
-                "documentation" => $cpf,
-                "birthday" => $data_nasc,
+                "name" => $this->nome_completo,
+                "documentation" => $this->cpf,
+                "birthday" => $this->data_nasc,
                 "has_documentation" => true,
                 "official_document_enabled" => true,
             ]
@@ -224,19 +273,20 @@ class Clicksign
             return false;
         }
 
-        $signer_key = json_decode($result)->signer->key;
+        $this->signer_key = json_decode($result)->signer->key;
 
-        return $signer_key;
+        return true;
     }
 
-    private function add_signer_to_doc($signer_key) {
-        $url = SIGNER_TO_DOC_URL;
+    public function add_signer_to_doc($document_key)
+    {
+        $url = SIGNER_TO_DOC_URL . '?access_token=' . ACCESS_TOKEN;
 
         $data = [
             "list" => [
-                "document_key" => $this->document_key,
-                "signer_key" => $signer_key,
-                "sign_as" => "buyer"
+                "document_key" => $document_key,
+                "signer_key" => $this->signer_key,
+                "sign_as" => $this->sign_as
             ]
         ];
 
@@ -256,7 +306,30 @@ class Clicksign
         }
 
         $this->sign_url = json_decode($result)->list->url;
-        
+
         return true;
+    }
+
+    public function send_sign_email()
+    {
+        $email = new Email();
+
+        $email->mail->addAddress($this->email, $this->nome_completo);
+
+        $email->mail->Subject = 'Proposta - Sistema Veloz';
+        $email->mail->Body = 'A proposta foi recebida e aprovada. Para assiná-la, acesse o link: ' . $this->sign_url;
+
+        if (!$email->mail->send()) {
+            echo $email->mail->ErrorInfo;
+            return false;
+        }
+
+        return true;
+    }
+
+    public function create_add_send($document_key, $send_email = true) {
+        $this->create_signer();
+        $this->add_signer_to_doc($document_key);
+        if($send_email) $this->send_sign_email();
     }
 }

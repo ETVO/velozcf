@@ -1,9 +1,9 @@
 <?php
 
+    include_once 'Model.php';
     include_once 'Info.php';
     include_once 'Image.php';
     include_once 'Imobiliaria.php';
-    include_once 'Model.php';
 
     class User extends Model {
         // DB stuff
@@ -97,7 +97,7 @@
         }
 
         // READ SINGLE
-        public function read_single($showBlocked = true) {
+        public function read_single($showBlocked = true, $read_imobiliaria = true) {
             // Create query
             $query = "SELECT
                     u.id, 
@@ -182,8 +182,10 @@
                     $this->photo->id = $row['photo_id'];
                     $this->photo->read_single();
 
-                    $this->imobiliaria->id = $row['imob_id'];
-                    $this->imobiliaria->read_single();
+                    if($read_imobiliaria){
+                        $this->imobiliaria->id = $row['imob_id'];
+                        $this->imobiliaria->read_single();
+                    }
                 
                 return true;
             }

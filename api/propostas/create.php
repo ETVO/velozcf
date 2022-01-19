@@ -14,7 +14,7 @@ include_once '../../config/authenticate.php';
 
     $data = json_decode(file_get_contents('php://input'));
 
-    $prop->set_properties($data, ['comprador', 'conjuge', 'pagamento', 'empreendimento', 'vendedor']);
+    $prop->set_properties($data, ['comprador', 'conjuge', 'pagamento', 'empreendimento', 'vendedor', 'unidades']);
     
     $prop->comprador->set_properties($data->comprador);
     $prop->conjuge->set_properties($data->conjuge);
@@ -23,6 +23,10 @@ include_once '../../config/authenticate.php';
     $prop->empreendimento->id = $data->empreendimento;
     $prop->vendedor->id = $data->vendedor;
 
+    echo json_encode($data->unidades, JSON_FORCE_OBJECT);
+
+    $prop->unidades = json_encode($data->unidades, JSON_FORCE_OBJECT);
+
     if($prop->create()) {
 
         $message = 'Proposta criada com sucesso';
@@ -30,37 +34,24 @@ include_once '../../config/authenticate.php';
         $sent = false;
 
         if($prop->aprovada) {
+            $prop->read_single();
 
-            $prop->empreendimento->read_single();
-            $prop->vendedor->read_single();
+            $clicksign = new Clicksign($prop, $db);
 
-            $clicksign = new Clicksign($prop);
-
-            if($clicksign->create()) {
-                $prop->sign_url = $clicksign->sign_url ?? '';
-                $message = 'A proposta não foi enviada, contate um administrador.';
-    
-                try {
-                    $email = new Email();
-        
-                    $email->mail->addAddress('minimalq.web@gmail.com', 'MinimalQ');
-                    $email->mail->addAddress($prop->email, $prop->comprador->nome_completo);
-                    // $email->mail->addAddress($prop->vendedor->email, $prop->vendedor->info->nome_completo);
-                    // $email->mail->addAddress('coord.imobmark@gmail.com', 'Imobmark');
-        
-                    $email->mail->Subject = 'Proposta - Sistema Veloz';
-                    $email->mail->Body = 'A proposta foi recebida e aprovada. Para assiná-la, acesse o link: ' . $prop->sign_url;
-    
-                    if(!$email->mail->send()) {
-                        echo $email->mail->ErrorInfo;
-                    }
-    
+            try {
+                if($clicksign->create(false)) {
                     $message = 'Proposta enviada com sucesso.';
                     $sent = true;
-                } catch (Exception $e) {
                     
-                    $message = 'A proposta não foi enviada, contate um administrador.';
+                    if($prop->update()) {
+                        $message = 'Proposta enviada e registrada com sucesso.';
+                    }
+        
                 }
+            }
+            catch (Exception $e) {
+                $message = 'Erro ao enviar proposta.';
+                $sent = false;
             }
 
         }

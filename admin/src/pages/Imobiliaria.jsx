@@ -20,8 +20,10 @@ const initialFields = {
     nome: '',
     cnpj: '',
     crecij: '',
-    creci_rep: '',
-    info_rep: initialInfo,
+    rep_email: '',
+    rep_estado_civil: '',
+    rep_creci: '',
+    rep_info: initialInfo,
     endereco: '',
     bairro: '',
     cep: '',
@@ -231,10 +233,10 @@ function Imobiliaria() {
                         <h3 className='mt-4 mb-0'>Informações Representante Imobiliária</h3>
                         <hr className='mt-2' />
 
-                        <Form.Group className='form-row' controlId="info_rep.nome_completo">
+                        <Form.Group className='form-row' controlId="rep_info.nome_completo">
                             <Form.Label>Nome Completo:</Form.Label>
                             <Form.Control onChange={handleChange}
-                                value={fields.info_rep.nome_completo}
+                                value={fields.rep_info.nome_completo}
                                 type="text"
                                 required
                             />
@@ -243,7 +245,7 @@ function Imobiliaria() {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group className='form-row' controlId="email">
+                        <Form.Group className='form-row' controlId="rep_email">
                             <Form.Label>Email:</Form.Label>
                             <Form.Control onChange={handleChange}
                                 value={fields.email}
@@ -255,7 +257,7 @@ function Imobiliaria() {
                         </Form.Group>
 
                         <Row className='form-row'>
-                            <Form.Group as={Col} lg={6} controlId="estado_civil">
+                            <Form.Group as={Col} lg={6} controlId="rep_estado_civil">
                                 <Form.Label>Estado civil:</Form.Label>
                                 <Form.Select onChange={handleChange} value={fields.estado_civil}>
                                     {estado_civil_options.map(option => {
@@ -269,10 +271,10 @@ function Imobiliaria() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} lg={6} controlId="creci_rep">
+                            <Form.Group as={Col} lg={6} controlId="rep_creci">
                                 <Form.Label>CRECI:</Form.Label>
                                 <Form.Control onChange={handleChange}
-                                    value={fields.creci_rep}
+                                    value={fields.rep_creci}
                                     type="text"
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -282,10 +284,10 @@ function Imobiliaria() {
                         </Row>
 
                         <Row className='form-row'>
-                            <Form.Group as={Col} controlId="info_rep.nacionalidade">
+                            <Form.Group as={Col} controlId="rep_info.nacionalidade">
                                 <Form.Label>Nacionalidade:</Form.Label>
                                 <Form.Control onChange={handleChange}
-                                    value={fields.info_rep.nacionalidade}
+                                    value={fields.rep_info.nacionalidade}
                                     type="text"
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -293,10 +295,10 @@ function Imobiliaria() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="info_rep.profissao">
+                            <Form.Group as={Col} controlId="rep_info.profissao">
                                 <Form.Label>Profissão:</Form.Label>
                                 <Form.Control onChange={handleChange}
-                                    value={fields.info_rep.profissao}
+                                    value={fields.rep_info.profissao}
                                     type="text"
                                 />
                                 <Form.Control.Feedback type="invalid">
@@ -305,10 +307,10 @@ function Imobiliaria() {
                             </Form.Group>
                         </Row>
 
-                        <Form.Group className='form-row' controlId="info_rep.data_nasc">
+                        <Form.Group className='form-row' controlId="rep_info.data_nasc">
                             <Form.Label>Data de nascimento:</Form.Label>
                             <Form.Control onChange={handleChange}
-                                value={fields.info_rep.data_nasc}
+                                value={fields.rep_info.data_nasc}
                                 min={minDataNasc.format('YYYY-MM-DD')}
                                 max={maxDataNasc.format('YYYY-MM-DD')}
                                 type="date"
@@ -319,11 +321,11 @@ function Imobiliaria() {
                         </Form.Group>
 
                         <Row className="form-row">
-                            <Form.Group as={Col} controlId="info_rep.cpf">
+                            <Form.Group as={Col} controlId="rep_info.cpf">
                                 <Form.Label>CPF:</Form.Label>
                                 <Form.Control onChange={handleChange}
                                     as={InputMask}
-                                    defaultValue={fields.info_rep.cpf}
+                                    defaultValue={fields.rep_info.cpf}
                                     mask="999.999.999-99"
                                     maskChar="_"
                                     placeholder='000.000.000-00'
@@ -333,20 +335,20 @@ function Imobiliaria() {
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="info_rep.rg">
+                            <Form.Group as={Col} controlId="rep_info.rg">
                                 <Form.Label>RG:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
-                                    defaultValue={fields.info_rep.rg}
+                                    defaultValue={fields.rep_info.rg}
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}
                                 </Form.Control.Feedback>
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="info_rep.orgao_exp">
+                            <Form.Group as={Col} controlId="rep_info.orgao_exp">
                                 <Form.Label>Órgão Exp.:</Form.Label>
                                 <Form.Control onChange={handleChange} type="text"
-                                    defaultValue={fields.info_rep.orgao_exp}
+                                    defaultValue={fields.rep_info.orgao_exp}
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {errors.requiredText}

@@ -9,15 +9,6 @@
     DROP TABLE IF EXISTS images;
     DROP TABLE IF EXISTS configs;
 
-    CREATE TABLE privileges (
-        endpoint VARCHAR(255) PRIMARY KEY,
-        can_create VARCHAR(255) NOT NULL,
-        can_update VARCHAR(255) NOT NULL,
-        can_delete VARCHAR(255) NOT NULL,
-        can_read VARCHAR(255) NOT NULL,
-        can_read_single VARCHAR(255) NOT NULL,
-    );
-
     CREATE TABLE configs (
         name VARCHAR(255) PRIMARY KEY,
         value VARCHAR(255) NOT NULL,
@@ -40,11 +31,11 @@
         map_slug VARCHAR(255) NOT NULL,
         logo_id INT(11) UNSIGNED, 
         cover_id INT(11) UNSIGNED,
-        pdf_url VARCHAR(511) UNSIGNED,
+        pdf_url VARCHAR(511),
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        deleted BOOLEAN DEFAULT 0,
-        FOREIGN KEY logo_img_fk (logo_id) REFERENCES images(id) ON DELETE SET NULL,
-        FOREIGN KEY cover_img_fk(cover_id) REFERENCES images(id) ON DELETE SET NULL
+        deleted BOOLEAN DEFAULT 0
+        -- FOREIGN KEY logo_img_fk (logo_id) REFERENCES images(id) ON DELETE SET NULL,
+        -- FOREIGN KEY cover_img_fk(cover_id) REFERENCES images(id) ON DELETE SET NULL
     );
 
     CREATE TABLE cabanas (
@@ -94,7 +85,10 @@
         nome VARCHAR(255) NOT NULL,
         cnpj VARCHAR(255) NOT NULL,
         crecij VARCHAR(255) NOT NULL,
-        representante INT(11) UNSIGNED,
+        rep_email VARCHAR(255),
+        rep_estado_civil VARCHAR(255),
+        rep_creci VARCHAR(255),
+        rep_info INT(11) UNSIGNED,
         endereco VARCHAR(255),
         bairro VARCHAR(255),
         cep VARCHAR(255),

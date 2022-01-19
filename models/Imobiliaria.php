@@ -1,7 +1,7 @@
 <?php
 
     include_once 'Model.php';
-    include_once 'User.php';
+    include_once 'Info.php';
 
     class Imobiliaria extends Model {
         // DB stuff
@@ -13,7 +13,10 @@
         public $nome;
         public $cnpj;
         public $crecij;
-        public $representante;
+        public $rep_email;
+        public $rep_estado_civil;
+        public $rep_creci;
+        public $rep_info;
         public $endereco;
         public $bairro;
         public $cep;
@@ -24,8 +27,7 @@
         // Construct with DB
         public function __construct($db) {
             $this->conn = $db;
-
-            $this->representante = new User($db);
+            $this->rep_info = new Info($db);
         }
 
         // READ
@@ -36,8 +38,11 @@
                     nome,
                     cnpj,
                     crecij,
-                    representante,
-                    rep_info.nome_completo as nome_rep,
+                    rep_email,
+                    rep_estado_civil,
+                    rep_creci,
+                    rep_info,
+                    info.nome_completo as rep_nome_completo,
                     endereco,
                     bairro,
                     cep,
@@ -48,10 +53,8 @@
                     {$this->table} i
                 LEFT JOIN
                     users u ON u.imobiliaria = i.id
-                LEFT JOIN 
-                    users rep_user ON i.representante = rep_user.id
-                LEFT JOIN 
-                    infos rep_info ON rep_user.info = rep_info.id
+                LEFT JOIN
+                    infos info ON i.rep_info = info.id
                 GROUP BY
                     i.id
                 ORDER BY 
@@ -75,7 +78,10 @@
                     i.nome,
                     cnpj,
                     crecij,
-                    representante as representante_id,
+                    rep_email,
+                    rep_estado_civil,
+                    rep_creci,
+                    rep_info as rep_info_id,
                     endereco,
                     bairro,
                     cep,
@@ -107,8 +113,8 @@
                 if(!isset($this->id)) $this->id = 0;
                 $this->set_properties($row);
 
-                $this->representante->id = $row['representante_id'];
-                $this->representante->read_single();
+                $this->rep_info->id = $row['rep_info_id'];
+                $this->rep_info->read_single();
                 
                 return true;
             }
@@ -124,7 +130,10 @@
                     nome = :nome,
                     cnpj = :cnpj,
                     crecij = :crecij,
-                    representante = :representante,
+                    rep_email = :rep_email,
+                    rep_estado_civil = :rep_estado_civil,
+                    rep_creci = :rep_creci,
+                    rep_info = :rep_info,
                     endereco = :endereco,
                     bairro = :bairro,
                     cep = :cep,
@@ -138,7 +147,10 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':cnpj', sanitizeText($this->cnpj));
             $stmt->bindParam(':crecij', sanitizeText($this->crecij));
-            $stmt->bindParam(':representante', sanitizeInt($this->representante));
+            $stmt->bindParam(':rep_email', sanitizeText($this->rep_email));
+            $stmt->bindParam(':rep_estado_civil', sanitizeText($this->rep_estado_civil));
+            $stmt->bindParam(':rep_creci', sanitizeText($this->rep_creci));
+            $stmt->bindParam(':rep_info', sanitizeInt($this->rep_info));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':bairro', sanitizeText($this->bairro));
             $stmt->bindParam(':cep', sanitizeText($this->cep));
@@ -163,7 +175,10 @@
                     nome = IFNULL(:nome, nome),
                     cnpj = IFNULL(:cnpj, cnpj),
                     crecij = IFNULL(:crecij, crecij),
-                    representante = IFNULL(:representante, representante),
+                    rep_email = IFNULL(:rep_email, rep_email),
+                    rep_estado_civil = IFNULL(:rep_estado_civil, rep_estado_civil),
+                    rep_creci = IFNULL(:rep_creci, rep_creci),
+                    rep_info = IFNULL(:rep_info, rep_info),
                     endereco = IFNULL(:endereco, endereco),
                     bairro = IFNULL(:bairro, bairro),
                     cep = IFNULL(:cep, cep),
@@ -179,7 +194,10 @@
             $stmt->bindParam(':nome', sanitizeText($this->nome));
             $stmt->bindParam(':cnpj', sanitizeText($this->cnpj));
             $stmt->bindParam(':crecij', sanitizeText($this->crecij));
-            $stmt->bindParam(':representante', sanitizeInt($this->representante));
+            $stmt->bindParam(':rep_email', sanitizeText($this->rep_email));
+            $stmt->bindParam(':rep_estado_civil', sanitizeText($this->rep_estado_civil));
+            $stmt->bindParam(':rep_creci', sanitizeText($this->rep_creci));
+            $stmt->bindParam(':rep_info', sanitizeInt($this->rep_info));
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
             $stmt->bindParam(':bairro', sanitizeText($this->bairro));
             $stmt->bindParam(':cep', sanitizeText($this->cep));

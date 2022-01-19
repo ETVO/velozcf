@@ -21,7 +21,7 @@
         public $email;
         public $estado_civil;
         public $regime_casamento;
-        public $sign_url;
+        public $document_key;
         public $comprador;
         public $conjuge;
         public $unidades;
@@ -98,7 +98,7 @@
                 FROM 
                     {$this->table}
                 WHERE
-                    prop.id = ?
+                    id = ?
                 LIMIT 1
             ";
 
@@ -152,7 +152,7 @@
                     telefone = :telefone,
                     email = :email,
                     estado_civil = :estado_civil,
-                    sign_url = :sign_url,
+                    document_key = :document_key,
                     regime_casamento = :regime_casamento,
                     comprador = :comprador,
                     conjuge = :conjuge,
@@ -183,10 +183,10 @@
                 $stmt->bindParam(':email', sanitizeText($this->email));
                 $stmt->bindParam(':estado_civil', sanitizeText($this->estado_civil));
                 $stmt->bindParam(':regime_casamento', sanitizeText($this->regime_casamento));
-                $stmt->bindParam(':sign_url', sanitizeText($this->sign_url));
+                $stmt->bindParam(':document_key', sanitizeText($this->document_key));
                 $stmt->bindParam(':comprador', sanitizeInt($this->comprador->id));
                 $stmt->bindParam(':conjuge', sanitizeInt($this->conjuge->id));
-                $stmt->bindParam(':unidades', sanitizeJSON(json_decode($this->unidades)));
+                $stmt->bindParam(':unidades', sanitizeJSON($this->unidades));
                 $stmt->bindParam(':pagamento', sanitizeInt($this->pagamento->id));
                 $stmt->bindParam(':aprovada', sanitizeText($this->aprovada));
                 $stmt->bindParam(':empreendimento', sanitizeInt($this->empreendimento->id));
@@ -219,7 +219,7 @@
                     email = IFNULL(:email, email),
                     estado_civil = IFNULL(:estado_civil, estado_civil),
                     regime_casamento = IFNULL(:regime_casamento, regime_casamento),
-                    sign_url = IFNULL(:sign_url, sign_url),
+                    document_key = IFNULL(:document_key, document_key),
                     comprador = IFNULL(:comprador, comprador),
                     conjuge = IFNULL(:conjuge, conjuge),
                     unidades = IFNULL(:unidades, unidades),
@@ -234,7 +234,9 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            if(!$this->info->update()) return false;
+            $this->comprador->update();
+            $this->conjuge->update();
+            $this->pagamento->update();
 
             // Sanitize data & Bind params
             $stmt->bindParam(':endereco', sanitizeText($this->endereco));
@@ -245,7 +247,7 @@
             $stmt->bindParam(':email', sanitizeText($this->email));
             $stmt->bindParam(':estado_civil', sanitizeText($this->estado_civil));
             $stmt->bindParam(':regime_casamento', sanitizeText($this->regime_casamento));
-            $stmt->bindParam(':sign_url', sanitizeText($this->sign_url));
+            $stmt->bindParam(':document_key', sanitizeText($this->document_key));
             $stmt->bindParam(':comprador', sanitizeText($this->comprador));
             $stmt->bindParam(':conjuge', sanitizeText($this->conjuge));
             $stmt->bindParam(':unidades', sanitizeJSON($this->unidades));

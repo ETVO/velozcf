@@ -17,7 +17,7 @@ const useGet = (url) => {
                         'Authorization': 'Basic ' + getAuthString()
                     }
                 })
-                const json = await res.json()
+                const json = await res.json();
 
                 setData(json)
                 setLoading(false)

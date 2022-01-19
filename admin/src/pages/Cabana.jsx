@@ -258,7 +258,7 @@ function Cabana() {
                     </Col>
                     <Col className='options'>
 
-                        <div className="d-flex flex-column">
+                        {/* <div className="d-flex flex-column">
                             <div className="ms-auto">
                                 {(editMode && data) ? (
                                     <div className='mt-2 text-end'>
@@ -267,7 +267,7 @@ function Cabana() {
                                     </div>
                                 ) : ''}
                             </div>
-                        </div>
+                        </div> */}
 
                     </Col>
                 </Row>

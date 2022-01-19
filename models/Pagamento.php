@@ -143,8 +143,6 @@
             // Prepare statement
             $stmt = $this->conn->prepare($query);
 
-            if(!$this->info->update()) return false;
-
             // Sanitize data & Bind params
             $stmt->bindParam(':valor_proposta', sanitizeText($this->valor_proposta));
             $stmt->bindParam(':valor_final', sanitizeText($this->valor_final));

@@ -1,5 +1,7 @@
 <?php 
 
+    ini_set('memory_limit', '128M');
+
     // Headers
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');

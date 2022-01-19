@@ -156,14 +156,17 @@
             $stmt->bindParam(':cover_id', sanitizeInt($this->cover->id));
             $stmt->bindParam(':pdf_url', $this->pdf_url);
 
-            // Execute query
-            if($stmt->execute()) {
-                $this->id = $this->conn->lastInsertId();
-                return true;
-            }
+            try {
+                // Execute query
+                if($stmt->execute()) {
+                    $this->id = $this->conn->lastInsertId();
+                    return true;
+                }
 
-            // Print error if something goes wrong
-            // printf("Error: %s\n", $stmt->err);
+            }
+            catch(Exception $e) {
+                $this->err_message = $e->getMessage();
+            }
             return false;
         }
 

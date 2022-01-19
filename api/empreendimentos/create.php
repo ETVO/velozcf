@@ -28,9 +28,10 @@
         ]);
     }
     else {
+        $message = $empre->err_message ?? 'Erro ao criar empreendimento.';
         echo json_encode([
             'success' => false,
-            'message' => 'Erro ao criar empreendimento.'
+            'message' => $message
         ]);
 
     }
